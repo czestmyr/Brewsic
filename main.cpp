@@ -119,7 +119,7 @@ int main(int argc, char* argv[]) {
 
 	// Gui setup
 	GuiMgr gui;
-	IControl* gui_bg = new Background(NULL, 10, 10, WIDTH-20, HEIGHT-20);
+	IControl* gui_bg = new Background(NULL, 4, 4, WIDTH-8, HEIGHT-8);
 	gui.adoptControl(gui_bg);
 	new Window(gui_bg, 10, 10, 500, 300);
 
