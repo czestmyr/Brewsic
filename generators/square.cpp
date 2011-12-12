@@ -11,3 +11,6 @@ void SquareGenerator::generate(int bufsize, float* buffer) {
 	while (_phase > 2*3.1415926535) _phase -= 2*3.1415926535;
 }
 
+IGenerator* SquareGenerator::clone() {
+	return new SquareGenerator(_freq, _phase, _duty);
+}

@@ -10,6 +10,8 @@ class SineGenerator: public IGenerator {
 		~SineGenerator() {};
 
 		void generate(int bufsize, float* buffer);
+
+		IGenerator* clone();
 };
 
 #endif

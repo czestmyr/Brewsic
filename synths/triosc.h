@@ -17,11 +17,8 @@ class TripleOscillator: public ISynth{
 	public:
 		TripleOscillator(int bufsize): _bufsize(bufsize), _mixer(bufsize), _adsr(), _first(-1205.0), _second(-1195.0), _shift(0) {
 			for (int i = 0; i < POLYPHONY; ++i) {
-				for (int j = 0; j < 1; ++j) {
-					_generators[i][j] = new SquareGenerator(440.0);
-				}
-				for (int j = 1; j < 3; ++j) {
-					_generators[i][j] = new SawGenerator(440.0);
+				for (int j = 0; j < 3; ++j) {
+					_generators[i][j] = new SineGenerator(440.0);
 				}
 				_adsr[i] = new Adsr(20, 100, 101, 2000);
 				_buffers[i] = new float[bufsize];
@@ -45,6 +42,8 @@ class TripleOscillator: public ISynth{
 		void setBase(float freq) { _shift = freq - 440; }
 		void setFirst(float cents) { _first = cents; }
 		void setSecond(float cents) { _second = cents; }
+
+		void setGenerator(int oscId, IGenerator* gen);
 
 		void startNote(int noteId, float frequency);
 		void stopNote(int noteId);

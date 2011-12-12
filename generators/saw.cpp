@@ -12,3 +12,6 @@ void SawGenerator::generate(int bufsize, float* buffer) {
 	while (_phase > 2*3.1415926535) _phase -= 2*3.1415926535;
 }
 
+IGenerator* SawGenerator::clone() {
+	return new SawGenerator(_freq, _phase);
+}

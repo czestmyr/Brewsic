@@ -10,3 +10,6 @@ void SineGenerator::generate(int bufsize, float* buffer) {
 	while (_phase > 2*3.1415926535) _phase -= 2*3.1415926535;
 }
 
+IGenerator* SineGenerator::clone() {
+	return new SineGenerator(_freq, _phase);
+}

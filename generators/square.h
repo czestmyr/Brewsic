@@ -11,6 +11,7 @@ class SquareGenerator: public IGenerator {
 
 		void generate(int bufsize, float* buffer);
 
+		IGenerator* clone();
 	private:
 		float _duty;
 };

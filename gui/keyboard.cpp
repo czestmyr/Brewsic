@@ -40,9 +40,9 @@ Keyboard::Keyboard(IControl* parent, int x, int y, int h)
 	_synth = NULL;
 	_lastNote = -1;
 
-	_kww = IMG_Load("data/kww.png");
-	_kwn = IMG_Load("data/kwn.png");
-	_kbn = IMG_Load("data/kbn.png");
+	_kww = IMG_Load("data/images/kww.png");
+	_kwn = IMG_Load("data/images/kwn.png");
+	_kbn = IMG_Load("data/images/kbn.png");
 }
 
 void Keyboard::draw(SDL_Surface* surf, int orig_x, int orig_y) {

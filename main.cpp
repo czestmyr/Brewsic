@@ -20,6 +20,8 @@
 #include "gui/button.h"
 #include "gui/style.h"
 #include "gui/keyboard.h"
+#include "gui/pselect.h"
+#include "gui/image.h"
 
 using namespace std;
 
@@ -67,10 +69,10 @@ void audioCallback(void *userdata, Uint8 *stream, int len) {
 	osc.generateOutput(mix.getBuffer());
 	delay.filter(_SAMPLES, mix.getBuffer());
 	delay2.filter(_SAMPLES, mix.getBuffer());
-	flanger.filter(_SAMPLES, mix.getBuffer());
-	flanger2.filter(_SAMPLES, mix.getBuffer());
-	flanger3.filter(_SAMPLES, mix.getBuffer());
-	flanger4.filter(_SAMPLES, mix.getBuffer());
+//	flanger.filter(_SAMPLES, mix.getBuffer());
+//	flanger2.filter(_SAMPLES, mix.getBuffer());
+//	flanger3.filter(_SAMPLES, mix.getBuffer());
+//	flanger4.filter(_SAMPLES, mix.getBuffer());
 	vol2.filter(_SAMPLES, mix.getBuffer());
 //	gate.filter(_SAMPLES, mix.getBuffer());
 
@@ -104,6 +106,54 @@ void kbd_dn(void* data) {
 	Keyboard* kbd = (Keyboard*)data;
 	int shift = kbd->getShift() + 20;
 	kbd->setShift(shift);
+}
+
+PictureSelector* psel1;
+PictureSelector* psel2;
+PictureSelector* psel3;
+
+void osc1Callback(void* data) {
+	switch (psel1->getSelection()) {
+		case 0:
+			osc.setGenerator(0, new SineGenerator(440));
+			std::cout << "Setting sine generator for osc1" << std::endl;
+		break;
+		case 1:
+			osc.setGenerator(0, new SawGenerator(440));
+			std::cout << "Setting saw generator for osc1" << std::endl;
+		break;
+		case 2:
+			osc.setGenerator(0, new SquareGenerator(440));
+		break;
+	}
+}
+
+void osc2Callback(void* data) {
+	switch (psel2->getSelection()) {
+		case 0:
+			osc.setGenerator(1, new SineGenerator(440));
+		break;
+		case 1:
+			osc.setGenerator(1, new SawGenerator(440));
+		break;
+		case 2:
+			osc.setGenerator(1, new SquareGenerator(440));
+		break;
+	}
+}
+
+void osc3Callback(void* data) {
+	switch (psel3->getSelection()) {
+		case 0:
+			osc.setGenerator(2, new SineGenerator(440));
+		break;
+		case 1:
+			osc.setGenerator(2, new SawGenerator(440));
+		break;
+		case 2:
+			osc.setGenerator(2, new SquareGenerator(440));
+		break;
+	}
 }
 
 int main(int argc, char* argv[]) {
@@ -156,6 +206,26 @@ int main(int argc, char* argv[]) {
 	gui_btn->setCallback(kbd_up);
 	gui_btn = new Button(gui_bg, WIDTH - 250, 75, "Down", kbd);
 	gui_btn->setCallback(kbd_dn);
+
+	psel1 = new PictureSelector(gui_bg, WIDTH - 250, 100, 32, 32);
+	psel1->addPicture("data/images/sine.png");
+	psel1->addPicture("data/images/saw.png");
+	psel1->addPicture("data/images/square.png");
+	psel1->setCallback(osc1Callback);
+
+	psel2 = new PictureSelector(gui_bg, WIDTH - 250, 140, 32, 32);
+	psel2->addPicture("data/images/sine.png");
+	psel2->addPicture("data/images/saw.png");
+	psel2->addPicture("data/images/square.png");
+	psel2->setCallback(osc2Callback);
+
+	psel3 = new PictureSelector(gui_bg, WIDTH - 250, 180, 32, 32);
+	psel3->addPicture("data/images/sine.png");
+	psel3->addPicture("data/images/saw.png");
+	psel3->addPicture("data/images/square.png");
+	psel3->setCallback(osc3Callback);
+
+	new Image(gui_bg, WIDTH - 258, 92, 48, 128, "data/images/oscsel.png");
 
 	// Main event loop
 	SDL_Event e;

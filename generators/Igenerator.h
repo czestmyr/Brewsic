@@ -11,9 +11,11 @@ class IGenerator {
 			setFreq(frequency);
 		}
 
-		virtual ~IGenerator() {};
+		virtual ~IGenerator() {}
 
 		virtual void generate(int bufsize, float* buffer) = 0;
+
+		virtual IGenerator* clone() = 0;
 
 		float getFreq() { return _freq; }
 

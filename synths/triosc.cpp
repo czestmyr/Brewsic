@@ -4,6 +4,17 @@
 
 using namespace std;
 
+void TripleOscillator::setGenerator(int oscId, IGenerator* gen) {
+	if (oscId < 0 || oscId >= 3) return;
+	for (int i = 0; i < POLYPHONY; ++i) {
+		delete _generators[i][oscId];
+		if (i == 0)
+			_generators[i][oscId] = gen;
+		else
+			_generators[i][oscId] = gen->clone();
+	}
+}
+
 void TripleOscillator::startNote(int noteId, float frequency) {
 	//Prevent retriggering
 	for (int i = 0; i < POLYPHONY; ++i) {
