@@ -22,6 +22,7 @@
 #include "gui/keyboard.h"
 #include "gui/pselect.h"
 #include "gui/image.h"
+#include "gui/wheel.h"
 
 using namespace std;
 
@@ -116,11 +117,9 @@ void osc1Callback(void* data) {
 	switch (psel1->getSelection()) {
 		case 0:
 			osc.setGenerator(0, new SineGenerator(440));
-			std::cout << "Setting sine generator for osc1" << std::endl;
 		break;
 		case 1:
 			osc.setGenerator(0, new SawGenerator(440));
-			std::cout << "Setting saw generator for osc1" << std::endl;
 		break;
 		case 2:
 			osc.setGenerator(0, new SquareGenerator(440));
@@ -154,6 +153,17 @@ void osc3Callback(void* data) {
 			osc.setGenerator(2, new SquareGenerator(440));
 		break;
 	}
+}
+
+Wheel* w1;
+Wheel* w2;
+
+void wheel1Callback(void* data) {
+	osc.setFirst(w1->getValue());
+}
+
+void wheel2Callback(void* data) {
+	osc.setSecond(w2->getValue());
 }
 
 int main(int argc, char* argv[]) {
@@ -226,6 +236,11 @@ int main(int argc, char* argv[]) {
 	psel3->setCallback(osc3Callback);
 
 	new Image(gui_bg, WIDTH - 258, 92, 48, 128, "data/images/oscsel.png");
+
+	w1 = new Wheel(gui_bg, WIDTH - 250, 230, 20, 20, -100, 100);
+	w2 = new Wheel(gui_bg, WIDTH - 275, 230, 20, 20, -100, 100);
+	w1->setCallback(wheel1Callback);
+	w2->setCallback(wheel2Callback);
 
 	// Main event loop
 	SDL_Event e;
