@@ -71,6 +71,24 @@ void GuiMgr::mouseMove(int x, int y, int dx, int dy) {
 	}
 }
 
+void GuiMgr::keyPress(SDLKey sym) {
+	std::vector<IControl*>::iterator it = _controls.begin();
+	while (it != _controls.end()) {
+		if ((*it)->recursiveKeyPress(sym))
+			return;
+		++it;
+	}
+}
+
+void GuiMgr::keyRelease(SDLKey sym) {
+	std::vector<IControl*>::iterator it = _controls.begin();
+	while (it != _controls.end()) {
+		if ((*it)->recursiveKeyRelease(sym))
+			return;
+		++it;
+	}
+}
+
 void GuiMgr::draw(SDL_Surface* surf) {
 	std::vector<IControl*>::iterator it = _controls.begin();
 	while (it != _controls.end()) {

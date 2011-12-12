@@ -13,6 +13,8 @@ class Window: public IControl {
 		bool leftPress(int x, int y);
 		bool leftRelease(int x, int y);
 		bool mouseMove(int x, int y, int dx, int dy);
+		bool keyPress(SDLKey sym);
+		bool keyRelease(SDLKey sym);
 
 		int getYMin() { return _title_h; }
 		int getYMax() { return _h - _status_h; }

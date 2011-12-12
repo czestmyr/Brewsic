@@ -61,3 +61,13 @@ bool Window::mouseMove(int x, int y, int dx, int dy) {
 	return true;
 }
 
+bool Window::keyPress(SDLKey sym) {
+	_status = "Pressed a key...";
+	return true;
+}
+
+bool Window::keyRelease(SDLKey sym) {
+	_status = "Released a key...";
+	return true;
+}
+

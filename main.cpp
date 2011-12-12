@@ -161,11 +161,10 @@ int main(int argc, char* argv[]) {
 					gui.mouseMove(e.motion.x, e.motion.y, e.motion.xrel, e.motion.yrel);
 				break;
 				case SDL_KEYDOWN:
-					switch (e.key.keysym.sym) {
-						case SDLK_ESCAPE:
-							cont = false;
-						break;
-					}
+					gui.keyPress(e.key.keysym.sym);
+				break;
+				case SDL_KEYUP:
+					gui.keyRelease(e.key.keysym.sym);
 				break;
 				case SDL_QUIT:
 					cont = false;

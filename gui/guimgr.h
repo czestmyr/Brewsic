@@ -20,6 +20,8 @@ class GuiMgr {
 		void leftRelease(int x, int y);
 		void rightRelease(int x, int y);
 		void mouseMove(int x, int y, int dx, int dy);
+		void keyPress(SDLKey sym);
+		void keyRelease(SDLKey sym);
 
 		void draw(SDL_Surface* surf);
 

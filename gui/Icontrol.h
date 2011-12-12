@@ -25,6 +25,8 @@ class IControl {
 		virtual bool leftRelease(int x, int y) { return false; }
 		virtual bool rightRelease(int x, int y) { return false; }
 		virtual bool mouseMove(int x, int y, int dx, int dy) { return false; }
+		virtual bool keyPress(SDLKey sym) { return false; }
+		virtual bool keyRelease(SDLKey sym) { return false; }
 
 		virtual bool inside(int x, int y) { 
 			if (x >= _x && x <= _x + _w && y >= _y && y <= _y + _h) return true;
@@ -155,6 +157,38 @@ class IControl {
 			} else {
 				return false;
 			}
+		}
+
+		bool recursiveKeyPress(SDLKey sym) {
+			if (keyPress(sym)) {
+				return true;
+			}
+
+			_it = _children.begin();
+			while (_it != _children.end()) {
+				if ((*_it)->recursiveKeyPress(sym)) {
+					return true;
+				}
+				++_it;
+			}
+
+			return false;
+		}
+
+		bool recursiveKeyRelease(SDLKey sym) {
+			if (keyRelease(sym)) {
+				return true;
+			}
+
+			_it = _children.begin();
+			while (_it != _children.end()) {
+				if ((*_it)->recursiveKeyRelease(sym)) {
+					return true;
+				}
+				++_it;
+			}
+
+			return false;
 		}
 
 		void redim(int x, int y, int w, int h) {
