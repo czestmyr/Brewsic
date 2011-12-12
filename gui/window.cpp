@@ -1,6 +1,8 @@
 #include "window.h"
 #include "fonts.h"
 
+#include <iostream>
+
 Window::Window(IControl* parent, int x, int y, int w, int h, const char* title)
 : IControl(parent) {
 	redim(x, y, w, h);

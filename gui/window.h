@@ -15,7 +15,9 @@ class Window: public IControl {
 		bool mouseMove(int x, int y, int dx, int dy);
 
 		int getYMin() { return _title_h; }
-		int getYMax() { return _h - _title_h - _status_h; }
+		int getYMax() { return _h - _status_h; }
+		int getXMin() { return 1; }
+		int getXMax() { return _w-1; }
 	protected:
 		std::string _name;
 		std::string _status;

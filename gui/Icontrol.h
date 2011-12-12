@@ -65,7 +65,7 @@ class IControl {
 
 			_rit = _children.rbegin();
 			while (_rit != _children.rend()) {
-				(*_rit)->draw(surf, orig_x + _x, orig_y + _y);
+				(*_rit)->recursiveDraw(surf, orig_x + _x, orig_y + _y);
 				++_rit;
 			}
 		}
