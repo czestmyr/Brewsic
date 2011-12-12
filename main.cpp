@@ -18,6 +18,7 @@
 #include "gui/window.h"
 #include "gui/background.h"
 #include "gui/button.h"
+#include "gui/style.h"
 
 using namespace std;
 
@@ -130,7 +131,8 @@ int main(int argc, char* argv[]) {
 	gui.adoptControl(gui_bg);
 	IControl* gui_outer = new Window(gui_bg, 10, 10, 500, 300, "Outer window");
 	IControl* gui_inner = new Window(gui_outer, 10, 10, 300, 200, "Inner window");
-	Button* gui_btn = new Button(gui_outer, 100, 100, "Some text");
+
+	Button* gui_btn = new Button(gui_bg, WIDTH, 5, "Quit Brewsic");
 	gui_btn->setCallback(exitCallback);
 
 	// Main event loop
@@ -173,7 +175,9 @@ int main(int argc, char* argv[]) {
 
 		if (g_quit) cont = false;
 
-		SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+		SDL_Color shadecol = Style::inst()->getShadeColor();
+		Uint32 shade = SDL_MapRGB(screen->format, shadecol.r, shadecol.g, shadecol.b);
+		SDL_FillRect(screen, NULL, shade);
 		gui.draw(screen);
 		SDL_Flip(screen);
 	}
