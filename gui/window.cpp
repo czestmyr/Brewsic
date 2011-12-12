@@ -1,12 +1,12 @@
 #include "window.h"
 #include "fonts.h"
 
-Window::Window(IControl* parent, int x, int y, int w, int h)
+Window::Window(IControl* parent, int x, int y, int w, int h, const char* title)
 : IControl(parent) {
 	redim(x, y, w, h);
 	_status_h = 20;
 	_title_h = 20;
-	_name = "Unnamed Window";
+	_name = title;
 	_dragging = false;
 }
 
@@ -38,7 +38,7 @@ void Window::draw(SDL_Surface* surf, int orig_x, int orig_y) {
 }
 
 bool Window::leftPress(int x, int y) {
-	if (y < _y + _title_h) {
+	if (y <= _y + _title_h) {
 		_dragging = true;
 		_status = "dragging...";
 	}

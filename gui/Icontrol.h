@@ -2,7 +2,7 @@
 #define _INTERFACE_CONTROL_H_
 
 #include <SDL.h>
-#include <vector>
+#include <list>
 
 class IControl {
 	public:
@@ -63,10 +63,10 @@ class IControl {
 		void recursiveDraw(SDL_Surface* surf, int orig_x, int orig_y) {
 			draw(surf, orig_x, orig_y);
 
-			_it = _children.begin();
-			while (_it != _children.end()) {
-				(*_it)->draw(surf, orig_x + _x, orig_y + _y);
-				++_it;
+			_rit = _children.rbegin();
+			while (_rit != _children.rend()) {
+				(*_rit)->draw(surf, orig_x + _x, orig_y + _y);
+				++_rit;
 			}
 		}
 
@@ -178,14 +178,28 @@ class IControl {
 		int getH() { return _h; }
 		int getX() { return _x; }
 		int getY() { return _y; }
+
+		void toFront() { if (_parent) _parent->childToFront(this); }
+		void childToFront(IControl* child) {
+			_it = _children.begin();
+			while (_it != _children.end()) {
+				if ((*_it) == child) {
+					_children.remove(child);
+					_children.push_front(child);
+					return;
+				}
+				++_it;
+			}
+		}
 	protected:
 		int _x;
 		int _y;
 		int _w;
 		int _h;
 
-		std::vector<IControl*> _children;
-		std::vector<IControl*>::iterator _it;
+		std::list<IControl*> _children;
+		std::list<IControl*>::iterator _it;
+		std::list<IControl*>::reverse_iterator _rit;
 		IControl* _parent;
 };
 

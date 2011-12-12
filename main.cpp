@@ -121,7 +121,8 @@ int main(int argc, char* argv[]) {
 	GuiMgr gui;
 	IControl* gui_bg = new Background(NULL, 4, 4, WIDTH-8, HEIGHT-8);
 	gui.adoptControl(gui_bg);
-	new Window(gui_bg, 10, 10, 500, 300);
+	IControl* gui_outer = new Window(gui_bg, 10, 10, 500, 300, "Outer window");
+	IControl* gui_inner = new Window(gui_bg, 10, 10, 300, 200, "Inner window");
 
 	// Main event loop
 	SDL_Event e;

@@ -8,6 +8,7 @@ void GuiMgr::leftPress(int x, int y) {
 		ptr = (*it)->recursiveLeftPress(x,y);
 		if (ptr) {
 			_drag = ptr;
+			_drag->toFront();
 			break;
 		}
 		++it;
