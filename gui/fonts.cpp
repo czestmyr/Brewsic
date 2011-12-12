@@ -27,3 +27,19 @@ void Fonts::renderText(const char* text, SDL_Surface* surf, int x, int y, SDL_Co
 	SDL_BlitSurface(textSurf, NULL, surf, &dst);
 	SDL_FreeSurface(textSurf);
 }
+
+SDL_Surface* Fonts::getRenderedText(const char* text, SDL_Surface* surf, SDL_Color color) {
+	SDL_Surface* textSurf = TTF_RenderText_Blended(_16pt, text, color);
+	if (!textSurf) {
+		std::cerr << "Could not render text: " << TTF_GetError() << std::endl;
+		return NULL;
+	}
+	return textSurf;
+}
+
+int Fonts::getTextWidth(const char* text) {
+	int retval;
+	TTF_SizeText(_16pt, text, &retval, NULL);
+	return retval;
+}
+

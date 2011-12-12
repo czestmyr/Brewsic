@@ -17,6 +17,7 @@
 #include "gui/guimgr.h"
 #include "gui/window.h"
 #include "gui/background.h"
+#include "gui/button.h"
 
 using namespace std;
 
@@ -84,6 +85,12 @@ void audioCallback(void *userdata, Uint8 *stream, int len) {
 //	}
 }
 
+bool g_quit = false;
+
+void exitCallback(void* data) {
+	g_quit = true;
+}
+
 int main(int argc, char* argv[]) {
 	// Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
@@ -123,6 +130,8 @@ int main(int argc, char* argv[]) {
 	gui.adoptControl(gui_bg);
 	IControl* gui_outer = new Window(gui_bg, 10, 10, 500, 300, "Outer window");
 	IControl* gui_inner = new Window(gui_outer, 10, 10, 300, 200, "Inner window");
+	Button* gui_btn = new Button(gui_outer, 100, 100, "Some text");
+	gui_btn->setCallback(exitCallback);
 
 	// Main event loop
 	SDL_Event e;
@@ -161,6 +170,8 @@ int main(int argc, char* argv[]) {
 				break;
 			}
 		}
+
+		if (g_quit) cont = false;
 
 		SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
 		gui.draw(screen);

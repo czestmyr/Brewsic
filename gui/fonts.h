@@ -16,6 +16,8 @@ class Fonts {
 		}
 
 		void renderText(const char* text, SDL_Surface* surf, int x, int y, SDL_Color color);
+		SDL_Surface* getRenderedText(const char* text, SDL_Surface* surf, SDL_Color color);
+		int getTextWidth(const char* text);
 	private:
 		static Fonts* _inst;
 
