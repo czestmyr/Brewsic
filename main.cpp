@@ -16,11 +16,15 @@
 #include "synths/triosc.h"
 #include "gui/guimgr.h"
 #include "gui/window.h"
+#include "gui/background.h"
 
 using namespace std;
 
 #define _FREQ 22050
 #define _SAMPLES 256
+
+#define WIDTH 800
+#define HEIGHT 600
 
 SquareGenerator ga(20);
 SineGenerator gb(80);
@@ -109,9 +113,15 @@ int main(int argc, char* argv[]) {
 
 	free(desired);
 
-	SDL_Surface* screen = SDL_SetVideoMode(640, 480, 32, 0);
+	SDL_Surface* screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, 0);
 
 	SDL_PauseAudio(0);
+
+	// Gui setup
+	GuiMgr gui;
+	IControl* gui_bg = new Background(NULL, 10, 10, WIDTH-20, HEIGHT-20);
+	gui.adoptControl(gui_bg);
+	new Window(gui_bg, 10, 10, 500, 300);
 
 	// Main event loop
 	SDL_Event e;
@@ -121,6 +131,23 @@ int main(int argc, char* argv[]) {
 
 		while (SDL_PollEvent(&e)) {
 			switch (e.type) {
+				case SDL_MOUSEBUTTONDOWN:
+					if (e.button.button == SDL_BUTTON_LEFT) {
+						gui.leftPress(e.button.x, e.button.y);
+					} else if (e.button.button == SDL_BUTTON_RIGHT) {
+						gui.rightPress(e.button.x, e.button.y);
+					}
+				break;
+				case SDL_MOUSEBUTTONUP:
+					if (e.button.button == SDL_BUTTON_LEFT) {
+						gui.leftRelease(e.button.x, e.button.y);
+					} else if (e.button.button == SDL_BUTTON_RIGHT) {
+						gui.rightRelease(e.button.x, e.button.y);
+					}
+				break;
+				case SDL_MOUSEMOTION:
+					gui.mouseMove(e.motion.x, e.motion.y, e.motion.xrel, e.motion.yrel);
+				break;
 				case SDL_KEYDOWN:
 					switch (e.key.keysym.sym) {
 						case SDLK_ESCAPE:
@@ -133,6 +160,10 @@ int main(int argc, char* argv[]) {
 				break;
 			}
 		}
+
+		SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+		gui.draw(screen);
+		SDL_Flip(screen);
 	}
 
 //	ofile.close();

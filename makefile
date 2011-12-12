@@ -1,8 +1,8 @@
-LDFLAGS  = `sdl-config --libs`
+LDFLAGS  = `sdl-config --libs` -lSDL_ttf
 CXXFLAGS = `sdl-config --cflags` -g -include draw/SDL_draw.h
 NAME     = brewsic
 
-OBJECTS = main.o mixer.o generators/sine.o generators/saw.o generators/square.o filters/gate.o filters/adsr.o filters/delay.o synths/triosc.o filters/flanger.o gui/guimgr.o gui/window.o
+OBJECTS = main.o mixer.o generators/sine.o generators/saw.o generators/square.o filters/gate.o filters/adsr.o filters/delay.o synths/triosc.o filters/flanger.o gui/guimgr.o gui/window.o gui/fonts.o gui/background.o
 SDL_DRAW = draw/SDL_draw.o
 
 ${NAME}: ${OBJECTS} ${SDL_DRAW}

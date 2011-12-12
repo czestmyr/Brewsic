@@ -19,7 +19,7 @@ class GuiMgr {
 		void rightPress(int x, int y);
 		void leftRelease(int x, int y);
 		void rightRelease(int x, int y);
-		void mouseMove(int dx, int dy);
+		void mouseMove(int x, int y, int dx, int dy);
 
 		void draw(SDL_Surface* surf);
 
