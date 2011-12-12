@@ -19,6 +19,7 @@
 #include "gui/background.h"
 #include "gui/button.h"
 #include "gui/style.h"
+#include "gui/keyboard.h"
 
 using namespace std;
 
@@ -92,6 +93,19 @@ void exitCallback(void* data) {
 	g_quit = true;
 }
 
+void kbd_up(void* data) {
+	Keyboard* kbd = (Keyboard*)data;
+	int shift = kbd->getShift() - 20;
+	if (shift < 0) shift = 0;
+	kbd->setShift(shift);
+}
+
+void kbd_dn(void* data) {
+	Keyboard* kbd = (Keyboard*)data;
+	int shift = kbd->getShift() + 20;
+	kbd->setShift(shift);
+}
+
 int main(int argc, char* argv[]) {
 	// Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
@@ -129,11 +143,19 @@ int main(int argc, char* argv[]) {
 	GuiMgr gui;
 	IControl* gui_bg = new Background(NULL, 4, 4, WIDTH-8, HEIGHT-8);
 	gui.adoptControl(gui_bg);
-	IControl* gui_outer = new Window(gui_bg, 10, 10, 500, 300, "Outer window");
-	IControl* gui_inner = new Window(gui_outer, 10, 10, 300, 200, "Inner window");
+	//IControl* gui_outer = new Window(gui_bg, 10, 10, 500, 300, "Outer window");
+	//IControl* gui_inner = new Window(gui_outer, 10, 10, 300, 200, "Inner window");
 
 	Button* gui_btn = new Button(gui_bg, WIDTH, 5, "Quit Brewsic");
 	gui_btn->setCallback(exitCallback);
+
+	Keyboard* kbd = new Keyboard(gui_bg, WIDTH - 200, 50, 400);
+	kbd->setSynth(&osc);
+
+	gui_btn = new Button(gui_bg, WIDTH - 250, 50, "Up", kbd);
+	gui_btn->setCallback(kbd_up);
+	gui_btn = new Button(gui_bg, WIDTH - 250, 75, "Down", kbd);
+	gui_btn->setCallback(kbd_dn);
 
 	// Main event loop
 	SDL_Event e;
