@@ -5,7 +5,7 @@
 
 class Window: public IControl {
 	public:
-		Window(int x, int y, int w, int h);
+		Window(IControl*, int x, int y, int w, int h);
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);
 };
 

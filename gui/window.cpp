@@ -1,7 +1,6 @@
 #include "window.h"
-#include "../draw/SDL_draw.h"
 
-Window::Window(IControl parent, int x, int y, int w, int h)
+Window::Window(IControl* parent, int x, int y, int w, int h)
 : IControl(parent) {
 	redim(x, y, w, h);
 }

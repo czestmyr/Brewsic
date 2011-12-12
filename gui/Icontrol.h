@@ -28,7 +28,7 @@ class IControl {
 
 			_it = _children.begin();
 			while (_it != _children.end()) {
-				(*_it)->draw(surf orig_x + _x, orig_y + _y);
+				(*_it)->draw(surf, orig_x + _x, orig_y + _y);
 				++_it;
 			}
 		}
@@ -113,7 +113,7 @@ class IControl {
 			}
 		}
 
-		void redim(int int x, int y, int w, int h) {
+		void redim(int x, int y, int w, int h) {
 			_x = x; _y = y; _w = w; _h = h;
 		}
 

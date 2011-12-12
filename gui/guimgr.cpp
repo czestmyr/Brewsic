@@ -35,15 +35,15 @@ void GuiMgr::rightRelease(int x, int y) {
 void GuiMgr::mouseMove(int dx, int dy) {
 	std::vector<IControl*>::iterator it = _controls.begin();
 	while (it != _controls.end()) {
-		if ((*it)->recursiveMouseMove(x,y)) break;
+		if ((*it)->recursiveMouseMove(dx,dy)) break;
 		++it;
 	}
 }
 
-void GuiMgr::draw() {
+void GuiMgr::draw(SDL_Surface* surf) {
 	std::vector<IControl*>::iterator it = _controls.begin();
 	while (it != _controls.end()) {
-		(*it)->recursiveDraw(0,0);
+		(*it)->recursiveDraw(surf, 0, 0);
 		++it;
 	}
 }

@@ -6,7 +6,7 @@
 
 class GuiMgr {
 	public:
-		GuiMgr(): _drag(0); {}
+		GuiMgr(): _drag(0) {}
 		~GuiMgr() {
 			std::vector<IControl*>::iterator it = _controls.begin();
 			while (it != _controls.end()) {
@@ -21,7 +21,7 @@ class GuiMgr {
 		void rightRelease(int x, int y);
 		void mouseMove(int dx, int dy);
 
-		void draw();
+		void draw(SDL_Surface* surf);
 
 		void adoptControl(IControl* control) {
 			_controls.push_back(control);
