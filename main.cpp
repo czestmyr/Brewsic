@@ -23,6 +23,7 @@
 #include "gui/pselect.h"
 #include "gui/image.h"
 #include "gui/wheel.h"
+#include "gui/style.h"
 
 using namespace std;
 
@@ -83,11 +84,6 @@ void audioCallback(void *userdata, Uint8 *stream, int len) {
 	mix.mixIn(a);
 
 	mix.copyBuffer((Uint16*)stream);
-
-//Test: output into a raw file
-//	for (int i = 0; i < len; ++i) {
-//		ofile << mix.getBuffer()[i];
-//	}
 }
 
 bool g_quit = false;
@@ -287,8 +283,6 @@ int main(int argc, char* argv[]) {
 		gui.draw(screen);
 		SDL_Flip(screen);
 	}
-
-//	ofile.close();
 
 	SDL_CloseAudio();
 	free(obtained);

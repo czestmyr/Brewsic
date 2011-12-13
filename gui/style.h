@@ -18,6 +18,9 @@ class Style {
 		SDL_Color getFgColor() { return _fgcolor; }
 		SDL_Color getShadeColor() { return _shade; }
 		SDL_Color getLightColor() { return _light; }
+
+		void drawInset(SDL_Surface* surf, int x, int y, int w, int h, int depth);
+		void drawOutset(SDL_Surface* surf, int x, int y, int w, int h, int depth);
 	private:
 		static Style* _inst;
 

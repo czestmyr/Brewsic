@@ -1,4 +1,5 @@
 #include "button.h"
+#include "style.h"
 #include "fonts.h"
 
 Button::Button(IControl* parent, int x, int y, const char* text, void* data)
@@ -20,22 +21,17 @@ void Button::draw(SDL_Surface* surf, int orig_x, int orig_y) {
 	Uint32 darkest = SDL_MapRGB(surf->format, 32, 32, 50);
 
 	SDL_Rect dst;
+	int x = orig_x + _x;
+	int y = orig_y + _y;
+
 	if (_pressed) {
-		dst.x = orig_x + _x + 2; dst.y = orig_y + _y + 2; dst.w = _w - 4; dst.h = _h - 4;
+		dst.x = x; dst.y = y; dst.w = _w; dst.h = _h;
 		SDL_FillRect(surf, &dst, darkest);
-		Draw_VLine(surf, orig_x + _x         , orig_y + _y         , orig_y + _y + _h - 2, dark);
-		Draw_VLine(surf, orig_x + _x + _w - 1, orig_y + _y + 1     , orig_y + _y + _h - 2, dark);
-		Draw_HLine(surf, orig_x + _x         , orig_y + _y         , orig_x + _x + _w - 2, dark);
-		Draw_HLine(surf, orig_x + _x + 1     , orig_y + _y + _h - 1, orig_x + _x + _w - 2, dark);
-		Draw_Rect (surf, orig_x + _x + 1     , orig_y + _y + 1     , _w-2, _h-2, light);
+		Style::inst()->drawInset(surf, x, y, _w, _h, 2);
 	} else {
-		dst.x = orig_x + _x + 3; dst.y = orig_y + _y + 3; dst.w = _w - 4; dst.h = _h - 4;
+		dst.x = x; dst.y = y; dst.w = _w; dst.h = _h;
 		SDL_FillRect(surf, &dst, darkest);
-		Draw_VLine(surf, orig_x + _x    , orig_y + _y    , orig_y + _y + _h - 2, dark);
-		Draw_VLine(surf, orig_x + _x + 1, orig_y + _y + 1, orig_y + _y + _h - 1, dark);
-		Draw_HLine(surf, orig_x + _x    , orig_y + _y    , orig_x + _x + _w - 2, dark);
-		Draw_HLine(surf, orig_x + _x + 1, orig_y + _y + 1, orig_x + _x + _w - 1, dark);
-		Draw_Rect (surf, orig_x + _x + 2, orig_y + _y + 2, _w-2, _h-2, light);
+		Style::inst()->drawOutset(surf, x, y, _w, _h, 2);
 	}
 
 	if (!_textSurf) {
@@ -44,8 +40,8 @@ void Button::draw(SDL_Surface* surf, int orig_x, int orig_y) {
 		_textSurf = Fonts::inst()->getRenderedText(_text.c_str(), surf, textCol);
 	}
 
-	dst.x = orig_x + _x + (_pressed?5:6);
-	dst.y = orig_y + _y + (_pressed?2:3);
+	dst.x = x + (_pressed?4:5);
+	dst.y = y + (_pressed?1:2);
 	SDL_BlitSurface(_textSurf, NULL, surf, &dst);
 }
 
