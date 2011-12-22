@@ -22,7 +22,6 @@ class Wheel: public IControl, IObserver {
 		void disconnect();
 	private:
 		void setValueInternal(float val, bool bySignal = false);
-		void* _data;
 
 		int _r;
 
