@@ -23,6 +23,7 @@
 #include "gui/pselect.h"
 #include "gui/image.h"
 #include "gui/wheel.h"
+#include "gui/slider.h"
 #include "gui/style.h"
 
 #include "common/propertytest.h"
@@ -155,6 +156,7 @@ void osc3Callback(void* data) {
 
 Wheel* w1;
 Wheel* w2;
+Slider* s1;
 
 void wheel1Callback(void* data) {
 	osc.setFirst(w1->getValue());
@@ -235,6 +237,8 @@ int main(int argc, char* argv[]) {
 
 	w1 = new Wheel(gui_bg, WIDTH - 250, 230, 20, 20, -300, 300, &osc._first);
 	w2 = new Wheel(gui_bg, WIDTH - 275, 230, 20, 20, -100, 100, &osc._second);
+
+	s1 = new Slider(gui_bg, WIDTH - 300, 230, 100, -100, 100, &osc._shift);
 
 	// Main event loop
 	SDL_Event e;
