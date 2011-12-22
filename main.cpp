@@ -233,8 +233,6 @@ int main(int argc, char* argv[]) {
 	psel3->addPicture("data/images/square.png");
 	psel3->setCallback(osc3Callback);
 
-	new Image(gui_bg, WIDTH - 258, 92, 48, 128, "data/images/oscsel.png");
-
 	w1 = new Wheel(gui_bg, WIDTH - 250, 230, 20, 20, -300, 300, &osc._first);
 	w2 = new Wheel(gui_bg, WIDTH - 275, 230, 20, 20, -100, 100, &osc._second);
 
