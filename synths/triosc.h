@@ -2,12 +2,13 @@
 #define _TRIPLE_OSCILLATOR_
 
 #include "Isynth.h"
-#include "../mixer.h"
-#include "../generators/Igenerator.h"
-#include "../generators/saw.h"
-#include "../generators/square.h"
-#include "../generators/sine.h"
-#include "../filters/adsr.h"
+#include "mixer.h"
+#include "generators/Igenerator.h"
+#include "generators/saw.h"
+#include "generators/square.h"
+#include "generators/sine.h"
+#include "filters/adsr.h"
+#include "common/property.h"
 
 #include <queue>
 
@@ -48,6 +49,7 @@ class TripleOscillator: public ISynth{
 		void startNote(int noteId, float frequency);
 		void stopNote(int noteId);
 		void generateOutput(float* buffer);
+
 	private:
 		Mixer _mixer;
 
@@ -60,9 +62,9 @@ class TripleOscillator: public ISynth{
 
 		int _bufsize;
 
-		float _shift;
-		float _first;
-		float _second;
+		Property<float> _shift;
+		Property<float> _first;
+		Property<float> _second;
 };
 
 #endif
