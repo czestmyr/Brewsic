@@ -244,6 +244,21 @@ int main(int argc, char* argv[]) {
 
 	ch1 = new Checkbox(gui_bg, WIDTH - 275, 255, 20, 20, NULL);
 
+	//Sequencer
+	int seq_size = 8;
+	int seq_length = 500;
+	int seq_ind = 0;
+	int seq_dur = 0;
+	Property<bool> sequencer[seq_size];
+	Checkbox* sqboxes[seq_size];
+	for (int i = 0; i < seq_size; ++i) {
+		sqboxes[seq_size] = new Checkbox(gui_bg, 50 + i*30, 50, 20, 20, &sequencer[i]);
+	} 
+
+	//Timing
+	Uint32 time = SDL_GetTicks();
+	Uint32 dt = 0;
+
 	// Main event loop
 	SDL_Event e;
 	bool cont = true;
@@ -280,6 +295,22 @@ int main(int argc, char* argv[]) {
 				break;
 			}
 		}
+
+		// Timing
+		dt = SDL_GetTicks() - time;
+		time += dt;
+
+		// Sequencer
+		seq_dur += dt;
+		while (seq_dur >= seq_length) {
+			osc.stopNote(seq_ind+1);
+			seq_dur -= seq_length;
+			seq_ind++;
+			if (seq_ind >= seq_size) seq_ind %= seq_size;
+			if (sequencer[seq_ind]) {
+				osc.startNote(seq_ind+1, 440.0*pow(2,seq_ind*1.0/12));
+			}
+		} 
 
 		if (g_quit) cont = false;
 

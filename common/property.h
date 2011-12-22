@@ -7,6 +7,7 @@
 template <class T>
 class Property {
 	public:
+		Property() {}
 		Property(const T& init): data(init) {}
 		Property(const T& init, IObserver* obs) {
 			data = init;
