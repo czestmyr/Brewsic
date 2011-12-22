@@ -9,14 +9,30 @@
 #include "generators/sine.h"
 #include "filters/adsr.h"
 #include "common/property.h"
+#include "trioscobserver.h"
 
 #include <queue>
 
 #define POLYPHONY 4
 
+enum {
+	PROP_FIRST,
+	PROP_SECOND,
+	PROP_SHIFT
+};
+
 class TripleOscillator: public ISynth{
 	public:
-		TripleOscillator(int bufsize): _bufsize(bufsize), _mixer(bufsize), _adsr(), _first(-1205.0), _second(-1195.0), _shift(0) {
+		TripleOscillator(int bufsize):
+			_bufsize(bufsize),
+			_mixer(bufsize),
+			_adsr(),
+			_first(-1205.0),
+			_first_obs(this, PROP_FIRST),
+			_second(-1195.0),
+			_second_obs(this, PROP_SECOND),
+			_shift(0),
+			_shift_obs(this, PROP_SHIFT) {
 			for (int i = 0; i < POLYPHONY; ++i) {
 				for (int j = 0; j < 3; ++j) {
 					_generators[i][j] = new SineGenerator(440.0);
@@ -50,7 +66,15 @@ class TripleOscillator: public ISynth{
 		void stopNote(int noteId);
 		void generateOutput(float* buffer);
 
+		Property<float> _shift;
+		Property<float> _first;
+		Property<float> _second;
 	private:
+		friend class TriOscObserver;
+		TriOscObserver _shift_obs;
+		TriOscObserver _first_obs;
+		TriOscObserver _second_obs;
+
 		Mixer _mixer;
 
 		Adsr* _adsr[POLYPHONY];
@@ -61,10 +85,6 @@ class TripleOscillator: public ISynth{
 		std::queue<int> _channelQueue;
 
 		int _bufsize;
-
-		Property<float> _shift;
-		Property<float> _first;
-		Property<float> _second;
 };
 
 #endif

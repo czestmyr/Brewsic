@@ -2,10 +2,12 @@
 #define _WHEEL_H_
 
 #include "Icontrol.h"
+#include "common/Iobserver.h"
+#include "common/property.h"
 
-class Wheel: public IControl {
+class Wheel: public IControl, IObserver {
 	public:
-		Wheel(IControl* parent, int x, int y, int w, int h, int min, int max, void* data = NULL);
+		Wheel(IControl* parent, int x, int y, int w, int h, float min, float max, Property<float>* prop = NULL);
 
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);
 
@@ -13,22 +15,25 @@ class Wheel: public IControl {
 		bool leftRelease(int x, int y);
 		bool mouseMove(int x, int y, int dx, int dy);
 
-		void setCallback(void (*callback)(void* data));
-		int getValue();
-		void setValue(int val);
+		float getValue();
+		void setValue(float val);
+
+		void signal();
+		void disconnect();
 	private:
-		void (*_callback)(void* data);
+		void setValueInternal(float val, bool bySignal = false);
 		void* _data;
 
 		int _r;
 
-		int _min;
-		int _max;
-		int _value;
+		float _min;
+		float _max;
+		float _value;
+		Property<float>* _prop;
 		float _inc;
 
 		int _pressed_y;
-		int _pressed_value;
+		float _pressed_value;
 		bool _pressed;
 };
 

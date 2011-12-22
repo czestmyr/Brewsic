@@ -37,6 +37,16 @@ class Property {
 		void addObserver(IObserver* observer) {
 			observers.push_back(observer);
 		}
+
+		void removeObserver(IObserver* observer) {
+			std::list<IObserver*>::iterator it = observers.begin();
+			while (it != observers.end()) {
+				if (*it == observer)
+					it = observers.erase(it);
+				else
+					++it;
+			}
+		}
 	private:
 		T data;
 

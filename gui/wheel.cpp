@@ -3,19 +3,23 @@
 #include "fonts.h"
 #include <cmath>
 
-Wheel::Wheel(IControl* parent, int x, int y, int w, int h, int min, int max, void* data)
-: IControl(parent), _data(data), _callback(NULL) {
+Wheel::Wheel(IControl* parent, int x, int y, int w, int h, float min, float max, Property<float>* prop)
+: IControl(parent), _prop(prop) {
 	redim(x, y, w, h);
 
+	if (prop) {
+		_prop->addObserver(this);
+	}
+
 	if (min > max) {
-		int swap = min;
+		float swap = min;
 		min = max;
 		max = swap;
 	}
 	_min = min;
 	_max = max;
 	_inc = (_max - _min) / 200.0;
-	setValue(0);
+	setValue(0.0);
 
 	_r = w<h ? w/2 : h/2;
 	_pressed = false;
@@ -35,7 +39,7 @@ void Wheel::draw(SDL_Surface* surf, int orig_x, int orig_y) {
 	Draw_FillCircle(surf, orig_x + _x + _r, orig_y + _y + _r, _r-2, fgcol);
 
 	// Calculate the angle at which the wheel should be right now
-	float t = (float(_max) - float(_value)) / (float(_max) - float(_min));
+	float t = (_max - _value) / (_max - _min);
 	float delta = 0.3;                               // Some small value to differentiate min and max
 	float phimin = 4.71238898 - delta + 6.283185307; // 4.71... = 3/2 * pi; 6.28... = 2 * pi
 	float phimax = 4.71238898 + delta;               // 4.71... = 3/2 * pi
@@ -48,7 +52,7 @@ void Wheel::draw(SDL_Surface* surf, int orig_x, int orig_y) {
 
 	if (_pressed) {
 		char buffer[32];
-		sprintf(buffer, "%i", _value);
+		sprintf(buffer, "%.1f", _value);
 		Fonts::inst()->renderText(buffer, surf, orig_x + _x + _r + x + 4, orig_y + _y + _r + y, text);
 	}
 }
@@ -73,20 +77,28 @@ bool Wheel::mouseMove(int x, int y, int dx, int dy) {
 	return false;
 }
 
-void Wheel::setCallback(void (*callback)(void* data)) {
-	_callback = callback;
-}
-
-int Wheel::getValue() {
+float Wheel::getValue() {
 	return _value;
 }
 
-void Wheel::setValue(int val) {
+void Wheel::setValue(float val) {
+	setValueInternal(val);
+}
+
+void Wheel::signal() {
+	setValueInternal(*_prop, true);
+}
+
+void Wheel::disconnect() {
+	_prop = NULL;
+}
+
+void Wheel::setValueInternal(float val, bool bySignal) {
 	if (val < _min) val = _min;
 	if (val > _max) val = _max;
 	_value = val;
 
-	if (_callback)
-		_callback(_data);
+	if (!bySignal && _prop)
+		*_prop = _value;
 }
 

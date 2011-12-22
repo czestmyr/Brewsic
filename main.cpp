@@ -235,15 +235,8 @@ int main(int argc, char* argv[]) {
 
 	new Image(gui_bg, WIDTH - 258, 92, 48, 128, "data/images/oscsel.png");
 
-	w1 = new Wheel(gui_bg, WIDTH - 250, 230, 20, 20, -100, 100);
-	w2 = new Wheel(gui_bg, WIDTH - 275, 230, 20, 20, -100, 100);
-	w1->setCallback(wheel1Callback);
-	w2->setCallback(wheel2Callback);
-
-	//Property test
-	PropertyTest ptest;
-	ptest.setNumber(1);
-	ptest.setNumber(2);
+	w1 = new Wheel(gui_bg, WIDTH - 250, 230, 20, 20, -300, 300, &osc._first);
+	w2 = new Wheel(gui_bg, WIDTH - 275, 230, 20, 20, -100, 100, &osc._second);
 
 	// Main event loop
 	SDL_Event e;
