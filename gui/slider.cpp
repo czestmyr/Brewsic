@@ -44,7 +44,8 @@ void Slider::draw(SDL_Surface* surf, int orig_x, int orig_y) {
 	Uint32 bgColU32 = SDL_MapRGB(surf->format, bgCol.r, bgCol.g, bgCol.b);
 	Draw_FillRect(surf, orig_x + _x, orig_y + _y + _button_y, _w, SLIDER_BUTTON_HEIGHT, bgColU32);
 
-	SDL_Color textCol = Style::inst()->getFgColor();
+	SDL_Color textCol;
+	textCol.r = textCol.g = textCol.b;
 	if (_pressed) {
 		Style::inst()->drawInset(surf, orig_x + _x, orig_y + _y + _button_y, _w, SLIDER_BUTTON_HEIGHT, 2);
 		char buffer[32];
