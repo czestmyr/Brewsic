@@ -1,2 +1,5 @@
 WAV-based generator
-piano roll sequecer with VG_View Agar widget
+piano roll sequecer
+3xosc gui
+multi-channel mixer
+filter gui
