@@ -1,5 +1,6 @@
-WAV-based generator
-piano roll sequecer
-3xosc gui
+convert all filters, generators and synths to use the new property system
 multi-channel mixer
+piano roll sequencer
+3xosc gui
 filter gui
+WAV-based generator
