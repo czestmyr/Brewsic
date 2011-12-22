@@ -1,4 +1,5 @@
 #include "style.h"
+#include "draw/SDL_draw.h"
 
 Style* Style::_inst = NULL;
 

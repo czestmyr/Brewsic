@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include <list>
+#include "draw/SDL_draw.h"
 
 class IControl {
 	public:
