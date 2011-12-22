@@ -44,13 +44,13 @@ include_directories(${SDLTTF_INCLUDE_DIR})
 include_directories(${SDLIMAGE_INCLUDE_DIR})
 
 add_executable(
-	updraft
+	brewsic
 	${CXX_SOURCES}
 	${C_SOURCES}
 )
 
 target_link_libraries(
-	updraft
+	brewsic
 	${SDL_LIBRARY}
 	${SDLTTF_LIBRARY}
 	${SDLIMAGE_LIBRARY}
