@@ -8,6 +8,12 @@ Checkbox::Checkbox(IControl* parent, int x, int y, int w, int h, Property<bool>*
 	setValueInternal(false);
 }
 
+Checkbox::~Checkbox() {
+	if (_prop) {
+		_prop->removeObserver(this);
+	}
+}
+
 void Checkbox::draw(SDL_Surface* surf, int orig_x, int orig_y) {
 	SDL_Color bg = Style::inst()->getBgColor();
 	SDL_Color fg = Style::inst()->getFgColor();

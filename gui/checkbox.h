@@ -8,6 +8,7 @@
 class Checkbox: public IControl, IObserver {
 	public:
 		Checkbox(IControl* parent, int x, int y, int w, int h, Property<bool>* prop = NULL);
+		~Checkbox();
 
 		void draw(SDL_Surface* surf, int x, int y);
 		bool leftPress(int x, int y);
