@@ -24,6 +24,7 @@
 #include "gui/image.h"
 #include "gui/wheel.h"
 #include "gui/slider.h"
+#include "gui/checkbox.h"
 #include "gui/style.h"
 
 #include "common/propertytest.h"
@@ -157,6 +158,7 @@ void osc3Callback(void* data) {
 Wheel* w1;
 Wheel* w2;
 Slider* s1;
+Checkbox* ch1;
 
 void wheel1Callback(void* data) {
 	osc.setFirst(w1->getValue());
@@ -239,6 +241,8 @@ int main(int argc, char* argv[]) {
 	w2 = new Wheel(gui_bg, WIDTH - 275, 230, 20, 20, -100, 100, &osc._second);
 
 	s1 = new Slider(gui_bg, WIDTH - 300, 230, 100, -100, 100, &osc._shift);
+
+	ch1 = new Checkbox(gui_bg, WIDTH - 275, 255, 20, 20, NULL);
 
 	// Main event loop
 	SDL_Event e;
