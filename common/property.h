@@ -13,6 +13,14 @@ class Property {
 			addObserver(obs);
 		}
 
+		~Property() {
+			std::list<IObserver*>::iterator it = observers.begin();
+			while (it != observers.end()) {
+				(*it)->disconnect();
+				++it;
+			}
+		}
+
 		operator const T&() const { return data; }
 		const T& operator=(const T& newVal) {
 			data = newVal;

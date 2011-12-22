@@ -4,6 +4,7 @@
 class IObserver {
 	public:
 		virtual void signal() = 0;
+		virtual void disconnect() {};
 };
 
 #endif
