@@ -25,6 +25,8 @@
 #include "gui/wheel.h"
 #include "gui/style.h"
 
+#include "common/propertytest.h"
+
 using namespace std;
 
 #define _FREQ 22050
@@ -237,6 +239,11 @@ int main(int argc, char* argv[]) {
 	w2 = new Wheel(gui_bg, WIDTH - 275, 230, 20, 20, -100, 100);
 	w1->setCallback(wheel1Callback);
 	w2->setCallback(wheel2Callback);
+
+	//Property test
+	PropertyTest ptest;
+	ptest.setNumber(1);
+	ptest.setNumber(2);
 
 	// Main event loop
 	SDL_Event e;
