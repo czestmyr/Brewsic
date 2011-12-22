@@ -47,6 +47,8 @@ void Button::draw(SDL_Surface* surf, int orig_x, int orig_y) {
 
 bool Button::leftPress(int x, int y) {
 	_pressed = true;
+
+	return true;
 }
 
 bool Button::leftRelease(int x, int y) {
@@ -56,5 +58,7 @@ bool Button::leftRelease(int x, int y) {
 		}
 	}
 	_pressed = false;
+
+	return true;
 }
 
