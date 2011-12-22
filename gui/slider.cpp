@@ -30,6 +30,12 @@ Slider::Slider(IControl* parent, int x, int y, int h, float min, float max, Prop
 	_pressed = false;
 }
 
+Slider::~Slider() {
+	if (_prop) {
+		_prop->removeObserver(this);
+	}
+}
+
 void Slider::draw(SDL_Surface* surf, int orig_x, int orig_y) {
 	Style::inst()->drawInset(
 		surf,

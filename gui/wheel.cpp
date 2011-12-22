@@ -25,6 +25,12 @@ Wheel::Wheel(IControl* parent, int x, int y, int w, int h, float min, float max,
 	_pressed = false;
 }
 
+Wheel::~Wheel() {
+	if (_prop) {
+		_prop->removeObserver(this);
+	}
+}
+
 void Wheel::draw(SDL_Surface* surf, int orig_x, int orig_y) {
 	SDL_Color light = Style::inst()->getLightColor();
 	SDL_Color fg = Style::inst()->getFgColor();
