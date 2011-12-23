@@ -43,7 +43,6 @@ void Window::draw(SDL_Surface* surf, int orig_x, int orig_y) {
 bool Window::leftPress(int x, int y) {
 	if (y <= _y + _title_h) {
 		_dragging = true;
-		_status = "dragging...";
 	}
 	return true;
 }
