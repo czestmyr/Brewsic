@@ -26,6 +26,7 @@
 #include "gui/slider.h"
 #include "gui/checkbox.h"
 #include "gui/style.h"
+#include "gui/filters/delaygui.h"
 
 #include "common/propertytest.h"
 
@@ -168,6 +169,17 @@ void wheel2Callback(void* data) {
 	osc.setSecond(w2->getValue());
 }
 
+IControl* gui_bg;
+DelayGui* dg = NULL;
+
+void dgCreateCallback(void* data) {
+	if (dg) {
+		gui_bg->leave(dg);
+		delete dg;
+	}
+	dg = new DelayGui(gui_bg, &delay);
+}
+
 int main(int argc, char* argv[]) {
 	// Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
@@ -203,7 +215,7 @@ int main(int argc, char* argv[]) {
 
 	// Gui setup
 	GuiMgr gui;
-	IControl* gui_bg = new Background(NULL, 4, 4, WIDTH-8, HEIGHT-8);
+	gui_bg = new Background(NULL, 4, 4, WIDTH-8, HEIGHT-8);
 	gui.adoptControl(gui_bg);
 	//IControl* gui_outer = new Window(gui_bg, 10, 10, 500, 300, "Outer window");
 	//IControl* gui_inner = new Window(gui_outer, 10, 10, 300, 200, "Inner window");
@@ -250,14 +262,21 @@ int main(int argc, char* argv[]) {
 	int seq_ind = 0;
 	int seq_dur = 0;
 	Property<bool> sequencer[seq_size];
+	Property<float> seq_freq[seq_size];
 	Checkbox* sqboxes[seq_size];
+	Slider* sqsliders[seq_size];
 	for (int i = 0; i < seq_size; ++i) {
 		sqboxes[seq_size] = new Checkbox(gui_bg, 50 + i*30, 50, 20, 20, &sequencer[i]);
+		sqsliders[seq_size] = new Slider(gui_bg, 50 + i*30, 75, 200, 100.0, 2000.0, &seq_freq[i]);
 	} 
 
 	//Timing
 	Uint32 time = SDL_GetTicks();
 	Uint32 dt = 0;
+
+	// Delay gui test
+	Button* dgCreate = new Button(gui_bg, 10, 290, "Create delay filter window");
+	dgCreate->setCallback(dgCreateCallback);
 
 	// Main event loop
 	SDL_Event e;
@@ -308,7 +327,7 @@ int main(int argc, char* argv[]) {
 			seq_ind++;
 			if (seq_ind >= seq_size) seq_ind %= seq_size;
 			if (sequencer[seq_ind]) {
-				osc.startNote(seq_ind+1, 440.0*pow(2,seq_ind*1.0/12));
+				osc.startNote(seq_ind+1, seq_freq[seq_ind]);
 			}
 		} 
 

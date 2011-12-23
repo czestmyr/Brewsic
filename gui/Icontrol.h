@@ -208,6 +208,9 @@ class IControl {
 		}
 
 		void adopt(IControl* child) { _children.push_back(child); }
+		void leave(IControl* child) {
+			_children.remove(child);
+		}
 
 		int getW() { return _w; }
 		int getH() { return _h; }

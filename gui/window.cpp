@@ -1,4 +1,5 @@
 #include "window.h"
+#include "button.h"
 #include "fonts.h"
 
 #include <iostream>

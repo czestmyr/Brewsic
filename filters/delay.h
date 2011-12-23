@@ -2,6 +2,7 @@
 #define _DELAY_FILTER_H_
 
 #include "Ifilter.h"
+#include "common/property.h"
 #include <cstring>
 
 class DelayFilter: public IFilter {
@@ -21,9 +22,10 @@ class DelayFilter: public IFilter {
 		};
 
 		void filter(int bufsize, float* buffer);
-	private:
-		float _atten;
 
+		Property<float> _atten;
+
+	private:
 		float* _loop;
 		int _loopidx;
 		int _maxidx;

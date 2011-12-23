@@ -13,10 +13,6 @@ Slider::Slider(IControl* parent, int x, int y, int h, float min, float max, Prop
 
 	redim(x, y, SLIDER_WIDTH, h);
 
-	if (prop) {
-		_prop->addObserver(this);
-	}
-
 	if (min > max) {
 		float swap = min;
 		min = max;
@@ -25,7 +21,13 @@ Slider::Slider(IControl* parent, int x, int y, int h, float min, float max, Prop
 	_min = min;
 	_max = max;
 	_inc = (_max - _min) / _h;
-	setValue(0.0);
+
+	if (prop) {
+		_prop->addObserver(this);
+		setValue(*_prop);
+	} else {
+		setValue(0.0);
+	}
 
 	_pressed = false;
 }
@@ -51,7 +53,7 @@ void Slider::draw(SDL_Surface* surf, int orig_x, int orig_y) {
 	Draw_FillRect(surf, orig_x + _x, orig_y + _y + _button_y, _w, SLIDER_BUTTON_HEIGHT, bgColU32);
 
 	SDL_Color textCol;
-	textCol.r = textCol.g = textCol.b;
+	textCol.r = textCol.g = textCol.b = 255.0;
 	if (_pressed) {
 		Style::inst()->drawInset(surf, orig_x + _x, orig_y + _y + _button_y, _w, SLIDER_BUTTON_HEIGHT, 2);
 		char buffer[32];
