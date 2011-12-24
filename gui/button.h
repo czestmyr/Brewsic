@@ -4,24 +4,27 @@
 #include <SDL.h>
 #include <string>
 #include "Icontrol.h"
+#include "common/Iobserver.h"
 
-class Button: public IControl {
+template <class T> class Property;
+
+class Button: public IControl, IObserver {
 	public:
-		Button(IControl* parent, int x, int y, const char* text = "A button", void* data = NULL);
+		Button(IControl* parent, int x, int y, const char* text = "A button", Property<int>* prop = NULL);
 		~Button();
 
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);
 		bool leftPress(int x, int y);
 		bool leftRelease(int x, int y);
-		void setCallback(void (*callback)(void* data)) { _callback = callback; }
+
+		void signal();
+		void disconnect();
 	protected:
+		Property<int>* _prop;
 		bool _pressed;
 
 		std::string _text;
 		SDL_Surface* _textSurf;
-
-		void* _data;
-		void (*_callback)(void* data);
 };
 
 #endif

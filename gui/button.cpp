@@ -1,12 +1,18 @@
 #include "button.h"
 #include "style.h"
 #include "fonts.h"
+#include "common/property.h"
 
-Button::Button(IControl* parent, int x, int y, const char* text, void* data)
-: IControl(parent), _text(text), _data(data), _callback(NULL) {
+Button::Button(IControl* parent, int x, int y, const char* text, Property<int>* prop)
+: IControl(parent), _text(text), _prop(prop) {
 	int w = Fonts::inst()->getTextWidth(text) + 8;
 	redim(x, y, w, 20);
 	_textSurf = NULL;
+
+	if (prop) {
+		_prop->addObserver(this);
+	}
+
 	_pressed = false;
 }
 
@@ -53,12 +59,18 @@ bool Button::leftPress(int x, int y) {
 
 bool Button::leftRelease(int x, int y) {
 	if (inside(x,y) && _pressed) {
-		if (_callback) {
-			_callback(_data);
+		if (_prop) {
+			*_prop = *_prop + 1;
 		}
 	}
 	_pressed = false;
 
 	return true;
+}
+
+void Button::signal() {}
+
+void Button::disconnect() {
+	_prop = NULL;
 }
 

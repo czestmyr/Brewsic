@@ -98,19 +98,6 @@ void exitCallback(void* data) {
 	g_quit = true;
 }
 
-void kbd_up(void* data) {
-	Keyboard* kbd = (Keyboard*)data;
-	int shift = kbd->getShift() - 20;
-	if (shift < 0) shift = 0;
-	kbd->setShift(shift);
-}
-
-void kbd_dn(void* data) {
-	Keyboard* kbd = (Keyboard*)data;
-	int shift = kbd->getShift() + 20;
-	kbd->setShift(shift);
-}
-
 PictureSelector* psel1;
 PictureSelector* psel2;
 PictureSelector* psel3;
@@ -185,6 +172,28 @@ void tgCreateCallback(void* data) {
 	new TripleOscillatorGui(gui_bg, &osc);
 }
 
+class KeyboardMover: public IObserver {
+	public:
+		KeyboardMover(Keyboard* kbd, bool up): _kbd(kbd), _up(up) {
+			_prop.addObserver(this);
+		}
+		void signal() {
+			if (_up) {
+				int shift = _kbd->getShift() - 20;
+				if (shift < 0) shift = 0;
+				_kbd->setShift(shift);
+			} else {
+				int shift = _kbd->getShift() + 20;
+				_kbd->setShift(shift);
+			}
+		}
+
+		Property<int> _prop;
+	private:
+		Keyboard* _kbd;
+		bool _up;
+};
+
 int main(int argc, char* argv[]) {
 	// Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
@@ -226,15 +235,14 @@ int main(int argc, char* argv[]) {
 	//IControl* gui_inner = new Window(gui_outer, 10, 10, 300, 200, "Inner window");
 
 	Button* gui_btn = new Button(gui_bg, WIDTH, 5, "Quit Brewsic");
-	gui_btn->setCallback(exitCallback);
 
 	Keyboard* kbd = new Keyboard(gui_bg, WIDTH - 200, 50, 400);
 	kbd->setSynth(&osc);
+	KeyboardMover kbd_up(kbd, true);
+	KeyboardMover kbd_dn(kbd, false);
 
-	gui_btn = new Button(gui_bg, WIDTH - 250, 50, "Up", kbd);
-	gui_btn->setCallback(kbd_up);
-	gui_btn = new Button(gui_bg, WIDTH - 250, 75, "Down", kbd);
-	gui_btn->setCallback(kbd_dn);
+	gui_btn = new Button(gui_bg, WIDTH - 250, 50, "Up", &kbd_up._prop);
+	gui_btn = new Button(gui_bg, WIDTH - 250, 75, "Down", &kbd_dn._prop);
 
 	psel1 = new PictureSelector(gui_bg, WIDTH - 250, 100, 32, 32);
 	psel1->addPicture("data/images/sine.png");
@@ -281,11 +289,9 @@ int main(int argc, char* argv[]) {
 
 	// Delay gui test
 	Button* dgCreate = new Button(gui_bg, 10, 290, "Create delay filter window");
-	dgCreate->setCallback(dgCreateCallback);
 
 	// Triosc gui test
 	Button* tgCreate = new Button(gui_bg, 10, 310, "Create 3xOsc GUI");
-	tgCreate->setCallback(tgCreateCallback);
 
 	// Main event loop
 	SDL_Event e;
