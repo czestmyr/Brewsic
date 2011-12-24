@@ -27,6 +27,7 @@
 #include "gui/checkbox.h"
 #include "gui/style.h"
 #include "gui/filters/delaygui.h"
+#include "gui/synths/triosc.h"
 
 #include "common/propertytest.h"
 
@@ -180,6 +181,10 @@ void dgCreateCallback(void* data) {
 	dg = new DelayGui(gui_bg, &delay);
 }
 
+void tgCreateCallback(void* data) {
+	new TripleOscillatorGui(gui_bg, &osc);
+}
+
 int main(int argc, char* argv[]) {
 	// Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
@@ -277,6 +282,10 @@ int main(int argc, char* argv[]) {
 	// Delay gui test
 	Button* dgCreate = new Button(gui_bg, 10, 290, "Create delay filter window");
 	dgCreate->setCallback(dgCreateCallback);
+
+	// Triosc gui test
+	Button* tgCreate = new Button(gui_bg, 10, 310, "Create 3xOsc GUI");
+	tgCreate->setCallback(tgCreateCallback);
 
 	// Main event loop
 	SDL_Event e;
