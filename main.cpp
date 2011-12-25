@@ -202,28 +202,14 @@ int main(int argc, char* argv[]) {
 	new Button(gui_bg, WIDTH - 250, 75, "Down", &kbd_dn._prop);
 
 	SafePtr<PictureSelector> psel1 = safe_new(PictureSelector(gui_bg, WIDTH - 250, 100, 32, 32, &osc._first_gen)).cast<PictureSelector>();
-	psel1->addPicture("data/images/sine.png");
-	psel1->addPicture("data/images/saw.png");
-	psel1->addPicture("data/images/square.png");
-
-/*	psel2 = new PictureSelector(gui_bg, WIDTH - 250, 140, 32, 32);
-	psel2->addPicture("data/images/sine.png");
-	psel2->addPicture("data/images/saw.png");
-	psel2->addPicture("data/images/square.png");
-	psel2->setCallback(osc2Callback);
-
-	psel3 = new PictureSelector(gui_bg, WIDTH - 250, 180, 32, 32);
-	psel3->addPicture("data/images/sine.png");
-	psel3->addPicture("data/images/saw.png");
-	psel3->addPicture("data/images/square.png");
-	psel3->setCallback(osc3Callback);
-
-	w1 = new Wheel(gui_bg, WIDTH - 250, 230, 20, 20, -300, 300, &osc._first);
-	w2 = new Wheel(gui_bg, WIDTH - 275, 230, 20, 20, -100, 100, &osc._second);
-
-	s1 = new Slider(gui_bg, WIDTH - 300, 230, 100, -100, 100, &osc._shift);
-
-	ch1 = new Checkbox(gui_bg, WIDTH - 275, 255, 20, 20, NULL);*/
+	SafePtr<PictureSelector> psel2 = safe_new(PictureSelector(gui_bg, WIDTH - 250, 140, 32, 32, &osc._second_gen)).cast<PictureSelector>();
+	SafePtr<PictureSelector> psel3 = safe_new(PictureSelector(gui_bg, WIDTH - 250, 180, 32, 32, &osc._third_gen)).cast<PictureSelector>();
+	for (int i = 0; i < (int)GEN_NUMBER; ++i) {
+		const char* filename = GeneratorFactory::inst()->getGeneratorPictureFilename((GeneratorType)i);
+		psel1->addPicture(filename);
+		psel2->addPicture(filename);
+		psel3->addPicture(filename);
+	}
 
 	//Sequencer
 	int seq_size = 8;

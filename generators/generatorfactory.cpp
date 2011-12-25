@@ -23,13 +23,13 @@ IGenerator* GeneratorFactory::createGenerator(GeneratorType type, float frequenc
 const char* GeneratorFactory::getGeneratorPictureFilename(GeneratorType type) {
 	switch (type) {
 		case GEN_SINE:
-			return "data/images/sine.h";
+			return "data/images/sine.png";
 		break;
 		case GEN_SAW:
-			return "data/images/saw.h";
+			return "data/images/saw.png";
 		break;
 		case GEN_SQUARE:
-			return "data/images/square.h";
+			return "data/images/square.png";
 		break;
 	}
 }
