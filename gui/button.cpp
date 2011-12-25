@@ -59,11 +59,12 @@ bool Button::leftPress(int x, int y) {
 
 bool Button::leftRelease(int x, int y) {
 	if (inside(x,y) && _pressed) {
+		_pressed = false;
 		if (_prop) {
 			*_prop = *_prop + 1;
 		}
-	}
-	_pressed = false;
+	} else 
+		_pressed = false;
 
 	return true;
 }

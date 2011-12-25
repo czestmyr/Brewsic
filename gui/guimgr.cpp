@@ -97,3 +97,11 @@ void GuiMgr::draw(SDL_Surface* surf) {
 	}
 }
 
+void GuiMgr::cleanup() {
+	std::vector<IControl*>::iterator it = _controls.begin();
+	while (it != _controls.end()) {
+		(*it)->recursiveCleanup();
+		++it;
+	}
+}
+

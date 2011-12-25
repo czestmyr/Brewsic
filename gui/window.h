@@ -3,6 +3,10 @@
 
 #include <string>
 #include "Icontrol.h"
+#include "common/property.h"
+#include "common/Iobserver.h"
+
+class Button;
 
 class Window: public IControl {
 	public:
@@ -20,6 +24,7 @@ class Window: public IControl {
 		int getYMax() { return _h - _status_h; }
 		int getXMin() { return 1; }
 		int getXMax() { return _w-1; }
+
 	protected:
 		std::string _name;
 		std::string _status;
@@ -28,6 +33,20 @@ class Window: public IControl {
 		int _title_h;
 
 		bool _dragging;
+
+		Button* _close_btn;
+
+	private:
+		class CloseObserver: public IObserver {
+			public:
+				CloseObserver(Window* parent): _parent(parent) {}
+				void signal() { _parent->deleteMe(); }
+			private:
+				Window* _parent;
+		};
+
+		Property<int> _c_prop;
+		CloseObserver _c_obs;
 };
 
 #endif

@@ -7,7 +7,7 @@
 
 class IControl {
 	public:
-		IControl(IControl* parent): _parent(parent), _x(0), _y(0), _w(0), _h(0){
+		IControl(IControl* parent): _parent(parent), _x(0), _y(0), _w(0), _h(0), _delete_me(false){
 			if (_parent) _parent->adopt(this);
 		}
 
@@ -208,9 +208,7 @@ class IControl {
 		}
 
 		void adopt(IControl* child) { _children.push_back(child); }
-		void leave(IControl* child) {
-			_children.remove(child);
-		}
+		void leave(IControl* child) { _children.remove(child); }
 
 		int getW() { return _w; }
 		int getH() { return _h; }
@@ -229,11 +227,27 @@ class IControl {
 				++_it;
 			}
 		}
+
+		void deleteMe() { _delete_me = true; }
+		void recursiveCleanup() {
+			_it = _children.begin();
+			while (_it != _children.end()) {
+				if ((*_it)->_delete_me) {
+					delete (*_it);
+					_it = _children.erase(_it);
+				} else {
+					(*_it)->recursiveCleanup();
+					++_it;
+				}
+			}
+		}
 	protected:
 		int _x;
 		int _y;
 		int _w;
 		int _h;
+
+		bool _delete_me;
 
 		std::list<IControl*> _children;
 		std::list<IControl*>::iterator _it;

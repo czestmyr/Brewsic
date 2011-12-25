@@ -24,6 +24,7 @@ class GuiMgr {
 		void keyRelease(SDLKey sym);
 
 		void draw(SDL_Surface* surf);
+		void cleanup();
 
 		void adoptControl(IControl* control) {
 			_controls.push_back(control);

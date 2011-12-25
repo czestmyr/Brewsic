@@ -5,12 +5,16 @@
 #include <iostream>
 
 Window::Window(IControl* parent, int x, int y, int w, int h, const char* title)
-: IControl(parent) {
+: IControl(parent), _c_obs(this) {
 	redim(x, y, w, h);
 	_status_h = 20;
-	_title_h = 20;
 	_name = title;
 	_dragging = false;
+
+	_title_h = 0;
+	_close_btn = new Button(this, _w, 0, "X", &_c_prop);
+	_c_prop.addObserver(&_c_obs);
+	_title_h = 20;
 }
 
 void Window::draw(SDL_Surface* surf, int orig_x, int orig_y) {

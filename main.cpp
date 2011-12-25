@@ -168,15 +168,32 @@ void dgCreateCallback(void* data) {
 	dg = new DelayGui(gui_bg, &delay);
 }
 
-void tgCreateCallback(void* data) {
-	new TripleOscillatorGui(gui_bg, &osc);
-}
+class TGCreator: public IObserver {
+	public:
+		TGCreator(IControl* parent): _parent(parent), _tg(NULL) {
+			_prop.addObserver(this);
+		}
+
+		void signal() {
+			if (_tg) {
+				_parent->leave(_tg);
+				delete(_tg);
+			}
+			_tg = new TripleOscillatorGui(_parent, &osc);
+		}
+
+		Property<int> _prop;
+	private:
+		IControl* _parent;
+		TripleOscillatorGui* _tg;
+};
 
 class KeyboardMover: public IObserver {
 	public:
 		KeyboardMover(Keyboard* kbd, bool up): _kbd(kbd), _up(up) {
 			_prop.addObserver(this);
 		}
+
 		void signal() {
 			if (_up) {
 				int shift = _kbd->getShift() - 20;
@@ -291,7 +308,8 @@ int main(int argc, char* argv[]) {
 	Button* dgCreate = new Button(gui_bg, 10, 290, "Create delay filter window");
 
 	// Triosc gui test
-	Button* tgCreate = new Button(gui_bg, 10, 310, "Create 3xOsc GUI");
+	TGCreator tgCreator(gui_bg);
+	Button* tgCreate = new Button(gui_bg, 10, 310, "Create 3xOsc GUI", &tgCreator._prop);
 
 	// Main event loop
 	SDL_Event e;
@@ -352,6 +370,7 @@ int main(int argc, char* argv[]) {
 		Uint32 shade = SDL_MapRGB(screen->format, shadecol.r, shadecol.g, shadecol.b);
 		SDL_FillRect(screen, NULL, shade);
 		gui.draw(screen);
+		gui.cleanup();
 		SDL_Flip(screen);
 	}
 
