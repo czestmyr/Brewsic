@@ -10,6 +10,7 @@ class SawGenerator: public IGenerator {
 		~SawGenerator() {};
 
 		void generate(int bufsize, float* buffer);
+		GeneratorType type() { return GEN_SAW; }
 
 		IGenerator* clone();
 };

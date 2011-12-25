@@ -3,7 +3,7 @@
 #include "fonts.h"
 #include <cmath>
 
-Wheel::Wheel(IControl* parent, int x, int y, int w, int h, float min, float max, Property<float>* prop)
+Wheel::Wheel(SafePtr<IControl> parent, int x, int y, int w, int h, float min, float max, Property<float>* prop)
 : IControl(parent), _prop(prop) {
 	redim(x, y, w, h);
 

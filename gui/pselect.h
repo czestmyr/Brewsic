@@ -2,11 +2,12 @@
 #define _PICTURE_SELECTOR_H_
 
 #include "Icontrol.h"
+#include "common/property.h"
 #include <vector>
 
 class PictureSelector: public IControl {
 	public:
-		PictureSelector(IControl* parent, int x, int y, int w, int h, void* data = NULL);
+		PictureSelector(SafePtr<IControl> parent, int x, int y, int w, int h, Property<int>* prop);
 		~PictureSelector();
 
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);
@@ -15,16 +16,11 @@ class PictureSelector: public IControl {
 
 		void addPicture(const char* filename);
 
-		void setCallback(void (*callback)(void* data));
-		int getSelection() { return _selection; }
 	protected:
 		SDL_Rect _size;
 
-		void (*_callback)(void* data);
-		void* _data;
-
 		std::vector<SDL_Surface*> _pics;
-		int _selection;
+		Property<int>* _prop;
 };
 
 #endif

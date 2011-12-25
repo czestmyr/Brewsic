@@ -1,6 +1,8 @@
 #ifndef _I_GENERATOR_H_
 #define _I_GENERATOR_H_
 
+#include "generatorfactory.h"
+
 #include <SDL.h>
 
 class IGenerator {
@@ -14,8 +16,8 @@ class IGenerator {
 		virtual ~IGenerator() {}
 
 		virtual void generate(int bufsize, float* buffer) = 0;
-
 		virtual IGenerator* clone() = 0;
+		virtual GeneratorType type() = 0;
 
 		float getFreq() { return _freq; }
 

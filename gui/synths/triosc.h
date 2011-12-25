@@ -13,10 +13,6 @@ class TripleOscillatorGui: public Window {
 
 	private:
 		TripleOscillator* _osc;
-
-		Slider* _base;
-		Wheel* _first;
-		Wheel* _second;
 };
 
 #endif

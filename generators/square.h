@@ -10,6 +10,7 @@ class SquareGenerator: public IGenerator {
 		~SquareGenerator() {};
 
 		void generate(int bufsize, float* buffer);
+		GeneratorType type() { return GEN_SQUARE; }
 
 		IGenerator* clone();
 	private:

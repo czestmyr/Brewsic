@@ -5,7 +5,7 @@
 
 class Background: public IControl {
 	public:
-		Background(IControl* parent, int x, int y, int w, int h): IControl(parent) {
+		Background(SafePtr<IControl> parent, int x, int y, int w, int h): IControl(parent) {
 			redim(x, y, w, h);
 			_rect.x = _x;
 			_rect.y = _y;

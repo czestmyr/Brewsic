@@ -6,7 +6,7 @@
 
 class Image: public IControl {
 	public:
-		Image(IControl* parent, int x, int y, int w, int h, const char* filename);
+		Image(SafePtr<IControl> parent, int x, int y, int w, int h, const char* filename);
 		~Image();
 
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);

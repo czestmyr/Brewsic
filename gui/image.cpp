@@ -2,7 +2,7 @@
 #include "SDL_image.h" 
 #include <iostream>
 
-Image::Image(IControl* parent, int x, int y, int w, int h, const char* filename)
+Image::Image(SafePtr<IControl> parent, int x, int y, int w, int h, const char* filename)
 : IControl(parent) {
 	redim(x, y, w, h);
 	_size.x = 0;

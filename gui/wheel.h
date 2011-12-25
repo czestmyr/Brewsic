@@ -7,7 +7,7 @@
 
 class Wheel: public IControl, IObserver {
 	public:
-		Wheel(IControl* parent, int x, int y, int w, int h, float min, float max, Property<float>* prop = NULL);
+		Wheel(SafePtr<IControl> parent, int x, int y, int w, int h, float min, float max, Property<float>* prop = NULL);
 		~Wheel();
 
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);

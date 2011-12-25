@@ -3,16 +3,13 @@
 #include "SDL_image.h"
 #include <iostream>
 
-PictureSelector::PictureSelector(IControl* parent, int x, int y, int w, int h, void* data)
-: IControl(parent) {
+PictureSelector::PictureSelector(SafePtr<IControl> parent, int x, int y, int w, int h, Property<int>* prop)
+: IControl(parent), _prop(prop) {
 	redim(x, y, w, h);
 	_size.x = 0;
 	_size.y = 0;
 	_size.w = _w;
 	_size.h = _h;
-	_callback = NULL;
-	_data = data;
-	_selection = 0;
 }
 
 PictureSelector::~PictureSelector() {
@@ -22,19 +19,17 @@ PictureSelector::~PictureSelector() {
 }
 
 void PictureSelector::draw(SDL_Surface* surf, int orig_x, int orig_y) {
-	if (_pics.size() == 0) return;
+	if (_pics.size() <= *_prop) return;
 	SDL_Rect dst;
 	dst.x = orig_x + _x;
 	dst.y = orig_y + _y;
-	SDL_BlitSurface(_pics[_selection], &_size, surf, &dst);
+	SDL_BlitSurface(_pics[*_prop], &_size, surf, &dst);
 	Style::inst()->drawInset(surf, orig_x + _x, orig_y + _y, _w, _h, 2);
 }
 
 bool PictureSelector::leftPress(int x, int y) {
-	if (_pics.size() == 0) return false;
-	_selection = (_selection + 1) % _pics.size();
-	if (_callback)
-		_callback(_data);
+	if (_pics.size() == 0 || _prop == NULL) return false;
+	*_prop = (*_prop + 1) % _pics.size();
 }
 
 void PictureSelector::addPicture(const char* filename) {
@@ -44,9 +39,5 @@ void PictureSelector::addPicture(const char* filename) {
 		return;
 	}
 	_pics.push_back(newPic);
-}
-
-void PictureSelector::setCallback(void (*callback)(void* data)) {
-	_callback = callback;
 }
 

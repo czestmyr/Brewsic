@@ -92,58 +92,6 @@ void audioCallback(void *userdata, Uint8 *stream, int len) {
 	mix.copyBuffer((Uint16*)stream);
 }
 
-bool g_quit = false;
-
-void exitCallback(void* data) {
-	g_quit = true;
-}
-
-PictureSelector* psel1;
-PictureSelector* psel2;
-PictureSelector* psel3;
-
-void osc1Callback(void* data) {
-	switch (psel1->getSelection()) {
-		case 0:
-			osc.setGenerator(0, new SineGenerator(440));
-		break;
-		case 1:
-			osc.setGenerator(0, new SawGenerator(440));
-		break;
-		case 2:
-			osc.setGenerator(0, new SquareGenerator(440));
-		break;
-	}
-}
-
-void osc2Callback(void* data) {
-	switch (psel2->getSelection()) {
-		case 0:
-			osc.setGenerator(1, new SineGenerator(440));
-		break;
-		case 1:
-			osc.setGenerator(1, new SawGenerator(440));
-		break;
-		case 2:
-			osc.setGenerator(1, new SquareGenerator(440));
-		break;
-	}
-}
-
-void osc3Callback(void* data) {
-	switch (psel3->getSelection()) {
-		case 0:
-			osc.setGenerator(2, new SineGenerator(440));
-		break;
-		case 1:
-			osc.setGenerator(2, new SawGenerator(440));
-		break;
-		case 2:
-			osc.setGenerator(2, new SquareGenerator(440));
-		break;
-	}
-}
-
 Slider* s1;
 Checkbox* ch1;
 
@@ -238,7 +186,7 @@ int main(int argc, char* argv[]) {
 
 	// Gui setup
 	GuiMgr gui;
-	SafePtr<IControl> gui_bg = safe_new(Background(NULL, 4, 4, WIDTH-8, HEIGHT-8));
+	SafePtr<IControl> gui_bg = safe_new(Background((IControl*)NULL, 4, 4, WIDTH-8, HEIGHT-8));
 	gui.adoptControl(gui_bg);
 
 	//Quit button
@@ -253,13 +201,12 @@ int main(int argc, char* argv[]) {
 	new Button(gui_bg, WIDTH - 250, 50, "Up", &kbd_up._prop);
 	new Button(gui_bg, WIDTH - 250, 75, "Down", &kbd_dn._prop);
 
-/*	psel1 = new PictureSelector(gui_bg, WIDTH - 250, 100, 32, 32);
+	SafePtr<PictureSelector> psel1 = safe_new(PictureSelector(gui_bg, WIDTH - 250, 100, 32, 32, &osc._first_gen)).cast<PictureSelector>();
 	psel1->addPicture("data/images/sine.png");
 	psel1->addPicture("data/images/saw.png");
 	psel1->addPicture("data/images/square.png");
-	psel1->setCallback(osc1Callback);
 
-	psel2 = new PictureSelector(gui_bg, WIDTH - 250, 140, 32, 32);
+/*	psel2 = new PictureSelector(gui_bg, WIDTH - 250, 140, 32, 32);
 	psel2->addPicture("data/images/sine.png");
 	psel2->addPicture("data/images/saw.png");
 	psel2->addPicture("data/images/square.png");

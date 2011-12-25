@@ -12,6 +12,11 @@ TriOscObserver::TriOscObserver(TripleOscillator* parent, int action): _parent(pa
 		case PROP_SHIFT:
 			_parent->_shift.addObserver(this);
 		break;
+		case PROP_GEN:
+			_parent->_first_gen.addObserver(this);
+			_parent->_second_gen.addObserver(this);
+			_parent->_third_gen.addObserver(this);
+		break;
 	}
 }
 
@@ -23,6 +28,9 @@ void TriOscObserver::signal() {
 		case PROP_SECOND:
 		break;
 		case PROP_SHIFT:
+		break;
+		case PROP_GEN:
+			_parent->checkGenerators();
 		break;
 	}
 }

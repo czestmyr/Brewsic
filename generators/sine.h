@@ -12,6 +12,7 @@ class SineGenerator: public IGenerator {
 		void generate(int bufsize, float* buffer);
 
 		IGenerator* clone();
+		GeneratorType type() { return GEN_SINE; }
 };
 
 #endif

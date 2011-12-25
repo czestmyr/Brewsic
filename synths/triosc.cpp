@@ -61,3 +61,17 @@ void TripleOscillator::generateOutput(float* buffer) {
 	_mixer.copyBufferFloat(buffer);
 }
 
+void TripleOscillator::checkGenerators() {
+	for (int j = 0; j < 3; ++j) {
+		int type;
+		if (j == 0) type = _first_gen;
+		if (j == 1) type = _second_gen;
+		if (j == 2) type = _third_gen;
+		if (_generators[0][j]->type() == type) continue;
+		for (int i = 0; i < POLYPHONY; ++i) {
+			delete _generators[i][j];
+			_generators[i][j] = GeneratorFactory::inst()->createGenerator((GeneratorType)type, 440.0, 0);
+		}
+	}
+}
+

@@ -18,7 +18,8 @@
 enum {
 	PROP_FIRST,
 	PROP_SECOND,
-	PROP_SHIFT
+	PROP_SHIFT,
+	PROP_GEN
 };
 
 class TripleOscillator: public ISynth{
@@ -27,18 +28,22 @@ class TripleOscillator: public ISynth{
 			_bufsize(bufsize),
 			_mixer(bufsize),
 			_adsr(),
-			_first(-1205.0),
+			_first(0.0),
 			_first_obs(this, PROP_FIRST),
-			_second(-1195.0),
+			_second(0.0),
 			_second_obs(this, PROP_SECOND),
 			_shift(0),
-			_shift_obs(this, PROP_SHIFT) {
+			_shift_obs(this, PROP_SHIFT),
+			_first_gen(GEN_SINE),
+			_second_gen(GEN_SINE),
+			_third_gen(GEN_SINE),
+			_gen_obs(this, PROP_GEN) {
 			for (int i = 0; i < POLYPHONY; ++i) {
-				for (int j = 0; j < 3; ++j) {
-					_generators[i][j] = new SineGenerator(440.0);
-				}
 				_adsr[i] = new Adsr(20, 100, 101, 2000);
 				_buffers[i] = new float[bufsize];
+				for (int j = 0; j < 3; ++j) {
+					_generators[i][j] = GeneratorFactory::inst()->createGenerator(GEN_SINE, 440.0, 0);
+				}
 			}
 
 			for (int i = 0; i < POLYPHONY; ++i) {
@@ -69,11 +74,18 @@ class TripleOscillator: public ISynth{
 		Property<float> _shift;
 		Property<float> _first;
 		Property<float> _second;
+
+		Property<int> _first_gen;
+		Property<int> _second_gen;
+		Property<int> _third_gen;
 	private:
+		void checkGenerators();
+
 		friend class TriOscObserver;
 		TriOscObserver _shift_obs;
 		TriOscObserver _first_obs;
 		TriOscObserver _second_obs;
+		TriOscObserver _gen_obs;
 
 		Mixer _mixer;
 
