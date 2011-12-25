@@ -33,7 +33,7 @@ const char* noteNames[12] = {
 	"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "H"
 };
 
-Keyboard::Keyboard(IControl* parent, int x, int y, int h)
+Keyboard::Keyboard(SafePtr<IControl> parent, int x, int y, int h)
 : IControl(parent){
 	redim(x, y, 80, h);
 	_shift = 720;

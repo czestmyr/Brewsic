@@ -6,7 +6,7 @@
 
 class Keyboard: public IControl {
 	public:
-		Keyboard(IControl* parent, int x, int y, int h);
+		Keyboard(SafePtr<IControl> parent, int x, int y, int h);
 
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);
 

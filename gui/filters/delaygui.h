@@ -7,11 +7,10 @@
 
 class DelayGui: public Window {
 	public:
-		DelayGui(IControl* parent, DelayFilter* delay);
+		DelayGui(SafePtr<IControl> parent, DelayFilter* delay);
 		
 	private:
 		DelayFilter* _delay;
-		Slider* _atten_slider;
 };
 
 #endif

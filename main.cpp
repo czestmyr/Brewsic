@@ -147,16 +147,21 @@ void osc3Callback(void* data) {
 Slider* s1;
 Checkbox* ch1;
 
-SafePtr<IControl> gui_bg;
-DelayGui* dg = NULL;
+class DGCreator: public IObserver {
+	public:
+		DGCreator(SafePtr<IControl> parent): _parent(parent), _dg((IControl*)NULL) {
+			_prop.addObserver(this);
+		}
 
-void dgCreateCallback(void* data) {
-	if (dg) {
-		gui_bg->leave(dg);
-		delete dg;
-	}
-//	dg = new DelayGui(gui_bg, &delay);
-}
+		void signal() {
+			_dg = safe_new(DelayGui(_parent, &delay));
+		}
+
+		Property<int> _prop;
+	private:
+		SafePtr<IControl> _parent;
+		SafePtr<IControl> _dg;
+};
 
 class TGCreator: public IObserver {
 	public:
@@ -165,6 +170,7 @@ class TGCreator: public IObserver {
 		}
 
 		void signal() {
+			if (_tg) _tg->deleteMe();
 			_tg = safe_new(TripleOscillatorGui(_parent, &osc));
 		}
 
@@ -232,22 +238,22 @@ int main(int argc, char* argv[]) {
 
 	// Gui setup
 	GuiMgr gui;
-	gui_bg = safe_new(Background(NULL, 4, 4, WIDTH-8, HEIGHT-8));
+	SafePtr<IControl> gui_bg = safe_new(Background(NULL, 4, 4, WIDTH-8, HEIGHT-8));
 	gui.adoptControl(gui_bg);
-	//IControl* gui_outer = new Window(gui_bg, 10, 10, 500, 300, "Outer window");
-	//IControl* gui_inner = new Window(gui_outer, 10, 10, 300, 200, "Inner window");
 
-	//Button* gui_btn = new Button(gui_bg, WIDTH, 5, "Quit Brewsic");
+	//Quit button
+	Property<int> quit_prop(0);
+	new Button(gui_bg, WIDTH, 5, "Quit Brewsic", &quit_prop);
 
-	/*Keyboard* kbd = new Keyboard(gui_bg, WIDTH - 200, 50, 400);
+	SafePtr<Keyboard> kbd = safe_new(Keyboard(gui_bg, WIDTH - 200, 50, 400)).cast<Keyboard>();
 	kbd->setSynth(&osc);
 	KeyboardMover kbd_up(kbd, true);
 	KeyboardMover kbd_dn(kbd, false);
 
-	gui_btn = new Button(gui_bg, WIDTH - 250, 50, "Up", &kbd_up._prop);
-	gui_btn = new Button(gui_bg, WIDTH - 250, 75, "Down", &kbd_dn._prop);
+	new Button(gui_bg, WIDTH - 250, 50, "Up", &kbd_up._prop);
+	new Button(gui_bg, WIDTH - 250, 75, "Down", &kbd_dn._prop);
 
-	psel1 = new PictureSelector(gui_bg, WIDTH - 250, 100, 32, 32);
+/*	psel1 = new PictureSelector(gui_bg, WIDTH - 250, 100, 32, 32);
 	psel1->addPicture("data/images/sine.png");
 	psel1->addPicture("data/images/saw.png");
 	psel1->addPicture("data/images/square.png");
@@ -289,7 +295,7 @@ int main(int argc, char* argv[]) {
 	Uint32 dt = 0;
 
 	// Delay gui test
-//	Button* dgCreate = new Button(gui_bg, 10, 290, "Create delay filter window");
+	SafePtr<Button> dgCreate = safe_new(Button(gui_bg, 10, 290, "Create delay filter window")).cast<Button>();
 
 	// Triosc gui test
 	TGCreator tgCreator(gui_bg);
@@ -297,8 +303,7 @@ int main(int argc, char* argv[]) {
 
 	// Main event loop
 	SDL_Event e;
-	bool cont = true;
-	while (cont) {
+	while (!quit_prop) {
 		SDL_Delay(50);
 
 		while (SDL_PollEvent(&e)) {
@@ -327,7 +332,7 @@ int main(int argc, char* argv[]) {
 					gui.keyRelease(e.key.keysym.sym);
 				break;
 				case SDL_QUIT:
-					cont = false;
+					quit_prop = 1;
 				break;
 			}
 		}
@@ -348,13 +353,11 @@ int main(int argc, char* argv[]) {
 			}
 		}
 
-		if (g_quit) cont = false;
-
 		SDL_Color shadecol = Style::inst()->getShadeColor();
 		Uint32 shade = SDL_MapRGB(screen->format, shadecol.r, shadecol.g, shadecol.b);
 		SDL_FillRect(screen, NULL, shade);
-		gui.draw(screen);
 		gui.cleanup();
+		gui.draw(screen);
 		SDL_Flip(screen);
 	}
 
