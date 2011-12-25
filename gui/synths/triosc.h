@@ -9,7 +9,7 @@ class Wheel;
 
 class TripleOscillatorGui: public Window {
 	public:
-		TripleOscillatorGui(IControl* parent, TripleOscillator* osc);
+		TripleOscillatorGui(SafePtr<IControl> parent, TripleOscillator* osc);
 
 	private:
 		TripleOscillator* _osc;

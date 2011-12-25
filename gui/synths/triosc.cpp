@@ -5,7 +5,7 @@
 #include "gui/pselect.h"
 #include "synths/triosc.h"
 
-TripleOscillatorGui::TripleOscillatorGui(IControl* parent, TripleOscillator* osc):
+TripleOscillatorGui::TripleOscillatorGui(SafePtr<IControl> parent, TripleOscillator* osc):
 	_osc(osc),
 	Window(parent, 0, 0, 80, 200, "3xOsc") {
 	_base = new Slider(this, 5, 5, 190, 20.0, 20000.0, &_osc->_shift);

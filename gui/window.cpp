@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-Window::Window(IControl* parent, int x, int y, int w, int h, const char* title)
+Window::Window(SafePtr<IControl> parent, int x, int y, int w, int h, const char* title)
 : IControl(parent), _c_obs(this) {
 	redim(x, y, w, h);
 	_status_h = 20;

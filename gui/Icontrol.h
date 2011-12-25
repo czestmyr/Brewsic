@@ -4,20 +4,25 @@
 #include <SDL.h>
 #include <list>
 #include "draw/SDL_draw.h"
+#include "common/pointers.h"
+
+#define NULL_CTL (IControl*) NULL
+#define safe_new(obj) (new obj)->dropAndSafePtr()
 
 class IControl {
 	public:
-		IControl(IControl* parent): _parent(parent), _x(0), _y(0), _w(0), _h(0), _delete_me(false){
-			if (_parent) _parent->adopt(this);
+		IControl(SafePtr<IControl> parent): _parent(parent), _x(0), _y(0), _w(0), _h(0),
+			_delete_me(false) {
+			_this_ref_ptr = new RefPtr<IControl>(this);
+			if (_parent) _parent->adopt(safePtr());
 		}
 
-		virtual ~IControl() {
-			_it = _children.begin();
-			while (_it != _children.end()) {
-				delete (*_it);
-				++_it;
-			}
-		}
+		virtual ~IControl() {}
+
+		SafePtr<IControl> safePtr() { return SafePtr<IControl>(_this_ref_ptr); }
+
+		//Used after construction to decrease reference count (we don't refcount ourselves)
+		SafePtr<IControl> dropAndSafePtr() { SafePtr<IControl> ret(_this_ref_ptr); _this_ref_ptr->drop(); return ret; }
 
 		virtual void draw(SDL_Surface* surf, int orig_x, int orig_y) { return; }
 
@@ -73,10 +78,10 @@ class IControl {
 			}
 		}
 
-		IControl* recursiveLeftPress(int x, int y) {
+		SafePtr<IControl> recursiveLeftPress(int x, int y) {
 			_it = _children.begin();
 			while (_it != _children.end()) {
-				IControl* ptr;
+				SafePtr<IControl> ptr;
 				if (!(*_it)->inside(x-_x,y-_y)) { ++_it; continue; }
 				ptr = (*_it)->recursiveLeftPress(x-_x, y-_y);
 				if (ptr) {
@@ -86,9 +91,9 @@ class IControl {
 			}
 
 			if (leftPress(x, y)) {
-				return this;
+				return _this_ref_ptr;
 			} else {
-				return NULL;
+				return NULL_CTL;
 			}
 		}
 
@@ -207,16 +212,16 @@ class IControl {
 			}
 		}
 
-		void adopt(IControl* child) { _children.push_back(child); }
-		void leave(IControl* child) { _children.remove(child); }
+		void adopt(SafePtr<IControl> child) { _children.push_back(child); }
+		void leave(SafePtr<IControl> child) { _children.remove(child); }
 
 		int getW() { return _w; }
 		int getH() { return _h; }
 		int getX() { return _x; }
 		int getY() { return _y; }
 
-		void toFront() { if (_parent) _parent->childToFront(this); }
-		void childToFront(IControl* child) {
+		void toFront() { if (_parent) _parent->childToFront(_this_ref_ptr); }
+		void childToFront(SafePtr<IControl> child) {
 			_it = _children.begin();
 			while (_it != _children.end()) {
 				if ((*_it) == child) {
@@ -233,7 +238,6 @@ class IControl {
 			_it = _children.begin();
 			while (_it != _children.end()) {
 				if ((*_it)->_delete_me) {
-					delete (*_it);
 					_it = _children.erase(_it);
 				} else {
 					(*_it)->recursiveCleanup();
@@ -249,10 +253,11 @@ class IControl {
 
 		bool _delete_me;
 
-		std::list<IControl*> _children;
-		std::list<IControl*>::iterator _it;
-		std::list<IControl*>::reverse_iterator _rit;
-		IControl* _parent;
+		std::list< SafePtr<IControl> > _children;
+		std::list< SafePtr<IControl> >::iterator _it;
+		std::list< SafePtr<IControl> >::reverse_iterator _rit;
+		SafePtr<IControl> _parent;
+		RefPtr<IControl>* _this_ref_ptr;
 };
 
 #endif

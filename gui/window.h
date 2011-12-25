@@ -10,7 +10,7 @@ class Button;
 
 class Window: public IControl {
 	public:
-		Window(IControl*, int x, int y, int w, int h, const char* title = "Unnamed window");
+		Window(SafePtr<IControl>, int x, int y, int w, int h, const char* title = "Unnamed window");
 		~Window() {};
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);
 

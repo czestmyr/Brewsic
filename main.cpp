@@ -144,20 +144,10 @@ void osc3Callback(void* data) {
 	}
 }
 
-Wheel* w1;
-Wheel* w2;
 Slider* s1;
 Checkbox* ch1;
 
-void wheel1Callback(void* data) {
-	osc.setFirst(w1->getValue());
-}
-
-void wheel2Callback(void* data) {
-	osc.setSecond(w2->getValue());
-}
-
-IControl* gui_bg;
+SafePtr<IControl> gui_bg;
 DelayGui* dg = NULL;
 
 void dgCreateCallback(void* data) {
@@ -165,32 +155,28 @@ void dgCreateCallback(void* data) {
 		gui_bg->leave(dg);
 		delete dg;
 	}
-	dg = new DelayGui(gui_bg, &delay);
+//	dg = new DelayGui(gui_bg, &delay);
 }
 
 class TGCreator: public IObserver {
 	public:
-		TGCreator(IControl* parent): _parent(parent), _tg(NULL) {
+		TGCreator(SafePtr<IControl> parent): _parent(parent), _tg((IControl*)NULL) {
 			_prop.addObserver(this);
 		}
 
 		void signal() {
-			if (_tg) {
-				_parent->leave(_tg);
-				delete(_tg);
-			}
-			_tg = new TripleOscillatorGui(_parent, &osc);
+			_tg = safe_new(TripleOscillatorGui(_parent, &osc));
 		}
 
 		Property<int> _prop;
 	private:
-		IControl* _parent;
-		TripleOscillatorGui* _tg;
+		SafePtr<IControl> _parent;
+		SafePtr<IControl> _tg;
 };
 
 class KeyboardMover: public IObserver {
 	public:
-		KeyboardMover(Keyboard* kbd, bool up): _kbd(kbd), _up(up) {
+		KeyboardMover(SafePtr<Keyboard> kbd, bool up): _kbd(kbd), _up(up) {
 			_prop.addObserver(this);
 		}
 
@@ -207,7 +193,7 @@ class KeyboardMover: public IObserver {
 
 		Property<int> _prop;
 	private:
-		Keyboard* _kbd;
+		SafePtr<Keyboard> _kbd;
 		bool _up;
 };
 
@@ -246,14 +232,14 @@ int main(int argc, char* argv[]) {
 
 	// Gui setup
 	GuiMgr gui;
-	gui_bg = new Background(NULL, 4, 4, WIDTH-8, HEIGHT-8);
+	gui_bg = safe_new(Background(NULL, 4, 4, WIDTH-8, HEIGHT-8));
 	gui.adoptControl(gui_bg);
 	//IControl* gui_outer = new Window(gui_bg, 10, 10, 500, 300, "Outer window");
 	//IControl* gui_inner = new Window(gui_outer, 10, 10, 300, 200, "Inner window");
 
-	Button* gui_btn = new Button(gui_bg, WIDTH, 5, "Quit Brewsic");
+	//Button* gui_btn = new Button(gui_bg, WIDTH, 5, "Quit Brewsic");
 
-	Keyboard* kbd = new Keyboard(gui_bg, WIDTH - 200, 50, 400);
+	/*Keyboard* kbd = new Keyboard(gui_bg, WIDTH - 200, 50, 400);
 	kbd->setSynth(&osc);
 	KeyboardMover kbd_up(kbd, true);
 	KeyboardMover kbd_dn(kbd, false);
@@ -284,7 +270,7 @@ int main(int argc, char* argv[]) {
 
 	s1 = new Slider(gui_bg, WIDTH - 300, 230, 100, -100, 100, &osc._shift);
 
-	ch1 = new Checkbox(gui_bg, WIDTH - 275, 255, 20, 20, NULL);
+	ch1 = new Checkbox(gui_bg, WIDTH - 275, 255, 20, 20, NULL);*/
 
 	//Sequencer
 	int seq_size = 8;
@@ -293,23 +279,21 @@ int main(int argc, char* argv[]) {
 	int seq_dur = 0;
 	Property<bool> sequencer[seq_size];
 	Property<float> seq_freq[seq_size];
-	Checkbox* sqboxes[seq_size];
-	Slider* sqsliders[seq_size];
 	for (int i = 0; i < seq_size; ++i) {
-		sqboxes[seq_size] = new Checkbox(gui_bg, 50 + i*30, 50, 20, 20, &sequencer[i]);
-		sqsliders[seq_size] = new Slider(gui_bg, 50 + i*30, 75, 200, 100.0, 2000.0, &seq_freq[i]);
-	} 
+		safe_new(Checkbox(gui_bg, 50 + i*30, 50, 20, 20, &sequencer[i]));
+		safe_new(Slider(gui_bg, 50 + i*30, 75, 200, 100.0, 2000.0, &seq_freq[i]));
+	}
 
 	//Timing
 	Uint32 time = SDL_GetTicks();
 	Uint32 dt = 0;
 
 	// Delay gui test
-	Button* dgCreate = new Button(gui_bg, 10, 290, "Create delay filter window");
+//	Button* dgCreate = new Button(gui_bg, 10, 290, "Create delay filter window");
 
 	// Triosc gui test
 	TGCreator tgCreator(gui_bg);
-	Button* tgCreate = new Button(gui_bg, 10, 310, "Create 3xOsc GUI", &tgCreator._prop);
+	SafePtr<Button> tgCreate = safe_new(Button(gui_bg, 10, 310, "Create 3xOsc GUI", &tgCreator._prop)).cast<Button>();
 
 	// Main event loop
 	SDL_Event e;
@@ -362,7 +346,7 @@ int main(int argc, char* argv[]) {
 			if (sequencer[seq_ind]) {
 				osc.startNote(seq_ind+1, seq_freq[seq_ind]);
 			}
-		} 
+		}
 
 		if (g_quit) cont = false;
 

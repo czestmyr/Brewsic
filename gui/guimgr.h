@@ -6,14 +6,8 @@
 
 class GuiMgr {
 	public:
-		GuiMgr(): _drag(0) {}
-		~GuiMgr() {
-			std::vector<IControl*>::iterator it = _controls.begin();
-			while (it != _controls.end()) {
-				delete (*it);
-				++it;
-			}
-		}
+		GuiMgr(): _drag((IControl*)NULL) {}
+		~GuiMgr() {}
 
 		void leftPress(int x, int y);
 		void rightPress(int x, int y);
@@ -26,13 +20,13 @@ class GuiMgr {
 		void draw(SDL_Surface* surf);
 		void cleanup();
 
-		void adoptControl(IControl* control) {
+		void adoptControl(SafePtr<IControl> control) {
 			_controls.push_back(control);
 		}
 	private:
-		std::vector<IControl*> _controls;
+		std::vector<SafePtr<IControl> > _controls;
 
-		IControl* _drag;
+		SafePtr<IControl> _drag;
 };
 
 #endif

@@ -3,7 +3,7 @@
 #include "fonts.h"
 #include "common/property.h"
 
-Button::Button(IControl* parent, int x, int y, const char* text, Property<int>* prop)
+Button::Button(SafePtr<IControl> parent, int x, int y, const char* text, Property<int>* prop)
 : IControl(parent), _text(text), _prop(prop) {
 	int w = Fonts::inst()->getTextWidth(text) + 8;
 	redim(x, y, w, 20);

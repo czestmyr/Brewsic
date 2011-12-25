@@ -1,7 +1,7 @@
 #include "checkbox.h"
 #include "style.h"
 
-Checkbox::Checkbox(IControl* parent, int x, int y, int w, int h, Property<bool>* prop)
+Checkbox::Checkbox(SafePtr<IControl> parent, int x, int y, int w, int h, Property<bool>* prop)
 : IControl(parent), _prop(prop) {
 	redim(x, y, w, h);
 	_pressed = false;

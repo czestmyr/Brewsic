@@ -6,7 +6,7 @@
 #define SLIDER_BUTTON_HEIGHT 10
 #define SLIDER_WIDTH         20
 
-Slider::Slider(IControl* parent, int x, int y, int h, float min, float max, Property<float>* prop)
+Slider::Slider(SafePtr<IControl> parent, int x, int y, int h, float min, float max, Property<float>* prop)
 : IControl(parent), _prop(prop) {
 	if (h < SLIDER_BUTTON_HEIGHT)
 		h = SLIDER_BUTTON_HEIGHT;

@@ -7,7 +7,7 @@
 
 class Slider: public IControl, IObserver {
 	public:
-		Slider(IControl* parent, int x, int y, int h, float min, float max, Property<float>* prop = NULL);
+		Slider(SafePtr<IControl> parent, int x, int y, int h, float min, float max, Property<float>* prop = NULL);
 		~Slider();
 
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);

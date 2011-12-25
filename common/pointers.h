@@ -2,6 +2,9 @@
 #define _POINTERS_H_
 
 #include <cstdlib>
+#include <iostream>
+
+#undef DUMP_SHIT
 
 // A reference counted pointer to a type.
 //
@@ -17,6 +20,9 @@ class RefPtr {
 		RefPtr(T* ptr) {
 			_ptr = ptr;
 			_refcount = 0;
+			#ifdef DUMP_SHIT
+			std::cout << "RefPtr-ing " << _ptr << std::endl;
+			#endif
 			grab();
 		}
 
@@ -29,13 +35,18 @@ class RefPtr {
 		void drop() {
 			_refcount--;
 			if (_refcount == 0) {
-				if (_ptr)
+				if (_ptr) {
 					delete _ptr;
+					#ifdef DUMP_SHIT
+					std::cout << "Deleting " << _ptr << std::endl;
+					#endif
+				}
 				_ptr = NULL;
 				delete this;
 			}
 		}
 
+		const T& get() const { return *_ptr; }
 		T& get() { return *_ptr; }
 
 	private:
@@ -49,10 +60,23 @@ class SafePtr {
 		SafePtr() { _ptr = new RefPtr<T>(NULL); }
 		SafePtr(T* ptr) { _ptr = new RefPtr<T>(ptr); }
 		SafePtr(const SafePtr<T>& other) {
+			#ifdef DUMP_SHIT
+			std::cout << "Initing SafePtr from SafePtr pointing at " << other.get() << std::endl;
+			#endif
 			_ptr = other._ptr;
 			_ptr->grab();
 		}
+		SafePtr(RefPtr<T>* ref) {
+			#ifdef DUMP_SHIT
+			std::cout << "Initing SafePtr from RefPtr pointing at " << &ref->get() << std::endl;
+			#endif
+			_ptr = ref;
+			_ptr->grab();
+		}
 		SafePtr<T>& operator=(const SafePtr<T>& other) {
+			#ifdef DUMP_SHIT
+			std::cout << "Copying SafePtr from other SafePtr pointing at " << other.get() << std::endl;
+			#endif
 			if (_ptr) _ptr->drop();
 
 			_ptr = other._ptr;
@@ -61,11 +85,22 @@ class SafePtr {
 			return *this;
 		}
 		~SafePtr() {
-			_ptr->drop();
+			#ifdef DUMP_SHIT
+			std::cout << "Destroying SafePtr pointing at " << &_ptr->get() << std::endl;
+			#endif
+			if (_ptr) _ptr->drop();
+		}
+
+		template <class U> SafePtr<U> cast() {
+			RefPtr<U>* refPtr = (RefPtr<U>*)(_ptr);
+			return SafePtr<U>(refPtr);
 		}
 
 		T& operator*() { return _ptr->get(); }
 		T* operator->() { return &_ptr->get(); }
+		operator bool() { return &_ptr->get(); }
+		bool operator==(const SafePtr<T>& other) { return _ptr == other._ptr; }
+		T* get() const { return &_ptr->get(); }
 	private:
 		RefPtr<T>* _ptr;
 };
