@@ -7,10 +7,6 @@ Wheel::Wheel(IControl* parent, int x, int y, int w, int h, float min, float max,
 : IControl(parent), _prop(prop) {
 	redim(x, y, w, h);
 
-	if (prop) {
-		_prop->addObserver(this);
-	}
-
 	if (min > max) {
 		float swap = min;
 		min = max;
@@ -19,9 +15,16 @@ Wheel::Wheel(IControl* parent, int x, int y, int w, int h, float min, float max,
 	_min = min;
 	_max = max;
 	_inc = (_max - _min) / 200.0;
-	setValue(0.0);
 
 	_r = w<h ? w/2 : h/2;
+
+	if (prop) {
+		_prop->addObserver(this);
+		setValue(*_prop);
+	} else {
+		setValue(0.0);
+	}
+
 	_pressed = false;
 }
 
