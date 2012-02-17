@@ -23,6 +23,7 @@ class Property {
 		}
 
 		operator const T&() const { return data; }
+		const T* operator->() const { return &data; }
 		const T& operator=(const T& newVal) {
 			data = newVal;
 		
