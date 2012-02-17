@@ -10,6 +10,9 @@ class SynthFactory {
 	public:
 		SynthFactory(int bufsize): _bufsize(bufsize) {}
 
+		int getClassNumber();
+		std::string getClassName(int index);
+
 		SafePtr<ISynth> createNewSynth(const std::string& className);
 
 		int getSynthNumber() { return _synths.size(); }
