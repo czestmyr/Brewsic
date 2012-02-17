@@ -4,3 +4,9 @@ piano roll sequencer
 3xosc gui
 filter gui
 WAV-based generator
+get rid of specifying parent coordinates in IControl::draw(...)
+  - But querying them also isn't a solution. The absolute position should be saved and updated in every IControl
+use a generic type insted of float for sound data
+create a way to change the buffer size dynamically
+add namespaces to the code
+make windows stay on top
