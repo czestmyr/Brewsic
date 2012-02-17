@@ -3,13 +3,12 @@
 #include "fonts.h"
 #include <cmath>
 
-#define SLIDER_BUTTON_HEIGHT 10
 #define SLIDER_WIDTH         20
 
-Slider::Slider(SafePtr<IControl> parent, int x, int y, int h, float min, float max, Property<float>* prop)
-: IControl(parent), _prop(prop) {
-	if (h < SLIDER_BUTTON_HEIGHT)
-		h = SLIDER_BUTTON_HEIGHT;
+Slider::Slider(SafePtr<IControl> parent, int x, int y, int h, float min, float max, Property<float>* prop, int bh)
+: IControl(parent), _prop(prop), _slider_button_height(bh) {
+	if (h < _slider_button_height)
+		h = _slider_button_height;
 
 	redim(x, y, SLIDER_WIDTH, h);
 
@@ -50,22 +49,22 @@ void Slider::draw(SDL_Surface* surf, int orig_x, int orig_y) {
 
 	SDL_Color bgCol = Style::inst()->getBgColor();
 	Uint32 bgColU32 = SDL_MapRGB(surf->format, bgCol.r, bgCol.g, bgCol.b);
-	Draw_FillRect(surf, orig_x + _x, orig_y + _y + _button_y, _w, SLIDER_BUTTON_HEIGHT, bgColU32);
+	Draw_FillRect(surf, orig_x + _x, orig_y + _y + _button_y, _w, _slider_button_height, bgColU32);
 
 	SDL_Color textCol;
 	textCol.r = textCol.g = textCol.b = 255.0;
 	if (_pressed) {
-		Style::inst()->drawInset(surf, orig_x + _x, orig_y + _y + _button_y, _w, SLIDER_BUTTON_HEIGHT, 2);
+		Style::inst()->drawInset(surf, orig_x + _x, orig_y + _y + _button_y, _w, _slider_button_height, 2);
 		char buffer[32];
 		sprintf(buffer, "%.1f", _value);
 		Fonts::inst()->renderText(buffer, surf, orig_x + _x + _w, orig_y + _y + _button_y, textCol);
 	} else {
-		Style::inst()->drawOutset(surf, orig_x + _x, orig_y + _y + _button_y, _w, SLIDER_BUTTON_HEIGHT, 2);
+		Style::inst()->drawOutset(surf, orig_x + _x, orig_y + _y + _button_y, _w, _slider_button_height, 2);
 	}
 }
 
 bool Slider::leftPress(int x, int y) {
-	if (y >= _button_y + _y && y <= _button_y + _y + SLIDER_BUTTON_HEIGHT) {
+	if (y >= _button_y + _y && y <= _button_y + _y + _slider_button_height) {
 		_pressed = true;
 		_pressed_y = y;
 		_pressed_value = _value;
@@ -109,7 +108,7 @@ void Slider::setValueInternal(float val, bool bySignal) {
 
 	// Calculate the position of the slide button
 	float t = (_max - _value) / (_max - _min);
-	_button_y = t * (_h - SLIDER_BUTTON_HEIGHT);
+	_button_y = t * (_h - _slider_button_height);
 
 	if (!bySignal && _prop)
 		*_prop = _value;

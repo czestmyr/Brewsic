@@ -7,7 +7,7 @@
 
 class Slider: public IControl, IObserver {
 	public:
-		Slider(SafePtr<IControl> parent, int x, int y, int h, float min, float max, Property<float>* prop = NULL);
+		Slider(SafePtr<IControl> parent, int x, int y, int h, float min, float max, Property<float>* prop = NULL, int bh = 10);
 		~Slider();
 
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);
@@ -35,6 +35,8 @@ class Slider: public IControl, IObserver {
 		bool _pressed;
 
 		int _button_y;
+
+		int _slider_button_height;
 };
 
 #endif
