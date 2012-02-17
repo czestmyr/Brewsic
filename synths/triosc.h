@@ -2,7 +2,7 @@
 #define _TRIPLE_OSCILLATOR_
 
 #include "Isynth.h"
-#include "mixer.h"
+#include "mixer/mixer.h"
 #include "generators/Igenerator.h"
 #include "generators/saw.h"
 #include "generators/square.h"

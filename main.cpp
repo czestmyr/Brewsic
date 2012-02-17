@@ -4,7 +4,7 @@
 #include <climits>
 #include <fstream>
 
-#include "mixer.h"
+#include "mixer/mixer.h"
 #include "generators/sine.h"
 #include "generators/saw.h"
 #include "generators/square.h"

@@ -26,8 +26,8 @@ file(GLOB_RECURSE CXX_SOURCES
 	${CMAKE_SOURCE_DIR}/generators/*.cpp
 	${CMAKE_SOURCE_DIR}/gui/*.cpp
 	${CMAKE_SOURCE_DIR}/synths/*.cpp
+	${CMAKE_SOURCE_DIR}/mixer/*.cpp
 	${CMAKE_SOURCE_DIR}/main.cpp
-	${CMAKE_SOURCE_DIR}/mixer.cpp
 )
 
 file(GLOB_RECURSE IMG_DATA
