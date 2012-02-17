@@ -46,7 +46,7 @@ using namespace std;
 MainMixer mmix(_SAMPLES, 16);
 
 SynthFactory synthFactory(_SAMPLES);
-SafePtr<ISynth> osc;
+SafePtr<TripleOscillator> osc;
 
 float myMin = 20;
 float myMax = 20000;
@@ -142,7 +142,7 @@ int main(int argc, char* argv[]) {
 	SDL_Surface* screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, 0);
 
 	// Synth factory test
-	osc = synthFactory.createNewSynth("TripleOscillator");
+	osc = synthFactory.createNewSynth("TripleOscillator").cast<TripleOscillator>();
 
 	// Mixer
 	SynthQueue* sq = mmix.getSynthQueue(0);
@@ -160,7 +160,7 @@ int main(int argc, char* argv[]) {
 	new Button(gui_bg, WIDTH, 5, "Quit Brewsic", &quit_prop);
 
 	SafePtr<Keyboard> kbd = safe_new(Keyboard(gui_bg, 50, 350, 200)).cast<Keyboard>();
-	kbd->setSynth(osc);
+	kbd->setSynth(osc.cast<ISynth>());
 	SafePtr<Matrix> mtrx = safe_new(Matrix(gui_bg, 130, 350, 400, 200)).cast<Matrix>();
 	KeyboardMover kbd_up(kbd, mtrx, true);
 	KeyboardMover kbd_dn(kbd, mtrx, false);
@@ -168,9 +168,9 @@ int main(int argc, char* argv[]) {
 	new Button(gui_bg, WIDTH - 250, 50, "Up", &kbd_up._prop);
 	new Button(gui_bg, WIDTH - 250, 75, "Down", &kbd_dn._prop);
 
-	SafePtr<PictureSelector> psel1 = safe_new(PictureSelector(gui_bg, WIDTH - 250, 100, 32, 32, &osc._first_gen)).cast<PictureSelector>();
-	SafePtr<PictureSelector> psel2 = safe_new(PictureSelector(gui_bg, WIDTH - 250, 140, 32, 32, &osc._second_gen)).cast<PictureSelector>();
-	SafePtr<PictureSelector> psel3 = safe_new(PictureSelector(gui_bg, WIDTH - 250, 180, 32, 32, &osc._third_gen)).cast<PictureSelector>();
+	SafePtr<PictureSelector> psel1 = safe_new(PictureSelector(gui_bg, WIDTH - 250, 100, 32, 32, &osc->_first_gen)).cast<PictureSelector>();
+	SafePtr<PictureSelector> psel2 = safe_new(PictureSelector(gui_bg, WIDTH - 250, 140, 32, 32, &osc->_second_gen)).cast<PictureSelector>();
+	SafePtr<PictureSelector> psel3 = safe_new(PictureSelector(gui_bg, WIDTH - 250, 180, 32, 32, &osc->_third_gen)).cast<PictureSelector>();
 	for (int i = 0; i < (int)GEN_NUMBER; ++i) {
 		const char* filename = GeneratorFactory::inst()->getGeneratorPictureFilename((GeneratorType)i);
 		psel1->addPicture(filename);
