@@ -5,6 +5,8 @@
 #include <fstream>
 
 #include "mixer/mixer.h"
+#include "mixer/mainmixer.h"
+#include "mixer/synthqueue.h"
 #include "generators/sine.h"
 #include "generators/saw.h"
 #include "generators/square.h"
@@ -40,24 +42,7 @@ using namespace std;
 #define WIDTH 800
 #define HEIGHT 600
 
-SquareGenerator ga(20);
-SineGenerator gb(80);
-SineGenerator gc(70);
-GateFilter gate(10.0, 0.1);
-Adsr adsr(1, 5, 10, 150);
-DelayFilter delay(5000, 0.80);
-DelayFilter delay2(10000, 0.90);
-FlangerFilter flanger(54);
-FlangerFilter flanger2(100);
-FlangerFilter flanger3(83);
-FlangerFilter flanger4(200);
-Volume vol1(8.0);
-Volume vol2(0.5);
-float a[_SAMPLES];
-float b[_SAMPLES];
-float c[_SAMPLES];
-Uint16 buf[_SAMPLES];
-Mixer mix(_SAMPLES);
+MainMixer mmix(_SAMPLES, 16);
 
 SynthFactory synthFactory(_SAMPLES);
 SafePtr<ISynth> osc;
@@ -75,43 +60,11 @@ float myValue2 = 30;
 ofstream ofile;
 
 void audioCallback(void *userdata, Uint8 *stream, int len) {
-	mix.clear();
-	osc.generateOutput(mix.getBuffer());
-	delay.filter(_SAMPLES, mix.getBuffer());
-	delay2.filter(_SAMPLES, mix.getBuffer());
-//	flanger.filter(_SAMPLES, mix.getBuffer());
-//	flanger2.filter(_SAMPLES, mix.getBuffer());
-//	flanger3.filter(_SAMPLES, mix.getBuffer());
-//	flanger4.filter(_SAMPLES, mix.getBuffer());
-	vol2.filter(_SAMPLES, mix.getBuffer());
-//	gate.filter(_SAMPLES, mix.getBuffer());
-
-	ga.generate(_SAMPLES, a);
-	adsr.filter(_SAMPLES, a);
-	vol1.filter(_SAMPLES, a);
-	mix.mixIn(a);
-
-	mix.copyBuffer((Uint16*)stream);
+	mmix.mixInto((Uint16*)stream);
 }
 
 Slider* s1;
 Checkbox* ch1;
-
-class DGCreator: public IObserver {
-	public:
-		DGCreator(SafePtr<IControl> parent): _parent(parent), _dg((IControl*)NULL) {
-			_prop.addObserver(this);
-		}
-
-		void signal() {
-			_dg = safe_new(DelayGui(_parent, &delay));
-		}
-
-		Property<int> _prop;
-	private:
-		SafePtr<IControl> _parent;
-		SafePtr<IControl> _dg;
-};
 
 class TGCreator: public IObserver {
 	public:
@@ -187,6 +140,10 @@ int main(int argc, char* argv[]) {
 	// Synth factory test
 	osc = synthFactory.createNewSynth("TripleOscillator");
 
+	// Mixer
+	SynthQueue* sq = mmix.getSynthQueue(0);
+	sq->pushSynth(osc.cast<ISynth>());
+
 	SDL_PauseAudio(0);
 
 	// Gui setup
@@ -231,9 +188,6 @@ int main(int argc, char* argv[]) {
 	//Timing
 	Uint32 time = SDL_GetTicks();
 	Uint32 dt = 0;
-
-	// Delay gui test
-	SafePtr<Button> dgCreate = safe_new(Button(gui_bg, 10, 290, "Create delay filter window")).cast<Button>();
 
 	// Triosc gui test
 	TGCreator tgCreator(gui_bg);
