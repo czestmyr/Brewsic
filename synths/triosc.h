@@ -46,6 +46,8 @@ class TripleOscillator: public ISynth{
 		void generateOutput();
 		float* getBuffer();
 
+		const char* getClassName() { return "TripleOscillator"; }
+
 		Property<float> _shift;
 		Property<float> _first;
 		Property<float> _second;

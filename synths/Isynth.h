@@ -8,6 +8,8 @@ class ISynth {
 
 		virtual void generateOutput() = 0;
 		virtual float* getBuffer() = 0;
+
+		virtual const char* getClassName() = 0;
 };
 
 #endif
