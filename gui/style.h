@@ -17,6 +17,7 @@ class Style {
 		SDL_Color getBgColor() { return _bgcolor; }
 		SDL_Color getFgColor() { return _fgcolor; }
 		SDL_Color getShadeColor() { return _shade; }
+		SDL_Color getMediumColor() { return _medium; }
 		SDL_Color getLightColor() { return _light; }
 
 		void drawInset(SDL_Surface* surf, int x, int y, int w, int h, int depth);
@@ -27,6 +28,7 @@ class Style {
 		SDL_Color _bgcolor;
 		SDL_Color _fgcolor;
 		SDL_Color _shade;
+		SDL_Color _medium;
 		SDL_Color _light;
 };
 

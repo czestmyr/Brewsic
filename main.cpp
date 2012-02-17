@@ -23,6 +23,7 @@
 #include "gui/button.h"
 #include "gui/style.h"
 #include "gui/keyboard.h"
+#include "gui/matrix.h"
 #include "gui/pselect.h"
 #include "gui/image.h"
 #include "gui/wheel.h"
@@ -85,7 +86,7 @@ class TGCreator: public IObserver {
 
 class KeyboardMover: public IObserver {
 	public:
-		KeyboardMover(SafePtr<Keyboard> kbd, bool up): _kbd(kbd), _up(up) {
+		KeyboardMover(SafePtr<Keyboard> kbd, SafePtr<Matrix> mtx, bool up): _kbd(kbd), _mtx(mtx), _up(up) {
 			_prop.addObserver(this);
 		}
 
@@ -94,15 +95,18 @@ class KeyboardMover: public IObserver {
 				int shift = _kbd->getShift() - 20;
 				if (shift < 0) shift = 0;
 				_kbd->setShift(shift);
+				_mtx->setShift(shift);
 			} else {
 				int shift = _kbd->getShift() + 20;
 				_kbd->setShift(shift);
+				_mtx->setShift(shift);
 			}
 		}
 
 		Property<int> _prop;
 	private:
 		SafePtr<Keyboard> _kbd;
+		SafePtr<Matrix> _mtx;
 		bool _up;
 };
 
@@ -155,10 +159,11 @@ int main(int argc, char* argv[]) {
 	Property<int> quit_prop(0);
 	new Button(gui_bg, WIDTH, 5, "Quit Brewsic", &quit_prop);
 
-	SafePtr<Keyboard> kbd = safe_new(Keyboard(gui_bg, WIDTH - 200, 50, 400)).cast<Keyboard>();
-	kbd->setSynth(&osc);
-	KeyboardMover kbd_up(kbd, true);
-	KeyboardMover kbd_dn(kbd, false);
+	SafePtr<Keyboard> kbd = safe_new(Keyboard(gui_bg, 50, 350, 200)).cast<Keyboard>();
+	kbd->setSynth(osc);
+	SafePtr<Matrix> mtrx = safe_new(Matrix(gui_bg, 130, 350, 400, 200)).cast<Matrix>();
+	KeyboardMover kbd_up(kbd, mtrx, true);
+	KeyboardMover kbd_dn(kbd, mtrx, false);
 
 	new Button(gui_bg, WIDTH - 250, 50, "Up", &kbd_up._prop);
 	new Button(gui_bg, WIDTH - 250, 75, "Down", &kbd_dn._prop);

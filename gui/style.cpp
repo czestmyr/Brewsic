@@ -16,6 +16,10 @@ Style::Style() {
 	_shade.g = 5;
 	_shade.b = 10;
 
+	_medium.r = 128;
+	_medium.g = 128;
+	_medium.b = 192;
+
 	_light.r = 192;
 	_light.g = 192;
 	_light.b = 255;
