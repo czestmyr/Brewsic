@@ -6,7 +6,8 @@ class ISynth {
 		virtual void startNote(int noteId, float frequency) = 0;
 		virtual void stopNote(int noteId) = 0;
 
-		virtual void generateOutput(float* buffer) = 0;
+		virtual void generateOutput() = 0;
+		virtual float* getBuffer() = 0;
 };
 
 #endif

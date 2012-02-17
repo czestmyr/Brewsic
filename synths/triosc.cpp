@@ -1,6 +1,7 @@
 #include "triosc.h"
 
 #include <cmath>
+#include <iostream>
 
 using namespace std;
 
@@ -75,7 +76,7 @@ void TripleOscillator::stopNote(int noteId) {
 	}
 }
 
-void TripleOscillator::generateOutput(float* buffer) {
+void TripleOscillator::generateOutput() {
 	_mixer.clear();
 	for (int i = 0; i < POLYPHONY; ++i) {
 		for (int j = 0; j < 3; ++j) {
@@ -84,8 +85,10 @@ void TripleOscillator::generateOutput(float* buffer) {
 			_mixer.mixIn(_buffers[i]);
 		}
 	}
+}
 
-	_mixer.copyBufferFloat(buffer);
+float* TripleOscillator::getBuffer() {
+	return _mixer.getBuffer();
 }
 
 void TripleOscillator::checkGenerators() {

@@ -43,7 +43,8 @@ class TripleOscillator: public ISynth{
 
 		void startNote(int noteId, float frequency);
 		void stopNote(int noteId);
-		void generateOutput(float* buffer);
+		void generateOutput();
+		float* getBuffer();
 
 		Property<float> _shift;
 		Property<float> _first;
