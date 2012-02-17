@@ -10,7 +10,7 @@ class SynthQueue {
 		size_t size() { return _synths.size(); }
 		void pushSynth(SafePtr<ISynth> synth) { _synths.push_back(synth); }
 
-		ISynth* getSynth(int i) { return _synths[i].get(); }
+		SafePtr<ISynth> getSynth(int i) { return _synths[i]; }
 
 	private:
 		std::vector<SafePtr<ISynth> > _synths;

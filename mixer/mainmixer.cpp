@@ -35,7 +35,7 @@ void MainMixer::mixInto(Uint16* buffer) {
 
 		_mixers[ch]->clear();
 		for (int s = 0; s < _synths[ch]->size(); ++s) {
-			ISynth* synth = _synths[ch]->getSynth(s);
+			SafePtr<ISynth> synth = _synths[ch]->getSynth(s);
 			synth->generateOutput();
 			if (s == 0) {
 				_mixers[ch]->copyFromBufferFloat(synth->getBuffer());
