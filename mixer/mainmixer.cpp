@@ -15,7 +15,7 @@ MainMixer::MainMixer(int bufsize, int channels): _main_mixer(bufsize) {
 	for (int i = 0; i < _channels; ++i) {
 		_mixers[i] = new Mixer(_bufsize);
 		_filters[i] = new FilterQueue();
-		_synths[i] = new SynthQueue();
+		_synths[i] = new SynthQueue("Synth Queue");
 	}
 }
 

@@ -144,16 +144,17 @@ int main(int argc, char* argv[]) {
 	// Synth factory test
 	osc = synthFactory.createNewSynth("TripleOscillator").cast<TripleOscillator>();
 
-	// Mixer
-	SynthQueue* sq = mmix.getSynthQueue(0);
-	sq->pushSynth(osc.cast<ISynth>());
-
-	SDL_PauseAudio(0);
-
 	// Gui setup
 	GuiMgr gui;
 	SafePtr<IControl> gui_bg = safe_new(Background((IControl*)NULL, 4, 4, WIDTH-8, HEIGHT-8));
 	gui.adoptControl(gui_bg);
+
+	// Mixer
+	SynthQueue* sq = mmix.getSynthQueue(0);
+	sq->setGuiParent(gui_bg);
+	sq->pushSynth(osc.cast<ISynth>());
+
+	safe_new(Button(gui_bg, 500, 500, "Synth Queue 1 Gui", &sq->_guiSignal));
 
 	//Quit button
 	Property<int> quit_prop(0);
@@ -197,6 +198,9 @@ int main(int argc, char* argv[]) {
 	// Triosc gui test
 	TGCreator tgCreator(gui_bg);
 	SafePtr<Button> tgCreate = safe_new(Button(gui_bg, 10, 310, "Create 3xOsc GUI", &tgCreator._prop)).cast<Button>();
+
+	// Start sound
+	SDL_PauseAudio(0);
 
 	// Main event loop
 	SDL_Event e;
