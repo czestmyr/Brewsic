@@ -12,7 +12,7 @@
 class IControl {
 	public:
 		IControl(SafePtr<IControl> parent): _parent(parent), _x(0), _y(0), _w(0), _h(0),
-			_delete_me(false) {
+			_delete_me(false), _margins(5), _pack_horizontally(false), _auto_packing(false) {
 			_this_ref_ptr = new RefPtr<IControl>(this);
 			if (_parent) _parent->adopt(safePtr());
 		}
@@ -198,6 +198,8 @@ class IControl {
 		}
 
 		void redim(int x, int y, int w, int h) {
+			bool resize = false;
+			if (_w != w || _h != h) resize = true;
 			_x = x; _y = y; _w = w; _h = h;
 
 			if (_parent) {
@@ -209,6 +211,61 @@ class IControl {
 				if (_y < _parent->getYMin()) _y = _parent->getYMin();
 				if (_x + _w > _parent->getXMax()) _x = _parent->getXMax() - _w;
 				if (_y + _h > _parent->getYMax()) _y = _parent->getYMax() - _h;		
+			}
+
+			if (resize && _auto_packing && _children.size() != 0) {
+				if (_pack_horizontally)
+					packHorizontally(_margins);
+				else
+					packVertically(_margins);
+			}
+		}
+
+		void packHorizontally(int margins) {
+			_auto_packing = true;
+			_pack_horizontally = true;
+			_margins = margins;
+			int margin_space = (_children.size()-1)*margins;
+			int gui_space = getXMax() - getXMin() - margin_space;
+			int gui_space_one = gui_space / _children.size();
+			int leftovers = gui_space % _children.size();
+
+			_it = _children.begin();
+			int x = getXMin();
+			int y = getYMin();
+			int h = getYMax() - getYMin();
+			int i = 0;
+			while (_it != _children.end()) {
+				(*_it)->redim(x, y, gui_space_one, h);
+				if (i < leftovers)
+					x += margins + gui_space_one + 1;
+				else
+					x += margins + gui_space_one;
+				++_it; ++i;
+			}
+		}
+
+		void packVertically(int margins) {
+			_auto_packing = true;
+			_pack_horizontally = false;
+			_margins = margins;
+			int margin_space = (_children.size()-1)*margins;
+			int gui_space = getYMax() - getYMin() - margin_space;
+			int gui_space_one = gui_space / _children.size();
+			int leftovers = gui_space % _children.size();
+
+			_it = _children.begin();
+			int x = getXMin();
+			int y = getYMin();
+			int w = getXMax() - getXMin();
+			int i = 0;
+			while (_it != _children.end()) {
+				(*_it)->redim(x, y, w, gui_space_one);
+				if (i < leftovers)
+					y += margins + gui_space_one + 1;
+				else
+					y += margins + gui_space_one;
+				++_it; ++i;
 			}
 		}
 
@@ -250,6 +307,10 @@ class IControl {
 		int _y;
 		int _w;
 		int _h;
+
+		bool _auto_packing;
+		bool _pack_horizontally;
+		int _margins;
 
 		bool _delete_me;
 
