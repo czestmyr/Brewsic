@@ -37,7 +37,7 @@ Keyboard::Keyboard(SafePtr<IControl> parent, int x, int y, int h)
 : IControl(parent){
 	redim(x, y, 80, h);
 	_shift = 720;
-	_synth = NULL;
+	_synth = (ISynth*)NULL;
 	_lastNote = -1;
 
 	_kww = IMG_Load("data/images/kww.png");

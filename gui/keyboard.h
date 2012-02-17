@@ -13,7 +13,7 @@ class Keyboard: public IControl {
 		bool leftPress(int x, int y);
 		bool leftRelease(int x, int y);
 
-		void setSynth(ISynth* synth) { _synth = synth; }
+		void setSynth(SafePtr<ISynth> synth) { _synth = synth; }
 		void setShift(int shift) { _shift = shift; }
 		int getShift() { return _shift; }
 	private:
@@ -21,7 +21,7 @@ class Keyboard: public IControl {
 		SDL_Surface* _kwn;
 		SDL_Surface* _kbn;
 
-		ISynth* _synth;
+		SafePtr<ISynth> _synth;
 
 		int _shift;
 		int _lastNote;
