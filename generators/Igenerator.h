@@ -9,7 +9,8 @@ class IGenerator {
 	public:
 		IGenerator(float frequency, float phase) {
 			_samp_freq = 22050.0;
-			_phase = phase;
+			_init_phase = phase;
+			reset();
 			setFreq(frequency);
 		}
 
@@ -28,11 +29,14 @@ class IGenerator {
 			SDL_UnlockAudio();
 		}
 
+		void reset() { _phase = _init_phase; };
+
 	protected:
 		float _samp_freq;
 		float _freq;
 		float _phase_inc;
 		float _phase;
+		float _init_phase;
 };
 
 #endif
