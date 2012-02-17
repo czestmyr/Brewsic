@@ -21,3 +21,7 @@ void Mixer::copyBufferFloat(float* buffer) {
 	memcpy(buffer, _buffer, sizeof(float)*_bufsize);
 }
 
+void Mixer::copyFromBufferFloat(float* buffer) {
+	memcpy(_buffer, buffer, sizeof(float)*_bufsize);
+}
+
