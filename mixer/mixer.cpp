@@ -7,7 +7,7 @@ void Mixer::clear() {
 
 void Mixer::mixIn(float* buffer) {
 	for (int i = 0; i < _bufsize; ++i) {
-		_buffer[i] = _buffer[i] + buffer[i] - _buffer[i]*buffer[i];
+		_buffer[i] = _buffer[i] + buffer[i];
 	}
 }
 
