@@ -13,6 +13,7 @@ Window::Window(SafePtr<IControl> parent, int x, int y, int w, int h, const char*
 
 	_title_h = 0;
 	_close_btn = new Button(this, _w, 0, "X", &_c_prop);
+	_close_btn->setPackable(false);
 	_c_prop.addObserver(&_c_obs);
 	_title_h = 20;
 }

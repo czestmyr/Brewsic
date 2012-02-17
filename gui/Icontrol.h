@@ -12,7 +12,8 @@
 class IControl {
 	public:
 		IControl(SafePtr<IControl> parent): _parent(parent), _x(0), _y(0), _w(0), _h(0),
-			_delete_me(false), _margins(5), _pack_horizontally(false), _auto_packing(false) {
+			_delete_me(false), _margins(5), _pack_horizontally(false), _auto_packing(false),
+       			_packable(true)	{
 			_this_ref_ptr = new RefPtr<IControl>(this);
 			if (_parent) _parent->adopt(safePtr());
 		}
@@ -225,10 +226,18 @@ class IControl {
 			_auto_packing = true;
 			_pack_horizontally = true;
 			_margins = margins;
-			int margin_space = (_children.size()-1)*margins;
+
+			int packable_children = 0;
+			_it = _children.begin();
+			while (_it != _children.end()) {
+				if ((*_it)->_packable) packable_children++;
+				_it++;
+			}
+
+			int margin_space = (packable_children-1)*margins;
 			int gui_space = getXMax() - getXMin() - margin_space;
-			int gui_space_one = gui_space / _children.size();
-			int leftovers = gui_space % _children.size();
+			int gui_space_one = gui_space / packable_children;
+			int leftovers = gui_space % packable_children;
 
 			_it = _children.begin();
 			int x = getXMin();
@@ -236,11 +245,13 @@ class IControl {
 			int h = getYMax() - getYMin();
 			int i = 0;
 			while (_it != _children.end()) {
-				(*_it)->redim(x, y, gui_space_one, h);
-				if (i < leftovers)
-					x += margins + gui_space_one + 1;
-				else
-					x += margins + gui_space_one;
+				if ((*_it)->_packable) {
+					(*_it)->redim(x, y, gui_space_one, h);
+					if (i < leftovers)
+						x += margins + gui_space_one + 1;
+					else
+						x += margins + gui_space_one;
+				}
 				++_it; ++i;
 			}
 		}
@@ -249,10 +260,18 @@ class IControl {
 			_auto_packing = true;
 			_pack_horizontally = false;
 			_margins = margins;
-			int margin_space = (_children.size()-1)*margins;
-			int gui_space = getYMax() - getYMin() - margin_space;
-			int gui_space_one = gui_space / _children.size();
-			int leftovers = gui_space % _children.size();
+
+			int packable_children = 0;
+			_it = _children.begin();
+			while (_it != _children.end()) {
+				if ((*_it)->_packable) packable_children++;
+				_it++;
+			}
+
+			int margin_space = (packable_children-1)*margins;
+			int gui_space = getXMax() - getXMin() - margin_space;
+			int gui_space_one = gui_space / packable_children;
+			int leftovers = gui_space % packable_children;
 
 			_it = _children.begin();
 			int x = getXMin();
@@ -260,14 +279,18 @@ class IControl {
 			int w = getXMax() - getXMin();
 			int i = 0;
 			while (_it != _children.end()) {
-				(*_it)->redim(x, y, w, gui_space_one);
-				if (i < leftovers)
-					y += margins + gui_space_one + 1;
-				else
-					y += margins + gui_space_one;
+				if ((*_it)->_packable) {
+					(*_it)->redim(x, y, w, gui_space_one);
+					if (i < leftovers)
+						y += margins + gui_space_one + 1;
+					else
+						y += margins + gui_space_one;
+				}
 				++_it; ++i;
 			}
 		}
+
+		void setPackable(bool p) { _packable = p; }
 
 		void adopt(SafePtr<IControl> child) { _children.push_back(child); }
 		void leave(SafePtr<IControl> child) { _children.remove(child); }
@@ -311,6 +334,7 @@ class IControl {
 		bool _auto_packing;
 		bool _pack_horizontally;
 		int _margins;
+		bool _packable;
 
 		bool _delete_me;
 
