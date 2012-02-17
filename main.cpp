@@ -14,6 +14,7 @@
 #include "filters/flanger.h"
 #include "filters/volume.h"
 #include "synths/triosc.h"
+#include "synths/synthfactory.h"
 #include "gui/guimgr.h"
 #include "gui/window.h"
 #include "gui/background.h"
@@ -58,7 +59,8 @@ float c[_SAMPLES];
 Uint16 buf[_SAMPLES];
 Mixer mix(_SAMPLES);
 
-TripleOscillator osc(_SAMPLES);
+SynthFactory synthFactory(_SAMPLES);
+SafePtr<ISynth> osc;
 
 float myMin = 20;
 float myMax = 20000;
@@ -119,7 +121,7 @@ class TGCreator: public IObserver {
 
 		void signal() {
 			if (_tg) _tg->deleteMe();
-			_tg = safe_new(TripleOscillatorGui(_parent, &osc));
+			_tg = safe_new(TripleOscillatorGui(_parent, (TripleOscillator*)osc.get()));
 		}
 
 		Property<int> _prop;
@@ -181,6 +183,9 @@ int main(int argc, char* argv[]) {
 	free(desired);
 
 	SDL_Surface* screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, 0);
+
+	// Synth factory test
+	osc = synthFactory.createNewSynth("TripleOscillator");
 
 	SDL_PauseAudio(0);
 
@@ -277,12 +282,12 @@ int main(int argc, char* argv[]) {
 		// Sequencer
 		seq_dur += dt;
 		while (seq_dur >= seq_length) {
-			osc.stopNote(seq_ind+1);
+			osc->stopNote(seq_ind+1);
 			seq_dur -= seq_length;
 			seq_ind++;
 			if (seq_ind >= seq_size) seq_ind %= seq_size;
 			if (sequencer[seq_ind]) {
-				osc.startNote(seq_ind+1, seq_freq[seq_ind]);
+				osc->startNote(seq_ind+1, seq_freq[seq_ind]);
 			}
 		}
 
