@@ -13,7 +13,7 @@ class IControl {
 	public:
 		IControl(SafePtr<IControl> parent): _parent(parent), _x(0), _y(0), _w(0), _h(0),
 			_delete_me(false), _margins(5), _pack_horizontally(false), _auto_packing(false),
-       			_packable(true)	{
+       			_packable(true), _focusable(false) {
 			_this_ref_ptr = new RefPtr<IControl>(this);
 			if (_parent) _parent->adopt(safePtr());
 		}
@@ -292,7 +292,7 @@ class IControl {
 
 		void setPackable(bool p) { _packable = p; }
 
-		void adopt(SafePtr<IControl> child) { _children.push_back(child); }
+		void adopt(SafePtr<IControl> child) { _children.push_front(child); }
 		void leave(SafePtr<IControl> child) { _children.remove(child); }
 
 		int getW() { return _w; }
@@ -300,7 +300,7 @@ class IControl {
 		int getX() { return _x; }
 		int getY() { return _y; }
 
-		void toFront() { if (_parent) _parent->childToFront(_this_ref_ptr); }
+		void toFront() { if (_focusable && _parent) _parent->childToFront(_this_ref_ptr); }
 		void childToFront(SafePtr<IControl> child) {
 			_it = _children.begin();
 			while (_it != _children.end()) {
@@ -335,6 +335,8 @@ class IControl {
 		bool _pack_horizontally;
 		int _margins;
 		bool _packable;
+
+		bool _focusable;
 
 		bool _delete_me;
 

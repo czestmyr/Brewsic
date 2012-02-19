@@ -10,6 +10,7 @@ Window::Window(SafePtr<IControl> parent, int x, int y, int w, int h, const char*
 	_status_h = 20;
 	_name = title;
 	_dragging = false;
+	_focusable = true;
 
 	_title_h = 0;
 	_close_btn = new Button(this, _w, 0, "X", _close.getSignal());
