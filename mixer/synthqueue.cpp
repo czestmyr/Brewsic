@@ -11,7 +11,7 @@ void SynthQueue::guiSignal() {
 	_gui = safe_new(Window(_gui_parent, 0, 0, 200, window_size, _name.c_str()));
 
 	for (int i = 0; i < _size; ++i) {
-		safe_new(Button(_gui, 0, 0, _synths[i]->getClassName()));
+		safe_new(Button(_gui, 0, 0, _synths[i]->getClassName(), _synths[i]->_createGui.getSignal()));
 	}
 
 	_gui->packVertically(5);

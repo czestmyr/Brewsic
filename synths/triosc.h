@@ -47,7 +47,7 @@ class TripleOscillator: public ISynth{
 		float* getBuffer();
 
 		const char* getClassName() { return "TripleOscillator"; }
-		void createGui(SafePtr<IControl> parent);
+		void createGui();
 
 		Property<float> _shift;
 		Property<float> _first;

@@ -141,13 +141,14 @@ int main(int argc, char* argv[]) {
 
 	SDL_Surface* screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, 0);
 
-	// Synth factory test
-	osc = synthFactory.createNewSynth("TripleOscillator").cast<TripleOscillator>();
-
 	// Gui setup
 	GuiMgr gui;
 	SafePtr<IControl> gui_bg = safe_new(Background((IControl*)NULL, 4, 4, WIDTH-8, HEIGHT-8));
 	gui.adoptControl(gui_bg);
+
+	// Synth factory test
+	osc = synthFactory.createNewSynth("TripleOscillator").cast<TripleOscillator>();
+	osc->setGuiParent(gui_bg);
 
 	// Mixer
 	SynthQueue* sq = mmix.getSynthQueue(0);

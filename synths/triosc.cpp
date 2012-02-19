@@ -94,10 +94,10 @@ float* TripleOscillator::getBuffer() {
 	return _mixer.getBuffer();
 }
 
-void TripleOscillator::createGui(SafePtr<IControl> parent) {
+void TripleOscillator::createGui() {
 	if (_gui) _gui->deleteMe();
 
-	_gui = safe_new(TripleOscillatorGui(parent, this));
+	_gui = safe_new(TripleOscillatorGui(_gui_parent, this));
 }
 
 void TripleOscillator::checkGenerators() {
