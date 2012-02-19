@@ -3,6 +3,9 @@
 #include <cmath>
 #include <iostream>
 
+#include "gui/Icontrol.h"
+#include "gui/synths/triosc.h"
+
 using namespace std;
 
 TripleOscillator::TripleOscillator(int bufsize):
@@ -89,6 +92,12 @@ void TripleOscillator::generateOutput() {
 
 float* TripleOscillator::getBuffer() {
 	return _mixer.getBuffer();
+}
+
+void TripleOscillator::createGui(SafePtr<IControl> parent) {
+	if (_gui) _gui->deleteMe();
+
+	_gui = safe_new(TripleOscillatorGui(parent, this));
 }
 
 void TripleOscillator::checkGenerators() {

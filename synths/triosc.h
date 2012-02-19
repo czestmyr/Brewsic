@@ -47,6 +47,7 @@ class TripleOscillator: public ISynth{
 		float* getBuffer();
 
 		const char* getClassName() { return "TripleOscillator"; }
+		void createGui(SafePtr<IControl> parent);
 
 		Property<float> _shift;
 		Property<float> _first;
@@ -74,6 +75,8 @@ class TripleOscillator: public ISynth{
 		std::queue<int> _channelQueue;
 
 		int _bufsize;
+
+		SafePtr<IControl> _gui;
 };
 
 #endif
