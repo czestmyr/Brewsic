@@ -32,31 +32,20 @@
 #include "gui/style.h"
 #include "gui/filters/delaygui.h"
 #include "gui/synths/triosc.h"
-
-#include "common/propertytest.h"
+#include "common/signals.h"
 
 using namespace std;
 
 #define _FREQ 22050
 #define _SAMPLES 256
+#define _CHANNELS 16
 
 #define WIDTH 800
 #define HEIGHT 600
 
-MainMixer mmix(_SAMPLES, 16);
-
+MainMixer mmix(_SAMPLES, _CHANNELS);
 SynthFactory synthFactory(_SAMPLES);
 SafePtr<TripleOscillator> osc;
-
-float myMin = 20;
-float myMax = 20000;
-float myValue = 440;
-float myMin1 = -2400;
-float myMax1 = 2400;
-float myValue1 = -30;
-float myMin2 = -2400;
-float myMax2 = 2400;
-float myValue2 = 30;
 
 ofstream ofile;
 
@@ -64,51 +53,32 @@ void audioCallback(void *userdata, Uint8 *stream, int len) {
 	mmix.mixInto((Uint16*)stream);
 }
 
-Slider* s1;
-Checkbox* ch1;
+bool do_quit(false);
+SafePtr<Keyboard> kbd;
+SafePtr<Matrix> mtrx;
 
-class TGCreator: public IObserver {
+class MainSignals {
 	public:
-		TGCreator(SafePtr<IControl> parent): _parent(parent), _tg((IControl*)NULL) {
-			_prop.addObserver(this);
-		}
+		MainSignals(): _quit(this), _kbdUp(this), _kbdDown(this) {}
 
-		void signal() {
-			if (_tg) _tg->deleteMe();
-			_tg = safe_new(TripleOscillatorGui(_parent, (TripleOscillator*)osc.get()));
+		SIGNAL_DESTINATION(_quit, MainSignals, quit);
+		SIGNAL_DESTINATION(_kbdUp, MainSignals, kbdUp);
+		SIGNAL_DESTINATION(_kbdDown, MainSignals, kbdDown);
+	
+		void quit() { do_quit = true; }
+		void kbdUp() {
+			int shift = kbd->getShift() - 20;
+			if (shift < 0) shift = 0;
+			kbd->setShift(shift);
+			mtrx->setShift(shift);
 		}
-
-		Property<int> _prop;
-	private:
-		SafePtr<IControl> _parent;
-		SafePtr<IControl> _tg;
+		void kbdDown() {
+			int shift = kbd->getShift() + 20;
+			kbd->setShift(shift);
+			mtrx->setShift(shift);
+		}
 };
-
-class KeyboardMover: public IObserver {
-	public:
-		KeyboardMover(SafePtr<Keyboard> kbd, SafePtr<Matrix> mtx, bool up): _kbd(kbd), _mtx(mtx), _up(up) {
-			_prop.addObserver(this);
-		}
-
-		void signal() {
-			if (_up) {
-				int shift = _kbd->getShift() - 20;
-				if (shift < 0) shift = 0;
-				_kbd->setShift(shift);
-				_mtx->setShift(shift);
-			} else {
-				int shift = _kbd->getShift() + 20;
-				_kbd->setShift(shift);
-				_mtx->setShift(shift);
-			}
-		}
-
-		Property<int> _prop;
-	private:
-		SafePtr<Keyboard> _kbd;
-		SafePtr<Matrix> _mtx;
-		bool _up;
-};
+MainSignals msig;
 
 int main(int argc, char* argv[]) {
 	// Initialize SDL
@@ -117,6 +87,7 @@ int main(int argc, char* argv[]) {
 		return -1;
 	}
 
+	// TODO: Move audio initialization elsewhere
 	SDL_AudioSpec* desired = (SDL_AudioSpec*)malloc(sizeof(SDL_AudioSpec));
 	SDL_AudioSpec* obtained = (SDL_AudioSpec*)malloc(sizeof(SDL_AudioSpec));
 
@@ -155,21 +126,20 @@ int main(int argc, char* argv[]) {
 	sq->setGuiParent(gui_bg);
 	sq->pushSynth(osc.cast<ISynth>());
 
-	safe_new(Button(gui_bg, 500, 500, "Synth Queue 1 Gui", sq->_guiSignal.getSignal()));
+	safe_new(Button(gui_bg, 600, 500, "Synth Queue 1 Gui", sq->_guiSignal.getSignal()));
 
-	//Quit button
-	Property<int> quit_prop(0);
-	new Button(gui_bg, WIDTH, 5, "Quit Brewsic");
+	// Quit button
+	new Button(gui_bg, WIDTH, 5, "Quit Brewsic", msig._quit.getSignal());
 
-	SafePtr<Keyboard> kbd = safe_new(Keyboard(gui_bg, 50, 350, 200)).cast<Keyboard>();
+	// Keyboard and matrix test
+	kbd = safe_new(Keyboard(gui_bg, 50, 350, 200)).cast<Keyboard>();
 	kbd->setSynth(osc.cast<ISynth>());
-	SafePtr<Matrix> mtrx = safe_new(Matrix(gui_bg, 130, 350, 400, 200)).cast<Matrix>();
-	KeyboardMover kbd_up(kbd, mtrx, true);
-	KeyboardMover kbd_dn(kbd, mtrx, false);
+	mtrx = safe_new(Matrix(gui_bg, 130, 350, 400, 200)).cast<Matrix>();
 
-	new Button(gui_bg, WIDTH - 250, 50, "Up");
-	new Button(gui_bg, WIDTH - 250, 75, "Down");
+	new Button(gui_bg, WIDTH - 250, 50, "Up", msig._kbdUp.getSignal());
+	new Button(gui_bg, WIDTH - 250, 75, "Down", msig._kbdDown.getSignal());
 
+	// Picture selectors for triosc
 	SafePtr<PictureSelector> psel1 = safe_new(PictureSelector(gui_bg, WIDTH - 250, 100, 32, 32, &osc->_first_gen)).cast<PictureSelector>();
 	SafePtr<PictureSelector> psel2 = safe_new(PictureSelector(gui_bg, WIDTH - 250, 140, 32, 32, &osc->_second_gen)).cast<PictureSelector>();
 	SafePtr<PictureSelector> psel3 = safe_new(PictureSelector(gui_bg, WIDTH - 250, 180, 32, 32, &osc->_third_gen)).cast<PictureSelector>();
@@ -180,7 +150,7 @@ int main(int argc, char* argv[]) {
 		psel3->addPicture(filename);
 	}
 
-	//Sequencer
+	// Sequencer
 	int seq_size = 8;
 	int seq_length = 500;
 	int seq_ind = 0;
@@ -192,20 +162,16 @@ int main(int argc, char* argv[]) {
 		safe_new(Slider(gui_bg, 50 + i*30, 75, 200, 100.0, 2000.0, &seq_freq[i]));
 	}
 
-	//Timing
+	// Timing
 	Uint32 time = SDL_GetTicks();
 	Uint32 dt = 0;
-
-	// Triosc gui test
-	TGCreator tgCreator(gui_bg);
-	SafePtr<Button> tgCreate = safe_new(Button(gui_bg, 10, 310, "Create 3xOsc GUI")).cast<Button>();
 
 	// Start sound
 	SDL_PauseAudio(0);
 
 	// Main event loop
 	SDL_Event e;
-	while (!quit_prop) {
+	while (!do_quit) {
 		SDL_Delay(50);
 
 		while (SDL_PollEvent(&e)) {
@@ -234,7 +200,7 @@ int main(int argc, char* argv[]) {
 					gui.keyRelease(e.key.keysym.sym);
 				break;
 				case SDL_QUIT:
-					quit_prop = 1;
+					do_quit = true;
 				break;
 			}
 		}
