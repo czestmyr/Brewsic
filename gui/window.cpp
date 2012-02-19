@@ -5,16 +5,15 @@
 #include <iostream>
 
 Window::Window(SafePtr<IControl> parent, int x, int y, int w, int h, const char* title)
-: IControl(parent), _c_obs(this) {
+: IControl(parent), _close(this) {
 	redim(x, y, w, h);
 	_status_h = 20;
 	_name = title;
 	_dragging = false;
 
 	_title_h = 0;
-	_close_btn = new Button(this, _w, 0, "X", &_c_prop);
+	_close_btn = new Button(this, _w, 0, "X", _close.getSignal());
 	_close_btn->setPackable(false);
-	_c_prop.addObserver(&_c_obs);
 	_title_h = 20;
 }
 

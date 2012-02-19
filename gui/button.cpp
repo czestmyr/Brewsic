@@ -3,16 +3,11 @@
 #include "fonts.h"
 #include "common/property.h"
 
-Button::Button(SafePtr<IControl> parent, int x, int y, const char* text, Property<int>* prop)
-: IControl(parent), _text(text), _prop(prop) {
+Button::Button(SafePtr<IControl> parent, int x, int y, const char* text, Signal sig)
+: IControl(parent), _text(text), _sig(sig) {
 	int w = Fonts::inst()->getTextWidth(text) + 8;
 	redim(x, y, w, 20);
 	_textSurf = NULL;
-
-	if (prop) {
-		_prop->addObserver(this);
-	}
-
 	_pressed = false;
 }
 
@@ -60,18 +55,10 @@ bool Button::leftPress(int x, int y) {
 bool Button::leftRelease(int x, int y) {
 	if (inside(x,y) && _pressed) {
 		_pressed = false;
-		if (_prop) {
-			*_prop = *_prop + 1;
-		}
+		_sig();
 	} else 
 		_pressed = false;
 
 	return true;
-}
-
-void Button::signal() {}
-
-void Button::disconnect() {
-	_prop = NULL;
 }
 

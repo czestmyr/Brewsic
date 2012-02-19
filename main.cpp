@@ -154,11 +154,11 @@ int main(int argc, char* argv[]) {
 	sq->setGuiParent(gui_bg);
 	sq->pushSynth(osc.cast<ISynth>());
 
-	safe_new(Button(gui_bg, 500, 500, "Synth Queue 1 Gui", &sq->_guiSignal));
+	safe_new(Button(gui_bg, 500, 500, "Synth Queue 1 Gui", sq->_guiSignal.getSignal()));
 
 	//Quit button
 	Property<int> quit_prop(0);
-	new Button(gui_bg, WIDTH, 5, "Quit Brewsic", &quit_prop);
+	new Button(gui_bg, WIDTH, 5, "Quit Brewsic");
 
 	SafePtr<Keyboard> kbd = safe_new(Keyboard(gui_bg, 50, 350, 200)).cast<Keyboard>();
 	kbd->setSynth(osc.cast<ISynth>());
@@ -166,8 +166,8 @@ int main(int argc, char* argv[]) {
 	KeyboardMover kbd_up(kbd, mtrx, true);
 	KeyboardMover kbd_dn(kbd, mtrx, false);
 
-	new Button(gui_bg, WIDTH - 250, 50, "Up", &kbd_up._prop);
-	new Button(gui_bg, WIDTH - 250, 75, "Down", &kbd_dn._prop);
+	new Button(gui_bg, WIDTH - 250, 50, "Up");
+	new Button(gui_bg, WIDTH - 250, 75, "Down");
 
 	SafePtr<PictureSelector> psel1 = safe_new(PictureSelector(gui_bg, WIDTH - 250, 100, 32, 32, &osc->_first_gen)).cast<PictureSelector>();
 	SafePtr<PictureSelector> psel2 = safe_new(PictureSelector(gui_bg, WIDTH - 250, 140, 32, 32, &osc->_second_gen)).cast<PictureSelector>();
@@ -197,7 +197,7 @@ int main(int argc, char* argv[]) {
 
 	// Triosc gui test
 	TGCreator tgCreator(gui_bg);
-	SafePtr<Button> tgCreate = safe_new(Button(gui_bg, 10, 310, "Create 3xOsc GUI", &tgCreator._prop)).cast<Button>();
+	SafePtr<Button> tgCreate = safe_new(Button(gui_bg, 10, 310, "Create 3xOsc GUI")).cast<Button>();
 
 	// Start sound
 	SDL_PauseAudio(0);

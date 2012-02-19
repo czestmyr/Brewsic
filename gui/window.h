@@ -5,6 +5,7 @@
 #include "Icontrol.h"
 #include "common/property.h"
 #include "common/Iobserver.h"
+#include "common/signals.h"
 
 class Button;
 
@@ -25,6 +26,8 @@ class Window: public IControl {
 		int getXMin() { return 1; }
 		int getXMax() { return _w-1; }
 
+		SIGNAL_DESTINATION(_close, Window, close);
+		void close() { deleteMe(); }
 	protected:
 		std::string _name;
 		std::string _status;
@@ -35,18 +38,6 @@ class Window: public IControl {
 		bool _dragging;
 
 		Button* _close_btn;
-
-	private:
-		class CloseObserver: public IObserver {
-			public:
-				CloseObserver(Window* parent): _parent(parent) {}
-				void signal() { _parent->deleteMe(); }
-			private:
-				Window* _parent;
-		};
-
-		Property<int> _c_prop;
-		CloseObserver _c_obs;
 };
 
 #endif

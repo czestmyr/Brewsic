@@ -5,22 +5,20 @@
 #include <string>
 #include "Icontrol.h"
 #include "common/Iobserver.h"
+#include "common/signals.h"
 
 template <class T> class Property;
 
-class Button: public IControl, IObserver {
+class Button: public IControl {
 	public:
-		Button(SafePtr<IControl> parent, int x, int y, const char* text = "A button", Property<int>* prop = NULL);
+		Button(SafePtr<IControl> parent, int x, int y, const char* text = "A button", Signal sig = Signal());
 		~Button();
 
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);
 		bool leftPress(int x, int y);
 		bool leftRelease(int x, int y);
-
-		void signal();
-		void disconnect();
 	protected:
-		Property<int>* _prop;
+		Signal _sig;
 		bool _pressed;
 
 		std::string _text;

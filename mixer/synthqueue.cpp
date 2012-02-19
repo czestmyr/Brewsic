@@ -2,7 +2,7 @@
 #include "gui/window.h"
 #include "gui/button.h"
 
-void SynthQueue::signal() {
+void SynthQueue::guiSignal() {
 	if (_gui)
 		_gui->deleteMe();
 

@@ -8,12 +8,11 @@
 #include "common/pointers.h"
 #include "common/Iobserver.h"
 #include "common/property.h"
+#include "common/signals.h"
 
-class SynthQueue: public IObserver {
+class SynthQueue {
 	public:
-		SynthQueue(const std::string& name): _name(name) {
-			_guiSignal.addObserver(this);
-		}
+		SynthQueue(const std::string& name): _name(name), _guiSignal(this) {}
 
 		size_t size() { return _synths.size(); }
 		void pushSynth(SafePtr<ISynth> synth) { _synths.push_back(synth); }
@@ -21,8 +20,8 @@ class SynthQueue: public IObserver {
 		SafePtr<ISynth> getSynth(int i) { return _synths[i]; }
 
 		void setGuiParent(SafePtr<IControl> par) { _gui_parent = par; }
-		Property<int> _guiSignal;
-		void signal();
+		SIGNAL_DESTINATION(_guiSignal, SynthQueue, guiSignal);
+		void guiSignal();
 	private:
 		std::string _name;
 		SafePtr<IControl> _gui;
