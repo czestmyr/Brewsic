@@ -22,6 +22,8 @@ MainMixer::MainMixer(int bufsize, int channels): _main_mixer(bufsize) {
 MainMixer::~MainMixer() {
 	for (int i = 0; i < _channels; ++i) {
 		delete _mixers[i];
+		delete _filters[i];
+		delete _synths[i];
 	}
 	delete[] _mixers;
 	delete[] _filters;
