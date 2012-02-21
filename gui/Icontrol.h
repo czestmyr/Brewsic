@@ -297,7 +297,7 @@ class IControl {
 
 		void setPackable(bool p) { _packable = p; }
 
-		void adopt(SafePtr<IControl> child) { _children.push_front(child); }
+		void adopt(SafePtr<IControl> child) { _children.push_back(child); }
 		void leave(SafePtr<IControl> child) { _children.remove(child); }
 
 		int getW() { return _w; }

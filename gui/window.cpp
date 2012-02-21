@@ -16,6 +16,8 @@ Window::Window(SafePtr<IControl> parent, int x, int y, int w, int h, const char*
 	_close_btn = new Button(this, _w, 0, "X", _close.getSignal());
 	_close_btn->setPackable(false);
 	_title_h = 20;
+
+	toFront();
 }
 
 void Window::draw(SDL_Surface* surf, int orig_x, int orig_y) {
