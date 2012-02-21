@@ -166,7 +166,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	// Packing test
-	SafePtr<IControl> frame = safe_new(Frame(gui_bg, 300, 230, 500, 60));
+	SafePtr<IControl> frame = safe_new(Frame(gui_bg, 500, 100, 100, 600));
 	SafePtr<IControl> b1 = safe_new(Button(frame, 0, 0, "1"));
 	SafePtr<IControl> b2 = safe_new(Button(frame, 0, 0, "2"));
 	SafePtr<IControl> b3 = safe_new(Button(frame, 0, 0, "3"));
@@ -174,14 +174,14 @@ int main(int argc, char* argv[]) {
 	SafePtr<IControl> b5 = safe_new(Button(frame, 0, 0, "5"));
 	SafePtr<IControl> b6 = safe_new(Button(frame, 0, 0, "6"));
 
-	b1->setPreferedSize(10, 0, 4);
-	b2->setPreferedSize(10, 0, 1);
-	b3->setPreferedSize(15, 0, 1);
-	b4->setPreferedSize(10, 0, 4);
-	b5->setPreferedSize(10, 0, 1);
+	b1->setPreferedSize(10, 10, 4);
+	b2->setPreferedSize(10, 20, 1);
+	b3->setPreferedSize(15, 30, 1);
+	b4->setPreferedSize(10, 40, 4);
+	b5->setPreferedSize(10, 50, 1);
 	b6->setPreferedSize(15, 0, 1);
 
-	frame->packHorizontally(5);
+	frame->packVertically(5);
 
 	// Timing
 	Uint32 time = SDL_GetTicks();

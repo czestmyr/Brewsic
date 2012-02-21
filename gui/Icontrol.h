@@ -296,32 +296,56 @@ class IControl {
 			_pack_horizontally = false;
 			_margins = margins;
 
-			int packable_children = 0;
+			int margin_space = 0;
+			int total_space = 0;
+			int total_weight = 0;
+			int weight_of_fixed = 0;
+
+			bool obey_preference = true;
+			bool some_nonfixed = false;
 			_it = _children.begin();
 			while (_it != _children.end()) {
-				if ((*_it)->_packable) packable_children++;
+				if ((*_it)->_packable) {
+					if ((*_it)->_prefered_h) {
+						total_space -= (*_it)->_prefered_h;
+						weight_of_fixed += (*_it)->_pack_weight;
+					} else {
+						some_nonfixed = true;
+						total_weight += (*_it)->_pack_weight;
+					}
+					margin_space += margins;
+				}
 				_it++;
 			}
 
-			int margin_space = (packable_children-1)*margins;
-			int gui_space = getXMax() - getXMin() - margin_space;
-			int gui_space_one = gui_space / packable_children;
-			int leftovers = gui_space % packable_children;
+			total_space += getYMax() - getYMin();
+			total_space -= margin_space - margins;  // There is one less margins than packable controls
+			if (total_space < 0) {  // This means that fixed-size controls cannot fit -> all controls will be non-fixed
+				obey_preference = false;
+				some_nonfixed = true;
+				total_space = getYMax() - getYMin() - margin_space;
+				total_weight += weight_of_fixed;
+			}
 
 			_it = _children.begin();
-			int x = getXMin();
 			int y = getYMin();
+			if (!some_nonfixed) y += total_space / 2;  // If all controls are fixed, center them
+			int x = getXMin();
 			int w = getXMax() - getXMin();
-			int i = 0;
 			while (_it != _children.end()) {
 				if ((*_it)->_packable) {
-					(*_it)->redim(x, y, w, gui_space_one);
-					if (i < leftovers)
-						y += margins + gui_space_one + 1;
-					else
-						y += margins + gui_space_one;
+					int h;
+					if ((*_it)->_prefered_h && obey_preference) {
+						h = (*_it)->_prefered_h;
+					} else {
+						h = total_space * (*_it)->_pack_weight / total_weight;
+						total_space -= h;
+						total_weight -= (*_it)->_pack_weight;
+					}
+					(*_it)->redim(x, y, w, h);
+					y += h + margins;
 				}
-				++_it; ++i;
+				++_it;
 			}
 		}
 
