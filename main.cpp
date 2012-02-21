@@ -122,11 +122,13 @@ int main(int argc, char* argv[]) {
 	osc->setGuiParent(gui_bg);
 
 	// Mixer
+	mmix.setGuiParent(gui_bg);
 	SynthQueue* sq = mmix.getSynthQueue(0);
 	sq->setGuiParent(gui_bg);
 	sq->pushSynth(osc.cast<ISynth>());
 
 	safe_new(Button(gui_bg, 600, 500, "Synth Queue 1 Gui", sq->_guiSignal.getSignal()));
+	safe_new(Button(gui_bg, 600, 530, "Mixer Gui", mmix._guiSignal.getSignal()));
 
 	// Quit button
 	new Button(gui_bg, WIDTH, 5, "Quit Brewsic", msig._quit.getSignal());

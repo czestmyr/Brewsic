@@ -3,8 +3,9 @@
 #include "mixer/filterqueue.h"
 #include "mixer/synthqueue.h"
 #include "synths/Isynth.h"
+#include "gui/mixer/mixer.h"
 
-MainMixer::MainMixer(int bufsize, int channels): _main_mixer(bufsize) {
+MainMixer::MainMixer(int bufsize, int channels): _main_mixer(bufsize), _guiSignal(this) {
 	_channels = channels;
 	_bufsize = bufsize;
 
@@ -50,5 +51,11 @@ void MainMixer::mixInto(Uint16* buffer) {
 	}
 
 	_main_mixer.copyBuffer(buffer);
+}
+
+void MainMixer::guiSignal() {
+	if (_gui) _gui->deleteMe();
+
+	_gui = safe_new(MixerGui(_gui_parent, this));
 }
 
