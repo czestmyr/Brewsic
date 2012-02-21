@@ -30,6 +30,7 @@
 #include "gui/slider.h"
 #include "gui/checkbox.h"
 #include "gui/style.h"
+#include "gui/frame.h"
 #include "gui/filters/delaygui.h"
 #include "gui/synths/triosc.h"
 #include "common/signals.h"
@@ -163,6 +164,24 @@ int main(int argc, char* argv[]) {
 		safe_new(Checkbox(gui_bg, 50 + i*30, 50, 20, 20, &sequencer[i]));
 		safe_new(Slider(gui_bg, 50 + i*30, 75, 200, 100.0, 2000.0, &seq_freq[i]));
 	}
+
+	// Packing test
+	SafePtr<IControl> frame = safe_new(Frame(gui_bg, 300, 230, 500, 60));
+	SafePtr<IControl> b1 = safe_new(Button(frame, 0, 0, "1"));
+	SafePtr<IControl> b2 = safe_new(Button(frame, 0, 0, "2"));
+	SafePtr<IControl> b3 = safe_new(Button(frame, 0, 0, "3"));
+	SafePtr<IControl> b4 = safe_new(Button(frame, 0, 0, "4"));
+	SafePtr<IControl> b5 = safe_new(Button(frame, 0, 0, "5"));
+	SafePtr<IControl> b6 = safe_new(Button(frame, 0, 0, "6"));
+
+	b1->setPreferedSize(10, 0, 4);
+	b2->setPreferedSize(10, 0, 1);
+	b3->setPreferedSize(15, 0, 1);
+	b4->setPreferedSize(10, 0, 4);
+	b5->setPreferedSize(10, 0, 1);
+	b6->setPreferedSize(15, 0, 1);
+
+	frame->packHorizontally(5);
 
 	// Timing
 	Uint32 time = SDL_GetTicks();

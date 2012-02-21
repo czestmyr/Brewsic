@@ -17,7 +17,7 @@ class IControl {
 
 		IControl(SafePtr<IControl> parent): _parent(parent), _x(0), _y(0), _w(0), _h(0),
 			_delete_me(false), _margins(5), _pack_horizontally(false), _auto_packing(false),
-       			_packable(true), _focusable(false) {
+       			_packable(true), _focusable(false), _prefered_h(0), _prefered_w(0), _pack_weight(1) {
 			_this_ref_ptr = new RefPtr<IControl>(this);
 			if (_parent) _parent->adopt(safePtr());
 			incCounter();
@@ -227,37 +227,67 @@ class IControl {
 			}
 		}
 
+		void setPreferedSize(int w, int h, int weight) {
+			_prefered_w = w;
+			_prefered_h = h;
+			_pack_weight = weight;
+		}
+
 		void packHorizontally(int margins) {
 			_auto_packing = true;
 			_pack_horizontally = true;
 			_margins = margins;
 
-			int packable_children = 0;
+			int margin_space = 0;
+			int total_space = 0;
+			int total_weight = 0;
+			int weight_of_fixed = 0;
+
+			bool obey_preference = true;
+			bool some_nonfixed = false;
 			_it = _children.begin();
 			while (_it != _children.end()) {
-				if ((*_it)->_packable) packable_children++;
+				if ((*_it)->_packable) {
+					if ((*_it)->_prefered_w) {
+						total_space -= (*_it)->_prefered_w;
+						weight_of_fixed += (*_it)->_pack_weight;
+					} else {
+						some_nonfixed = true;
+						total_weight += (*_it)->_pack_weight;
+					}
+					margin_space += margins;
+				}
 				_it++;
 			}
 
-			int margin_space = (packable_children-1)*margins;
-			int gui_space = getXMax() - getXMin() - margin_space;
-			int gui_space_one = gui_space / packable_children;
-			int leftovers = gui_space % packable_children;
+			total_space += getXMax() - getXMin();
+			total_space -= margin_space - margins;  // There is one less margins than packable controls
+			if (total_space < 0) {  // This means that fixed-size controls cannot fit -> all controls will be non-fixed
+				obey_preference = false;
+				some_nonfixed = true;
+				total_space = getXMax() - getXMin() - margin_space;
+				total_weight += weight_of_fixed;
+			}
 
 			_it = _children.begin();
 			int x = getXMin();
+			if (!some_nonfixed) x += total_space / 2;  // If all controls are fixed, center them
 			int y = getYMin();
 			int h = getYMax() - getYMin();
-			int i = 0;
 			while (_it != _children.end()) {
 				if ((*_it)->_packable) {
-					(*_it)->redim(x, y, gui_space_one, h);
-					if (i < leftovers)
-						x += margins + gui_space_one + 1;
-					else
-						x += margins + gui_space_one;
+					int w;
+					if ((*_it)->_prefered_w && obey_preference) {
+						w = (*_it)->_prefered_w;
+					} else {
+						w = total_space * (*_it)->_pack_weight / total_weight;
+						total_space -= w;
+						total_weight -= (*_it)->_pack_weight;
+					}
+					(*_it)->redim(x, y, w, h);
+					x += w + margins;
 				}
-				++_it; ++i;
+				++_it;
 			}
 		}
 
@@ -335,6 +365,10 @@ class IControl {
 		int _y;
 		int _w;
 		int _h;
+
+		int _prefered_w;
+		int _prefered_h;
+		int _pack_weight;
 
 		bool _auto_packing;
 		bool _pack_horizontally;
