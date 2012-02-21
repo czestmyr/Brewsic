@@ -113,9 +113,9 @@ int main(int argc, char* argv[]) {
 	SDL_Surface* screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, 0);
 
 	// Gui setup
-	GuiMgr gui;
+	GuiMgr* gui = new GuiMgr();
 	SafePtr<IControl> gui_bg = safe_new(Background((IControl*)NULL, 4, 4, WIDTH-8, HEIGHT-8));
-	gui.adoptControl(gui_bg);
+	gui->adoptControl(gui_bg);
 
 	// Synth factory test
 	osc = synthFactory.createNewSynth("TripleOscillator").cast<TripleOscillator>();
@@ -178,26 +178,26 @@ int main(int argc, char* argv[]) {
 			switch (e.type) {
 				case SDL_MOUSEBUTTONDOWN:
 					if (e.button.button == SDL_BUTTON_LEFT) {
-						gui.leftPress(e.button.x, e.button.y);
+						gui->leftPress(e.button.x, e.button.y);
 					} else if (e.button.button == SDL_BUTTON_RIGHT) {
-						gui.rightPress(e.button.x, e.button.y);
+						gui->rightPress(e.button.x, e.button.y);
 					}
 				break;
 				case SDL_MOUSEBUTTONUP:
 					if (e.button.button == SDL_BUTTON_LEFT) {
-						gui.leftRelease(e.button.x, e.button.y);
+						gui->leftRelease(e.button.x, e.button.y);
 					} else if (e.button.button == SDL_BUTTON_RIGHT) {
-						gui.rightRelease(e.button.x, e.button.y);
+						gui->rightRelease(e.button.x, e.button.y);
 					}
 				break;
 				case SDL_MOUSEMOTION:
-					gui.mouseMove(e.motion.x, e.motion.y, e.motion.xrel, e.motion.yrel);
+					gui->mouseMove(e.motion.x, e.motion.y, e.motion.xrel, e.motion.yrel);
 				break;
 				case SDL_KEYDOWN:
-					gui.keyPress(e.key.keysym.sym);
+					gui->keyPress(e.key.keysym.sym);
 				break;
 				case SDL_KEYUP:
-					gui.keyRelease(e.key.keysym.sym);
+					gui->keyRelease(e.key.keysym.sym);
 				break;
 				case SDL_QUIT:
 					do_quit = true;
@@ -224,14 +224,17 @@ int main(int argc, char* argv[]) {
 		SDL_Color shadecol = Style::inst()->getShadeColor();
 		Uint32 shade = SDL_MapRGB(screen->format, shadecol.r, shadecol.g, shadecol.b);
 		SDL_FillRect(screen, NULL, shade);
-		gui.cleanup();
-		gui.draw(screen);
+		gui->cleanup();
+		gui->draw(screen);
 		SDL_Flip(screen);
 	}
 
 	SDL_CloseAudio();
 	free(obtained);
 	SDL_Quit();
+
+	delete gui;
+	std::cout << "Undeleted control number: " << IControl::ctlCounter << std::endl;
 
 	return 0;
 }

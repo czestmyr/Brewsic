@@ -11,14 +11,19 @@
 
 class IControl {
 	public:
+		static long ctlCounter;
+		static void incCounter() { ctlCounter++; }
+		static void decCounter() { ctlCounter--; }
+
 		IControl(SafePtr<IControl> parent): _parent(parent), _x(0), _y(0), _w(0), _h(0),
 			_delete_me(false), _margins(5), _pack_horizontally(false), _auto_packing(false),
        			_packable(true), _focusable(false) {
 			_this_ref_ptr = new RefPtr<IControl>(this);
 			if (_parent) _parent->adopt(safePtr());
+			incCounter();
 		}
 
-		virtual ~IControl() {}
+		virtual ~IControl() { decCounter(); }
 
 		SafePtr<IControl> safePtr() { return SafePtr<IControl>(_this_ref_ptr); }
 
