@@ -85,10 +85,7 @@ class SafePtr {
 			return *this;
 		}
 		~SafePtr() {
-			#ifdef DUMP_SHIT
-			std::cout << "Destroying SafePtr pointing at " << &_ptr->get() << std::endl;
-			#endif
-			if (_ptr) _ptr->drop();
+                        clear();
 		}
 
 		template <class U> SafePtr<U> cast() {
@@ -100,7 +97,15 @@ class SafePtr {
 		T* operator->() { return &_ptr->get(); }
 		operator bool() { return &_ptr->get(); }
 		bool operator==(const SafePtr<T>& other) { return _ptr == other._ptr; }
+
 		T* get() const { return &_ptr->get(); }
+                void clear() {
+			#ifdef DUMP_SHIT
+			std::cout << "Clearing SafePtr pointing at " << &_ptr->get() << std::endl;
+			#endif
+			if (_ptr) _ptr->drop();
+                        _ptr = NULL;
+                }
 	private:
 		RefPtr<T>* _ptr;
 };
