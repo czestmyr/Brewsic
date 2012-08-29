@@ -27,6 +27,8 @@ void SynthFactory::dropSynth(SafePtr<ISynth> synth) {
         while (it != _synths.end()) {
                 if (*it == synth) {
                           it =_synths.erase(it);
+                } else {
+                  ++it;
                 }
         }
 }
