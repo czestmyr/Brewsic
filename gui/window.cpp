@@ -13,7 +13,7 @@ Window::Window(SafePtr<IControl> parent, int x, int y, int w, int h, const char*
 	_focusable = true;
 
 	_title_h = 0;
-	_close_btn = new Button(this, _w, 0, "X", _close.getSignal());
+	_close_btn = safe_new(Button(_this_ref_ptr, _w, 0, "X", _close.getSignal())).cast<Button>();
 	_close_btn->rawRedim(_w - 20, 0, 20, 20);
 	_close_btn->setPackable(false);
 	_title_h = 20;

@@ -6,8 +6,7 @@
 #include "common/property.h"
 #include "common/Iobserver.h"
 #include "common/signals.h"
-
-class Button;
+#include "gui/button.h"
 
 #define MARGIN 3
 
@@ -39,7 +38,7 @@ class Window: public IControl {
 
 		bool _dragging;
 
-		Button* _close_btn;
+		SafePtr<Button> _close_btn;
 };
 
 #endif
