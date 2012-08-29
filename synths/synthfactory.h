@@ -14,6 +14,7 @@ class SynthFactory {
 		std::string getClassName(int index);
 
 		SafePtr<ISynth> createNewSynth(const std::string& className);
+                void dropSynth(SafePtr<ISynth> synth);
 
 		int getSynthNumber() { return _synths.size(); }
 		SafePtr<ISynth> getSynth(int index) {

@@ -22,3 +22,12 @@ SafePtr<ISynth> SynthFactory::createNewSynth(const std::string& className) {
 	return safePtr;
 }
 
+void SynthFactory::dropSynth(SafePtr<ISynth> synth) {
+        std::vector<SafePtr<ISynth> >::iterator it = _synths.begin();
+        while (it != _synths.end()) {
+                if (*it == synth) {
+                          it =_synths.erase(it);
+                }
+        }
+}
+
