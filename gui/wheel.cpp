@@ -16,8 +16,6 @@ Wheel::Wheel(SafePtr<IControl> parent, int x, int y, int w, int h, float min, fl
 	_max = max;
 	_inc = (_max - _min) / 200.0;
 
-	_r = w<h ? w/2 : h/2;
-
 	if (prop) {
 		_prop->addObserver(this);
 		setValue(*_prop);
@@ -44,8 +42,10 @@ void Wheel::draw(SDL_Surface* surf, int orig_x, int orig_y) {
 	Uint32 fgcol = SDL_MapRGB(surf->format, fg.r, fg.g, fg.b);
 	Uint32 shcol = SDL_MapRGB(surf->format, shade.r, shade.g, shade.b);
 
-	Draw_FillCircle(surf, orig_x + _x + _r, orig_y + _y + _r, _r, licol);
-	Draw_FillCircle(surf, orig_x + _x + _r, orig_y + _y + _r, _r-2, fgcol);
+	int r = _w<_h ? _w/2 : _h/2;
+
+	Draw_FillCircle(surf, orig_x + _x + r, orig_y + _y + r, r, licol);
+	Draw_FillCircle(surf, orig_x + _x + r, orig_y + _y + r, r-2, fgcol);
 
 	// Calculate the angle at which the wheel should be right now
 	float t = (_max - _value) / (_max - _min);
@@ -54,15 +54,15 @@ void Wheel::draw(SDL_Surface* surf, int orig_x, int orig_y) {
 	float phimax = 4.71238898 + delta;               // 4.71... = 3/2 * pi
 	float phi = t*phimin + (1.0-t)*phimax;
 
-	int x = cos(phi) * (_r-3);
-	int y = (-sin(phi)) * (_r-3);               // Y axis is inverted in SDL, thus 1.0 - sin(...)
-	Draw_Line(surf, orig_x + _x + _r, orig_y + _y + _r, orig_x + _x + _r + x, orig_y + _y + _r + y, licol);
-	Draw_FillCircle(surf, orig_x + _x + _r + x, orig_y + _y + _r + y, 3, shcol);
+	int x = cos(phi) * (r-3);
+	int y = (-sin(phi)) * (r-3);               // Y axis is inverted in SDL, thus 1.0 - sin(...)
+	Draw_Line(surf, orig_x + _x + r, orig_y + _y + r, orig_x + _x + r + x, orig_y + _y + r + y, licol);
+	Draw_FillCircle(surf, orig_x + _x + r + x, orig_y + _y + r + y, 3, shcol);
 
 	if (_pressed) {
 		char buffer[32];
 		sprintf(buffer, "%.1f", _value);
-		Fonts::inst()->renderText(buffer, surf, orig_x + _x + _r + x + 4, orig_y + _y + _r + y, text);
+		Fonts::inst()->renderText(buffer, surf, orig_x + _x + r + x + 4, orig_y + _y + r + y, text);
 	}
 }
 

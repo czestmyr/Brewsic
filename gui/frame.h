@@ -5,16 +5,18 @@
 
 class Frame: public IControl {
 	public:
-		Frame(SafePtr<IControl> parent, int x, int y, int w, int h): IControl(parent) {
+		Frame(SafePtr<IControl> parent, int x, int y, int w, int h, int t = 1): IControl(parent), _thickness(t) {
 			redim(x, y, w, h);
 		}
 
-		int getXMin() { return 3; }
-		int getYMin() { return 3; }
-		int getXMax() { return _w-3; }
-		int getYMax() { return _h-3; }
+		int getXMin() { return _thickness; }
+		int getYMin() { return _thickness; }
+		int getXMax() { return _w-_thickness; }
+		int getYMax() { return _h-_thickness; }
 
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);
+	protected:
+		int _thickness;
 };
 
 #endif

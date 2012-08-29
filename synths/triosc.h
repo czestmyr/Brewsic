@@ -10,6 +10,7 @@
 #include "filters/adsr.h"
 #include "common/property.h"
 #include "trioscobserver.h"
+#include "gui/synths/triosc.h"
 
 #include <queue>
 
@@ -56,10 +57,12 @@ class TripleOscillator: public ISynth{
 		Property<int> _first_gen;
 		Property<int> _second_gen;
 		Property<int> _third_gen;
-	private:
+
+	protected:
 		void checkGenerators();
 
 		friend class TriOscObserver;
+		friend class TripleOscillatorGui;
 		TriOscObserver _shift_obs;
 		TriOscObserver _first_obs;
 		TriOscObserver _second_obs;

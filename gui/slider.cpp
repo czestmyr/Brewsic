@@ -10,8 +10,6 @@ Slider::Slider(SafePtr<IControl> parent, int x, int y, int h, float min, float m
 	if (h < _slider_button_height)
 		h = _slider_button_height;
 
-	redim(x, y, SLIDER_WIDTH, h);
-
 	if (min > max) {
 		float swap = min;
 		min = max;
@@ -19,7 +17,9 @@ Slider::Slider(SafePtr<IControl> parent, int x, int y, int h, float min, float m
 	}
 	_min = min;
 	_max = max;
-	_inc = (_max - _min) / _h;
+
+	redim(x, y, SLIDER_WIDTH, h);
+	setPreferedSize(SLIDER_WIDTH, 0, 1);
 
 	if (prop) {
 		_prop->addObserver(this);
@@ -35,6 +35,11 @@ Slider::~Slider() {
 	if (_prop) {
 		_prop->removeObserver(this);
 	}
+}
+
+void Slider::redim(int x, int y, int w, int h) {
+	IControl::redim(x, y, w, h);
+	_inc = (_max - _min) / _h;
 }
 
 void Slider::draw(SDL_Surface* surf, int orig_x, int orig_y) {

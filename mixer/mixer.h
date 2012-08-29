@@ -16,7 +16,7 @@ class Mixer {
 
 		void clear();
 		void mixIn(float* buffer);
-		void copyBuffer(Uint16* buffer);
+		void copyBuffer(Sint16* buffer);
 		void copyBufferFloat(float* buffer);
 		void copyFromBufferFloat(float* buffer);
 

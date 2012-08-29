@@ -31,7 +31,7 @@ MainMixer::~MainMixer() {
 	delete[] _synths;
 }
 
-void MainMixer::mixInto(Uint16* buffer) {
+void MainMixer::mixInto(Sint16* buffer) {
 	_main_mixer.clear();
 	for (int ch = 0; ch < _channels; ch++) {
 		if (_synths[ch]->size() == 0) continue;

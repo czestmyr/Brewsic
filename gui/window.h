@@ -9,6 +9,8 @@
 
 class Button;
 
+#define MARGIN 3
+
 class Window: public IControl {
 	public:
 		Window(SafePtr<IControl>, int x, int y, int w, int h, const char* title = "Unnamed window");
@@ -21,10 +23,10 @@ class Window: public IControl {
 		bool keyPress(SDLKey sym);
 		bool keyRelease(SDLKey sym);
 
-		int getYMin() { return _title_h; }
-		int getYMax() { return _h - _status_h; }
-		int getXMin() { return 1; }
-		int getXMax() { return _w-1; }
+		int getYMin() { return _title_h + MARGIN; }
+		int getYMax() { return _h - _status_h - MARGIN; }
+		int getXMin() { return 1 + MARGIN; }
+		int getXMax() { return _w-1 - MARGIN; }
 
 		SIGNAL_DESTINATION(_close, Window, close);
 		void close() { deleteMe(); }

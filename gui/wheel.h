@@ -24,8 +24,6 @@ class Wheel: public IControl, IObserver {
 	private:
 		void setValueInternal(float val, bool bySignal = false);
 
-		int _r;
-
 		float _min;
 		float _max;
 		float _value;

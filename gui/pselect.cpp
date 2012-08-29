@@ -5,11 +5,8 @@
 
 PictureSelector::PictureSelector(SafePtr<IControl> parent, int x, int y, int w, int h, Property<int>* prop)
 : IControl(parent), _prop(prop) {
+	setPreferedSize(32, 32, 1);
 	redim(x, y, w, h);
-	_size.x = 0;
-	_size.y = 0;
-	_size.w = _w;
-	_size.h = _h;
 }
 
 PictureSelector::~PictureSelector() {
@@ -23,6 +20,10 @@ void PictureSelector::draw(SDL_Surface* surf, int orig_x, int orig_y) {
 	SDL_Rect dst;
 	dst.x = orig_x + _x;
 	dst.y = orig_y + _y;
+	_size.x = 0;
+	_size.y = 0;
+	_size.w = _w;
+	_size.h = _h;
 	SDL_BlitSurface(_pics[*_prop], &_size, surf, &dst);
 	Style::inst()->drawInset(surf, orig_x + _x, orig_y + _y, _w, _h, 2);
 }

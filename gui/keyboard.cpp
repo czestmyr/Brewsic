@@ -133,3 +133,38 @@ bool Keyboard::leftRelease(int x, int y) {
 	if (inside(x,y)) return true;
 }
 
+bool Keyboard::keyPress(SDLKey sym) {
+	int note = keySymToNote(sym);
+	if (note < 0 || note >= 12*8) return false;
+
+	if (_synth) _synth->startNote(note, 440.0*pow(2.0,float(note-57)/12.0));
+	return true;
+}
+
+bool Keyboard::keyRelease(SDLKey sym) {
+	int note = keySymToNote(sym);
+	if (note < 0 || note >= 12*8) return false;
+
+	if (_synth) _synth->stopNote(note);
+	return true;
+}
+
+int Keyboard::keySymToNote(SDLKey sym) {
+	switch (sym) {
+		case SDLK_z: return 46;
+		case SDLK_s: return 47;
+		case SDLK_x: return 48;
+		case SDLK_d: return 49;
+		case SDLK_c: return 50;
+		case SDLK_v: return 51;
+		case SDLK_g: return 52;
+		case SDLK_b: return 53;
+		case SDLK_h: return 54;
+		case SDLK_n: return 55;
+		case SDLK_j: return 56;
+		case SDLK_m: return 57;
+	}
+
+	return -1;
+}
+

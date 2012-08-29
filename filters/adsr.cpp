@@ -1,9 +1,17 @@
 #include "adsr.h"
 #include <SDL.h>
 
+#include "gui/wheel.h"
+#include "gui/frame.h"
+
 #define SPEED 0.0001
 
 void Adsr::filter(int bufsize, float* buffer) {
+	_a = _attack;
+	_d = _a + _decay;
+	_s = _d + _sustain;
+	_r = _s + _release;
+
 	float coeff;
 	for (int i = 0; i < bufsize; ++i) {
 		_phase += _phase_inc;
@@ -36,7 +44,7 @@ void Adsr::filter(int bufsize, float* buffer) {
 			}
 		}
 
-		buffer[i] *= _curr;
+		buffer[i] *= coeff;
 	}
 }
 
@@ -51,5 +59,16 @@ void Adsr::release() {
 	SDL_LockAudio();
 	_hold = false;
 	SDL_UnlockAudio();
+}
+
+void Adsr::prepareGui() {
+	_gui = safe_new(Frame((IControl*)NULL, 0, 0, 0, 0, 0));
+
+	safe_new(Wheel(_gui, 0, 0, 0, 0, 10, 10000, &_attack));
+	safe_new(Wheel(_gui, 0, 0, 0, 0, 0, 10000, &_decay));
+	safe_new(Wheel(_gui, 0, 0, 0, 0, 0, 10000, &_sustain));
+	safe_new(Wheel(_gui, 0, 0, 0, 0, 0, 10000, &_release));
+
+	_gui->packHorizontally(5);
 }
 

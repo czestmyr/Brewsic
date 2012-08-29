@@ -1,6 +1,7 @@
 build
 *.o
 *.swp
+*.swo
 brewsic
 data
 

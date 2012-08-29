@@ -11,7 +11,7 @@ void Mixer::mixIn(float* buffer) {
 	}
 }
 
-void Mixer::copyBuffer(Uint16* buffer) {
+void Mixer::copyBuffer(Sint16* buffer) {
 	for (int i = 0; i < _bufsize; ++i) {
 		buffer[i] = _buffer[i] * 30000;
 	}

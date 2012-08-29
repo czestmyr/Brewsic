@@ -10,6 +10,7 @@ class Slider: public IControl, IObserver {
 		Slider(SafePtr<IControl> parent, int x, int y, int h, float min, float max, Property<float>* prop = NULL, int bh = 10);
 		~Slider();
 
+		void redim(int x, int y, int w, int h);
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);
 
 		bool leftPress(int x, int y);

@@ -14,7 +14,7 @@ class MainMixer {
 		MainMixer(int bufsize, int channels);
 		~MainMixer();
 
-		void mixInto(Uint16* buffer);
+		void mixInto(Sint16* buffer);
 
 		FilterQueue* getFilterQueue(int i) { return _filters[i]; }
 		SynthQueue* getSynthQueue(int i) { return _synths[i]; }

@@ -7,14 +7,6 @@
 #include "mixer/mixer.h"
 #include "mixer/mainmixer.h"
 #include "mixer/synthqueue.h"
-#include "generators/sine.h"
-#include "generators/saw.h"
-#include "generators/square.h"
-#include "filters/gate.h"
-#include "filters/adsr.h"
-#include "filters/delay.h"
-#include "filters/flanger.h"
-#include "filters/volume.h"
 #include "synths/triosc.h"
 #include "synths/synthfactory.h"
 #include "gui/guimgr.h"
@@ -38,7 +30,7 @@
 using namespace std;
 
 #define _FREQ 22050
-#define _SAMPLES 256
+#define _SAMPLES 64
 #define _CHANNELS 16
 
 #define WIDTH 800
@@ -51,7 +43,7 @@ SafePtr<TripleOscillator> osc;
 ofstream ofile;
 
 void audioCallback(void *userdata, Uint8 *stream, int len) {
-	mmix.mixInto((Uint16*)stream);
+	mmix.mixInto((Sint16*)stream);
 }
 
 bool do_quit(false);
@@ -141,17 +133,6 @@ int main(int argc, char* argv[]) {
 
 	new Button(gui_bg, WIDTH - 250, 50, "Up", msig._kbdUp.getSignal());
 	new Button(gui_bg, WIDTH - 250, 75, "Down", msig._kbdDown.getSignal());
-
-	// Picture selectors for triosc
-	SafePtr<PictureSelector> psel1 = safe_new(PictureSelector(gui_bg, WIDTH - 250, 100, 32, 32, &osc->_first_gen)).cast<PictureSelector>();
-	SafePtr<PictureSelector> psel2 = safe_new(PictureSelector(gui_bg, WIDTH - 250, 140, 32, 32, &osc->_second_gen)).cast<PictureSelector>();
-	SafePtr<PictureSelector> psel3 = safe_new(PictureSelector(gui_bg, WIDTH - 250, 180, 32, 32, &osc->_third_gen)).cast<PictureSelector>();
-	for (int i = 0; i < (int)GEN_NUMBER; ++i) {
-		const char* filename = GeneratorFactory::inst()->getGeneratorPictureFilename((GeneratorType)i);
-		psel1->addPicture(filename);
-		psel2->addPicture(filename);
-		psel3->addPicture(filename);
-	}
 
 	// Sequencer
 	int seq_size = 8;

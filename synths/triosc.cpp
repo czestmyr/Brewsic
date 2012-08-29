@@ -23,7 +23,7 @@ TripleOscillator::TripleOscillator(int bufsize):
 	_third_gen(GEN_SINE),
 	_gen_obs(this, PROP_GEN) {
 	for (int i = 0; i < POLYPHONY; ++i) {
-		_adsr[i] = new Adsr(20, 100, 101, 2000);
+		_adsr[i] = new Adsr(200, 100, 101, 20000);
 		_buffers[i] = new float[bufsize];
 		for (int j = 0; j < 3; ++j) {
 			_generators[i][j] = GeneratorFactory::inst()->createGenerator(GEN_SINE, 440.0, 0);

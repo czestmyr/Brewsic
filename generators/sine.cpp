@@ -3,7 +3,7 @@
 
 void SineGenerator::generate(int bufsize, float* buffer) {
 	for (int i = 0; i < bufsize; ++i) {
-		buffer[i] = (sin(_phase) + 1.0) / 8.0;
+		buffer[i] = sin(_phase) / 8.0;
 		_phase += _phase_inc;
 	}
 

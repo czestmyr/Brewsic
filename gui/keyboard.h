@@ -13,10 +13,15 @@ class Keyboard: public IControl {
 		bool leftPress(int x, int y);
 		bool leftRelease(int x, int y);
 
+		bool keyPress(SDLKey sym);
+		bool keyRelease(SDLKey sym);
+
 		void setSynth(SafePtr<ISynth> synth) { _synth = synth; }
 		void setShift(int shift) { _shift = shift; }
 		int getShift() { return _shift; }
 	private:
+		int keySymToNote(SDLKey sym);
+
 		SDL_Surface* _kww;
 		SDL_Surface* _kwn;
 		SDL_Surface* _kbn;
