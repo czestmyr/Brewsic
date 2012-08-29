@@ -114,7 +114,6 @@ int main(int argc, char* argv[]) {
 
         // Synth factory test
 	osc = synthFactory.createNewSynth("TripleOscillator").cast<TripleOscillator>();
-/*
 	osc->setGuiParent(gui_bg);
 
 	// Mixer
@@ -125,7 +124,7 @@ int main(int argc, char* argv[]) {
 
 	safe_new(Button(gui_bg, 600, 500, "Synth Queue 1 Gui", sq->_guiSignal.getSignal()));
 	safe_new(Button(gui_bg, 600, 530, "Mixer Gui", mmix._guiSignal.getSignal()));
-*/
+
 	// Quit button
 	safe_new(Button(gui_bg, WIDTH, 5, "Quit Brewsic", msig._quit.getSignal()));
 
@@ -141,7 +140,7 @@ int main(int argc, char* argv[]) {
 	safe_new(Button(gui_bg, WIDTH - 250, 75, "Down", msig._kbdDown.getSignal()));
 */
 	// Sequencer
-	int seq_size = 8;
+/*	int seq_size = 8;
 	int seq_length = 500;
 	int seq_ind = 0;
 	int seq_dur = 0;
@@ -151,7 +150,7 @@ int main(int argc, char* argv[]) {
 		safe_new(Checkbox(gui_bg, 50 + i*30, 50, 20, 20, &sequencer[i]));
 		safe_new(Slider(gui_bg, 50 + i*30, 75, 200, 100.0, 2000.0, &seq_freq[i]));
 	}
-
+*/
 	// Packing test
 	SafePtr<IControl> frame = safe_new(Frame(gui_bg, 500, 100, 100, 600));
 	SafePtr<IControl> b1 = safe_new(Button(frame, 0, 0, "1"));
@@ -241,7 +240,11 @@ int main(int argc, char* argv[]) {
 	free(obtained);
 	SDL_Quit();
 
+        sq->unsetGuiParent();
+        mmix.unsetGuiParent();
+
         synthFactory.dropSynth(osc.cast<ISynth>());
+        sq->dropSynth(osc.cast<ISynth>());
         osc.clear();
 
 	delete gui;
