@@ -10,5 +10,4 @@ use a generic type insted of float for sound data
 create a way to change the buffer size dynamically
 add namespaces to the code
 create session management (e.g. for window coordinates saving)
-solve pointer-hanging with IControl parents and children pointing at each other
 
