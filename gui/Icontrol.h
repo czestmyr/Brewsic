@@ -119,7 +119,7 @@ class IControl {
 		std::list< SafePtr<IControl> > _children;
 		std::list< SafePtr<IControl> >::iterator _it;
 		std::list< SafePtr<IControl> >::reverse_iterator _rit;
-		SafePtr<IControl> _parent;
+		IControl* _parent;
 		RefPtr<IControl>* _this_ref_ptr;
 };
 

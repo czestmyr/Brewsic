@@ -1,10 +1,15 @@
 #include "gui/Icontrol.h"
 
-IControl::IControl(SafePtr<IControl> parent): _parent(parent), _x(0), _y(0), _w(0), _h(0),
+IControl::IControl(SafePtr<IControl> parent): _x(0), _y(0), _w(0), _h(0),
 	_delete_me(false), _margins(5), _pack_horizontally(false), _auto_packing(false),
 	_packable(true), _focusable(false), _prefered_h(0), _prefered_w(0), _pack_weight(1) {
 	_this_ref_ptr = new RefPtr<IControl>(this);
-	if (_parent) _parent->adopt(safePtr());
+	if (parent) {
+          _parent = parent.get();
+          _parent->adopt(safePtr());
+        } else {
+          _parent = NULL;
+        }
 	incCounter();
 }
 
