@@ -29,6 +29,9 @@ MainMixer::~MainMixer() {
 	delete[] _mixers;
 	delete[] _filters;
 	delete[] _synths;
+
+        _gui_parent.clear();
+        _gui.clear();
 }
 
 void MainMixer::mixInto(Sint16* buffer) {

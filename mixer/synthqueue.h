@@ -13,13 +13,16 @@
 class SynthQueue {
 	public:
 		SynthQueue(const std::string& name): _name(name), _guiSignal(this) {}
+                ~SynthQueue() { _gui_parent.clear(); _gui.clear(); }
 
 		size_t size() { return _synths.size(); }
 		void pushSynth(SafePtr<ISynth> synth) { _synths.push_back(synth); }
+                void dropSynth(SafePtr<ISynth> synth);
 
 		SafePtr<ISynth> getSynth(int i) { return _synths[i]; }
 
 		void setGuiParent(SafePtr<IControl> par) { _gui_parent = par; }
+                void unsetGuiParent() { _gui_parent.clear(); }
 		SIGNAL_DESTINATION(_guiSignal, SynthQueue, guiSignal);
 		void guiSignal();
 	private:

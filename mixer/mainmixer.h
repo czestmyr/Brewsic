@@ -20,6 +20,7 @@ class MainMixer {
 		SynthQueue* getSynthQueue(int i) { return _synths[i]; }
 
 		void setGuiParent(SafePtr<IControl> guiParent) { _gui_parent = guiParent; }
+                void unsetGuiParent() { _gui_parent.clear(); }
 		SIGNAL_DESTINATION(_guiSignal, MainMixer, guiSignal);
 		void guiSignal();
 	private:
