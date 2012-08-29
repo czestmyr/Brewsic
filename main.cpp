@@ -105,13 +105,16 @@ int main(int argc, char* argv[]) {
 
 	SDL_Surface* screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, 0);
 
+        { // Begin memory allocation testing block
+
 	// Gui setup
 	GuiMgr* gui = new GuiMgr();
 	SafePtr<IControl> gui_bg = safe_new(Background((IControl*)NULL, 4, 4, WIDTH-8, HEIGHT-8));
 	gui->adoptControl(gui_bg);
 
-	// Synth factory test
+        // Synth factory test
 	osc = synthFactory.createNewSynth("TripleOscillator").cast<TripleOscillator>();
+/*
 	osc->setGuiParent(gui_bg);
 
 	// Mixer
@@ -122,18 +125,21 @@ int main(int argc, char* argv[]) {
 
 	safe_new(Button(gui_bg, 600, 500, "Synth Queue 1 Gui", sq->_guiSignal.getSignal()));
 	safe_new(Button(gui_bg, 600, 530, "Mixer Gui", mmix._guiSignal.getSignal()));
-
+*/
 	// Quit button
-	new Button(gui_bg, WIDTH, 5, "Quit Brewsic", msig._quit.getSignal());
+	safe_new(Button(gui_bg, WIDTH, 5, "Quit Brewsic", msig._quit.getSignal()));
 
+        // TEST WINDOWS:
+        safe_new(Window(gui_bg, 50, 50, 400, 200, "Test window"));
+/*
 	// Keyboard and matrix test
 	kbd = safe_new(Keyboard(gui_bg, 50, 350, 200)).cast<Keyboard>();
 	kbd->setSynth(osc.cast<ISynth>());
 	mtrx = safe_new(Matrix(gui_bg, 130, 350, 400, 200)).cast<Matrix>();
 
-	new Button(gui_bg, WIDTH - 250, 50, "Up", msig._kbdUp.getSignal());
-	new Button(gui_bg, WIDTH - 250, 75, "Down", msig._kbdDown.getSignal());
-
+	safe_new(Button(gui_bg, WIDTH - 250, 50, "Up", msig._kbdUp.getSignal()));
+	safe_new(Button(gui_bg, WIDTH - 250, 75, "Down", msig._kbdDown.getSignal()));
+*/
 	// Sequencer
 	int seq_size = 8;
 	int seq_length = 500;
@@ -212,7 +218,7 @@ int main(int argc, char* argv[]) {
 		time += dt;
 
 		// Sequencer
-		seq_dur += dt;
+/*		seq_dur += dt;
 		while (seq_dur >= seq_length) {
 			osc->stopNote(seq_ind+1);
 			seq_dur -= seq_length;
@@ -222,7 +228,7 @@ int main(int argc, char* argv[]) {
 				osc->startNote(seq_ind+1, seq_freq[seq_ind]);
 			}
 		}
-
+*/
 		SDL_Color shadecol = Style::inst()->getShadeColor();
 		Uint32 shade = SDL_MapRGB(screen->format, shadecol.r, shadecol.g, shadecol.b);
 		SDL_FillRect(screen, NULL, shade);
@@ -235,7 +241,13 @@ int main(int argc, char* argv[]) {
 	free(obtained);
 	SDL_Quit();
 
+        synthFactory.dropSynth(osc.cast<ISynth>());
+        osc.clear();
+
 	delete gui;
+
+        } // End memory allocation testing block
+
 	std::cout << "Undeleted control number: " << IControl::ctlCounter << std::endl;
 
 	return 0;
