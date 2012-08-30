@@ -2,6 +2,7 @@
 #define _FILTER_VOLUME_H_
 
 #include "Ifilter.h"
+#include "common/property.h"
 
 class Volume: public IFilter {
 	public:
@@ -14,8 +15,8 @@ class Volume: public IFilter {
 				buffer[i] *= _vol;
 			}
 		}
-	private:
-		float _vol;
+
+		Property<float> _vol;
 };
 
 #endif

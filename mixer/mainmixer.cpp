@@ -5,17 +5,19 @@
 #include "synths/Isynth.h"
 #include "gui/mixer/mixer.h"
 
-MainMixer::MainMixer(int bufsize, int channels): _main_mixer(bufsize), _guiSignal(this) {
+MainMixer::MainMixer(int bufsize, int channels): _main_mixer(bufsize), _guiSignal(this), _master_volume(1.0) {
 	_channels = channels;
 	_bufsize = bufsize;
 
 	_mixers = new Mixer*[channels];
 	_filters = new FilterQueue*[channels];
+        _volumes = new Volume*[channels];
 	_synths = new SynthQueue*[channels];
 
 	for (int i = 0; i < _channels; ++i) {
 		_mixers[i] = new Mixer(_bufsize);
 		_filters[i] = new FilterQueue();
+                _volumes[i] = new Volume(1.0);
 		_synths[i] = new SynthQueue("Synth Queue");
 	}
 }
@@ -24,10 +26,12 @@ MainMixer::~MainMixer() {
 	for (int i = 0; i < _channels; ++i) {
 		delete _mixers[i];
 		delete _filters[i];
+                delete _volumes[i];
 		delete _synths[i];
 	}
 	delete[] _mixers;
 	delete[] _filters;
+        delete[] _volumes;
 	delete[] _synths;
 
         _gui_parent.clear();

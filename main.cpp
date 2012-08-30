@@ -160,11 +160,11 @@ int main(int argc, char* argv[]) {
 	SafePtr<IControl> b5 = safe_new(Button(frame, 0, 0, "5"));
 	SafePtr<IControl> b6 = safe_new(Button(frame, 0, 0, "6"));
 
-	b1->setPreferedSize(10, 10, 4);
-	b2->setPreferedSize(10, 20, 1);
+	b1->setPreferedSize(0, 10, 4);
+	b2->setPreferedSize(0, 20, 1);
 	b3->setPreferedSize(15, 30, 1);
-	b4->setPreferedSize(10, 40, 4);
-	b5->setPreferedSize(10, 50, 1);
+	b4->setPreferedSize(0, 40, 4);
+	b5->setPreferedSize(0, 50, 1);
 	b6->setPreferedSize(15, 0, 1);
 
 	frame->packVertically(5);

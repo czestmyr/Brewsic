@@ -21,7 +21,12 @@ class Label: public IControl, IObserver {
 	private:
 		Property<std::string>* _prop;
 		SDL_Surface* _textSurf;
-		const char* _text;
+                union {
+		  const char* _const_text;
+                  char* _text;
+                };
+
+                void prepareSurface(SDL_Surface* surf);
 };
 
 #endif

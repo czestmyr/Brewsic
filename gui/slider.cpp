@@ -18,15 +18,12 @@ Slider::Slider(SafePtr<IControl> parent, int x, int y, int h, float min, float m
 	_min = min;
 	_max = max;
 
+        if (_prop) {
+	  _prop->addObserver(this);
+        }
+
 	redim(x, y, SLIDER_WIDTH, h);
 	setPreferedSize(SLIDER_WIDTH, 0, 1);
-
-	if (prop) {
-		_prop->addObserver(this);
-		setValue(*_prop);
-	} else {
-		setValue(0.0);
-	}
 
 	_pressed = false;
 }
@@ -40,6 +37,12 @@ Slider::~Slider() {
 void Slider::redim(int x, int y, int w, int h) {
 	IControl::redim(x, y, w, h);
 	_inc = (_max - _min) / _h;
+
+	if (_prop) {
+		setValue(*_prop);
+	} else {
+		setValue(0.0);
+	}
 }
 
 void Slider::draw(SDL_Surface* surf, int orig_x, int orig_y) {

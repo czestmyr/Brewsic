@@ -5,6 +5,7 @@
 #include "common/signals.h"
 #include "common/pointers.h"
 #include "gui/Icontrol.h"
+#include "filters/volume.h"
 
 class FilterQueue;
 class SynthQueue;
@@ -18,6 +19,10 @@ class MainMixer {
 
 		FilterQueue* getFilterQueue(int i) { return _filters[i]; }
 		SynthQueue* getSynthQueue(int i) { return _synths[i]; }
+                Volume* getVolume(int i) { return _volumes[i]; }
+                Volume* getMasterVolume() { return &_master_volume; }
+
+                int getChannels() const { return _channels; }
 
 		void setGuiParent(SafePtr<IControl> guiParent) { _gui_parent = guiParent; }
                 void unsetGuiParent() { _gui_parent.clear(); }
@@ -34,6 +39,8 @@ class MainMixer {
 
 		Mixer** _mixers;
 		FilterQueue** _filters;
+                Volume** _volumes;
+                Volume _master_volume;
 		SynthQueue** _synths;
 };
 
