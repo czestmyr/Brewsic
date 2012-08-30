@@ -21,6 +21,7 @@ class Mixer {
 		void copyFromBufferFloat(float* buffer);
 
 		float* getBuffer() { return _buffer; }
+                int getBufferSize() { return _bufsize; }
 
 	private:
 		float* _buffer;

@@ -130,7 +130,7 @@ int main(int argc, char* argv[]) {
 
         // TEST WINDOWS:
         safe_new(Window(gui_bg, 50, 50, 400, 200, "Test window"));
-/*
+
 	// Keyboard and matrix test
 	kbd = safe_new(Keyboard(gui_bg, 50, 350, 200)).cast<Keyboard>();
 	kbd->setSynth(osc.cast<ISynth>());
@@ -138,7 +138,7 @@ int main(int argc, char* argv[]) {
 
 	safe_new(Button(gui_bg, WIDTH - 250, 50, "Up", msig._kbdUp.getSignal()));
 	safe_new(Button(gui_bg, WIDTH - 250, 75, "Down", msig._kbdDown.getSignal()));
-*/
+
 	// Sequencer
 /*	int seq_size = 8;
 	int seq_length = 500;

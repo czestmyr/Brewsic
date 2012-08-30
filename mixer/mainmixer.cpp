@@ -54,9 +54,11 @@ void MainMixer::mixInto(Sint16* buffer) {
 			}
 		}
 
+                _volumes[ch]->filter(_mixers[ch]->getBufferSize(), _mixers[ch]->getBuffer());
 		_main_mixer.mixIn(_mixers[ch]->getBuffer());
 	}
 
+        _master_volume.filter(_main_mixer.getBufferSize(), _main_mixer.getBuffer());
 	_main_mixer.copyBuffer(buffer);
 }
 
