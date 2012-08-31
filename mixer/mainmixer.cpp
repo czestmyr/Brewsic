@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #include "mixer/mainmixer.h"
 #include "mixer/filterqueue.h"
 #include "mixer/synthqueue.h"
@@ -18,7 +19,10 @@ MainMixer::MainMixer(int bufsize, int channels): _main_mixer(bufsize), _guiSigna
 		_mixers[i] = new Mixer(_bufsize);
 		_filters[i] = new FilterQueue();
                 _volumes[i] = new Volume(1.0);
-		_synths[i] = new SynthQueue("Synth Queue");
+
+                char buffer[16];
+                sprintf(buffer, "Synth Queue %i", i+1);
+		_synths[i] = new SynthQueue(buffer);
 	}
 }
 
