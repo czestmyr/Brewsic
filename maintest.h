@@ -2,6 +2,7 @@
 #define _MAINTEST_H_
 
 #include <SDL.h>
+#include "common/signals.h"
 
 #define _FREQ 22050
 #define _SAMPLES 64
@@ -22,7 +23,7 @@ class SynthFactory;
 /// shows the way the program's classes might be organized.
 class MainTest {
   public:
-    MainTest() {}
+    MainTest(): _quit(this) {}
     ~MainTest() {}
 
     int init();
@@ -31,8 +32,12 @@ class MainTest {
     void mainLoop();
     static void audioCallback(void *userdata, Uint8 *stream, int len);
 
+    SIGNAL_DESTINATION(_quit, MainTest, quit);
+    void quit() { _do_quit = true; }
   private:
     static MainTest* _instance;
+
+    bool _do_quit;
 
     MainMixer* _mixer;
     GuiMgr* _gui_mgr;

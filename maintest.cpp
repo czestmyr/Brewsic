@@ -2,6 +2,7 @@
 #include "mixer/mainmixer.h"
 #include "gui/guimgr.h"
 #include "gui/background.h"
+#include "gui/button.h"
 #include "gui/style.h"
 #include "synths/synthfactory.h"
 
@@ -54,7 +55,15 @@ int MainTest::init() {
 
   // Main classes creation
   _mixer = new MainMixer(_SAMPLES, _CHANNELS);
+  _mixer->setGuiParent(gui_bg);
   _synth_factory = new SynthFactory(_SAMPLES);
+
+  // Some gui tests:
+
+  // Quit button
+  safe_new(Button(gui_bg, WIDTH, 5, "Quit Brewsic", _quit.getSignal()));
+  // Mixer button
+  safe_new(Button(gui_bg, 600, 530, "Mixer Gui", _mixer->_guiSignal.getSignal()));
 
   return 0;
 }
@@ -79,8 +88,8 @@ void MainTest::mainLoop() {
 
   // Main event loop
   SDL_Event e;
-  bool do_quit = false;
-  while (!do_quit) {
+  _do_quit = false;
+  while (!_do_quit) {
     SDL_Delay(50);
 
     while (SDL_PollEvent(&e)) {
@@ -109,7 +118,7 @@ void MainTest::mainLoop() {
           _gui_mgr->keyRelease(e.key.keysym.sym);
         break;
         case SDL_QUIT:
-          do_quit = true;
+          _do_quit = true;
         break;
       }
     }
