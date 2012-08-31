@@ -100,6 +100,8 @@ class SafePtr {
 		operator bool() { return &_ptr->get(); }
 		bool operator==(const SafePtr<T>& other) { return _ptr == other._ptr; }
 
+                unsigned int getCount() { if (_ptr) return _ptr->getCount(); return 0; }
+
 		T* get() const { return &_ptr->get(); }
                 void clear() {
 			#ifdef DUMP_SHIT
