@@ -24,8 +24,8 @@ class MainMixer {
 
                 int getChannels() const { return _channels; }
 
-		void setGuiParent(SafePtr<IControl> guiParent) { _gui_parent = guiParent; }
-                void unsetGuiParent() { _gui_parent.clear(); }
+		void setGuiParent(SafePtr<IControl> guiParent);
+                void unsetGuiParent();
 		SIGNAL_DESTINATION(_guiSignal, MainMixer, guiSignal);
 		void guiSignal();
 	private:

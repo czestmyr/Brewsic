@@ -41,8 +41,6 @@ int main(int argc, char* argv[]) {
   test.deinit();
 
   /*
-        { // Begin memory allocation testing block
-
         SafePtr<TripleOscillator> osc;
 
 	// Gui setup
@@ -61,10 +59,6 @@ int main(int argc, char* argv[]) {
 	sq->pushSynth(osc.cast<ISynth>());
 
 	safe_new(Button(gui_bg, 600, 500, "Synth Queue 1 Gui", sq->_guiSignal.getSignal()));
-	safe_new(Button(gui_bg, 600, 530, "Mixer Gui", mmix._guiSignal.getSignal()));
-
-	// Quit button
-	safe_new(Button(gui_bg, WIDTH, 5, "Quit Brewsic", msig._quit.getSignal()));
 
         // TEST WINDOWS:
         safe_new(Window(gui_bg, 50, 50, 400, 200, "Test window"));
@@ -105,24 +99,6 @@ int main(int argc, char* argv[]) {
 	b6->setPreferedSize(15, 0, 1);
 
 	frame->packVertically(5);
-
-	SDL_CloseAudio();
-	free(obtained);
-	SDL_Quit();
-
-        sq->unsetGuiParent();
-        mmix.unsetGuiParent();
-
-        std::cout << "triosc reffed: " << osc.getCount() << std::endl;
-        synthFactory.dropSynth(osc.cast<ISynth>());
-        std::cout << "triosc reffed: " << osc.getCount() << std::endl;
-        sq->dropSynth(osc.cast<ISynth>());
-        std::cout << "triosc reffed: " << osc.getCount() << std::endl;
-        osc.clear();
-
-	delete gui;
-
-        } // End memory allocation testing block
 */
         IControl::dumpRegisteredControls();
 

@@ -62,6 +62,20 @@ void MainMixer::mixInto(Sint16* buffer) {
 	_main_mixer.copyBuffer(buffer);
 }
 
+void MainMixer::setGuiParent(SafePtr<IControl> guiParent) {
+  _gui_parent = guiParent;
+  for (int i = 0; i < _channels; ++i) {
+    _synths[i]->setGuiParent(guiParent);
+  }
+}
+
+void MainMixer::unsetGuiParent() {
+  _gui_parent.clear();
+  for (int i = 0; i < _channels; ++i) {
+    _synths[i]->unsetGuiParent();
+  }
+}
+
 void MainMixer::guiSignal() {
 	if (_gui) _gui->deleteMe();
 

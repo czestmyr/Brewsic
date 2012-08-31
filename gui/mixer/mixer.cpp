@@ -1,5 +1,6 @@
 #include "gui/mixer/mixer.h"
 #include "mixer/mainmixer.h"
+#include "mixer/synthqueue.h"
 #include "gui/slider.h"
 #include "gui/label.h"
 #include "gui/frame.h"
@@ -25,9 +26,11 @@ MixerGui::MixerGui(SafePtr<IControl> parent, MainMixer* mixer)
     sprintf(buffer, "Ch.%i", i+1);
 
     SafePtr<IControl> frame = safe_new(Frame(hframe, 0, 0, 20, 300, 0));
+    SafePtr<Button> button = safe_new(Button(frame, 0, 0, "SQ.", mixer->getSynthQueue(i)->_guiSignal.getSignal())).cast<Button>();
     SafePtr<Label> header  = safe_new(Label(frame, 0, 20, buffer)).cast<Label>();
     SafePtr<Slider> slider = safe_new(Slider(frame, 0, 40, 280, 0.0, 1.5, &_mixer->getVolume(i)->_vol, 50)).cast<Slider>();
 
+    button->setPreferedSize(0, 22, 1);
     header->setPreferedSize(0, 14, 1);
     slider->setPreferedSize(0, 0, 1);
 
