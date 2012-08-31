@@ -1,52 +1,13 @@
-#include <iostream>
 #include <SDL.h>
-#include <cmath>
-#include <climits>
-#include <fstream>
 
-#include "mixer/mixer.h"
-#include "mixer/mainmixer.h"
-#include "mixer/synthqueue.h"
-#include "synths/triosc.h"
-#include "synths/synthfactory.h"
-#include "gui/guimgr.h"
-#include "gui/window.h"
-#include "gui/background.h"
-#include "gui/button.h"
-#include "gui/style.h"
-#include "gui/keyboard.h"
-#include "gui/matrix.h"
-#include "gui/pselect.h"
-#include "gui/image.h"
-#include "gui/wheel.h"
-#include "gui/slider.h"
-#include "gui/checkbox.h"
-#include "gui/style.h"
-#include "gui/frame.h"
-#include "gui/filters/delaygui.h"
-#include "gui/synths/triosc.h"
-#include "common/signals.h"
+#include "maintest.h"
+#include "gui/Icontrol.h"
 
 using namespace std;
 
-#define _FREQ 22050
-#define _SAMPLES 64
-#define _CHANNELS 16
+MainTest test;
 
-#define WIDTH 800
-#define HEIGHT 600
-
-MainMixer mmix(_SAMPLES, _CHANNELS);
-SynthFactory synthFactory(_SAMPLES);
-SafePtr<TripleOscillator> osc;
-
-ofstream ofile;
-
-void audioCallback(void *userdata, Uint8 *stream, int len) {
-	mmix.mixInto((Sint16*)stream);
-}
-
-bool do_quit(false);
+/*bool do_quit(false);
 SafePtr<Keyboard> kbd;
 SafePtr<Matrix> mtrx;
 
@@ -71,41 +32,18 @@ class MainSignals {
 			mtrx->setShift(shift);
 		}
 };
-MainSignals msig;
+MainSignals msig;*/
 
 int main(int argc, char* argv[]) {
-	// Initialize SDL
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
-		cerr << "Could not initialize SDL!" << endl;
-		return -1;
-	}
+  int initResult = test.init();
+  if (initResult) return initResult;
+  test.mainLoop();
+  test.deinit();
 
-	// TODO: Move audio initialization elsewhere
-	SDL_AudioSpec* desired = (SDL_AudioSpec*)malloc(sizeof(SDL_AudioSpec));
-	SDL_AudioSpec* obtained = (SDL_AudioSpec*)malloc(sizeof(SDL_AudioSpec));
-
-	desired->freq = _FREQ;
-	desired->format = AUDIO_S16SYS;
-	desired->channels = 1;
-	desired->samples = _SAMPLES*2;
-	desired->callback = audioCallback;
-	desired->userdata = NULL;
-
-	if (SDL_OpenAudio(desired, obtained)) {
-		cerr << "Could not open audio device!" << endl;
-		SDL_Quit();
-		return -1;
-	}
-
-	cout << "Frequency : " << obtained->freq << endl;
-	cout << "Channels  : " << obtained->channels << endl;
-	cout << "Samples   : " << obtained->samples << endl;
-
-	free(desired);
-
-	SDL_Surface* screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, 0);
-
+  /*
         { // Begin memory allocation testing block
+
+        SafePtr<TripleOscillator> osc;
 
 	// Gui setup
 	GuiMgr* gui = new GuiMgr();
@@ -140,7 +78,7 @@ int main(int argc, char* argv[]) {
 	safe_new(Button(gui_bg, WIDTH - 250, 75, "Down", msig._kbdDown.getSignal()));
 
 	// Sequencer
-/*	int seq_size = 8;
+        int seq_size = 8;
 	int seq_length = 500;
 	int seq_ind = 0;
 	int seq_dur = 0;
@@ -150,7 +88,6 @@ int main(int argc, char* argv[]) {
 		safe_new(Checkbox(gui_bg, 50 + i*30, 50, 20, 20, &sequencer[i]));
 		safe_new(Slider(gui_bg, 50 + i*30, 75, 200, 100.0, 2000.0, &seq_freq[i]));
 	}
-*/
 	// Packing test
 	SafePtr<IControl> frame = safe_new(Frame(gui_bg, 500, 100, 100, 600));
 	SafePtr<IControl> b1 = safe_new(Button(frame, 0, 0, "1"));
@@ -169,73 +106,6 @@ int main(int argc, char* argv[]) {
 
 	frame->packVertically(5);
 
-	// Timing
-	Uint32 time = SDL_GetTicks();
-	Uint32 dt = 0;
-
-	// Start sound
-	SDL_PauseAudio(0);
-
-	// Main event loop
-	SDL_Event e;
-	while (!do_quit) {
-		SDL_Delay(50);
-
-		while (SDL_PollEvent(&e)) {
-			switch (e.type) {
-				case SDL_MOUSEBUTTONDOWN:
-					if (e.button.button == SDL_BUTTON_LEFT) {
-						gui->leftPress(e.button.x, e.button.y);
-					} else if (e.button.button == SDL_BUTTON_RIGHT) {
-						gui->rightPress(e.button.x, e.button.y);
-					}
-				break;
-				case SDL_MOUSEBUTTONUP:
-					if (e.button.button == SDL_BUTTON_LEFT) {
-						gui->leftRelease(e.button.x, e.button.y);
-					} else if (e.button.button == SDL_BUTTON_RIGHT) {
-						gui->rightRelease(e.button.x, e.button.y);
-					}
-				break;
-				case SDL_MOUSEMOTION:
-					gui->mouseMove(e.motion.x, e.motion.y, e.motion.xrel, e.motion.yrel);
-				break;
-				case SDL_KEYDOWN:
-					gui->keyPress(e.key.keysym.sym);
-				break;
-				case SDL_KEYUP:
-					gui->keyRelease(e.key.keysym.sym);
-				break;
-				case SDL_QUIT:
-					do_quit = true;
-				break;
-			}
-		}
-
-		// Timing
-		dt = SDL_GetTicks() - time;
-		time += dt;
-
-		// Sequencer
-/*		seq_dur += dt;
-		while (seq_dur >= seq_length) {
-			osc->stopNote(seq_ind+1);
-			seq_dur -= seq_length;
-			seq_ind++;
-			if (seq_ind >= seq_size) seq_ind %= seq_size;
-			if (sequencer[seq_ind]) {
-				osc->startNote(seq_ind+1, seq_freq[seq_ind]);
-			}
-		}
-*/
-		SDL_Color shadecol = Style::inst()->getShadeColor();
-		Uint32 shade = SDL_MapRGB(screen->format, shadecol.r, shadecol.g, shadecol.b);
-		SDL_FillRect(screen, NULL, shade);
-		gui->cleanup();
-		gui->draw(screen);
-		SDL_Flip(screen);
-	}
-
 	SDL_CloseAudio();
 	free(obtained);
 	SDL_Quit();
@@ -243,14 +113,17 @@ int main(int argc, char* argv[]) {
         sq->unsetGuiParent();
         mmix.unsetGuiParent();
 
+        std::cout << "triosc reffed: " << osc.getCount() << std::endl;
         synthFactory.dropSynth(osc.cast<ISynth>());
+        std::cout << "triosc reffed: " << osc.getCount() << std::endl;
         sq->dropSynth(osc.cast<ISynth>());
+        std::cout << "triosc reffed: " << osc.getCount() << std::endl;
         osc.clear();
 
 	delete gui;
 
         } // End memory allocation testing block
-
+*/
         IControl::dumpRegisteredControls();
 
 	return 0;

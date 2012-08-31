@@ -28,6 +28,7 @@ file(GLOB_RECURSE CXX_SOURCES
 	${CMAKE_SOURCE_DIR}/synths/*.cpp
 	${CMAKE_SOURCE_DIR}/mixer/*.cpp
 	${CMAKE_SOURCE_DIR}/main.cpp
+	${CMAKE_SOURCE_DIR}/maintest.cpp
 )
 
 file(GLOB_RECURSE IMG_DATA
