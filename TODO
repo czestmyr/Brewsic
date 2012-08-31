@@ -11,4 +11,5 @@ create a way to change the buffer size dynamically
 add namespaces to the code
 create session management (e.g. for window coordinates saving)
 Parent parameters in gui controls should be changed to ordinary pointers
+Calculation of needed space for child gui elements (i.e. shrink parent to prefered children sizes)
 
