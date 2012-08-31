@@ -1,5 +1,30 @@
 #include "gui/Icontrol.h"
 
+//Debug
+#include <iostream>
+
+void IControl::dumpRegisteredControls() {
+        std::cout << "List of registered controls:" << std::endl;
+
+        std::map<long, IControl*>::iterator it = registeredControls.begin();
+        while (it != registeredControls.end()) {
+          std::cout << "  " << it->second->controlClassName() << " " << it->second->controlId <<
+            " (" << it->second->_this_ref_ptr->getCount() << " refs)" << std::endl;
+
+	  std::list< SafePtr<IControl> >::iterator children_it = it->second->_children.begin();
+          while (children_it != it->second->_children.end()) {
+            std::cout << "    " << (*children_it)->controlId << std::endl;
+            ++children_it;
+          }
+
+          ++it;
+        }
+}
+
+std::map<long, IControl*> IControl::registeredControls;
+
+long IControl::ctlCounter = 0;
+
 IControl::IControl(SafePtr<IControl> parent): _x(0), _y(0), _w(0), _h(0),
 	_delete_me(false), _margins(5), _pack_horizontally(false), _auto_packing(false),
 	_packable(true), _focusable(false), _prefered_h(0), _prefered_w(0), _pack_weight(1) {
@@ -10,10 +35,8 @@ IControl::IControl(SafePtr<IControl> parent): _x(0), _y(0), _w(0), _h(0),
         } else {
           _parent = NULL;
         }
-	incCounter();
+        registerControl(this);
 }
-
-long IControl::ctlCounter = 0;
 
 int IControl::xToParent(int x) {
 	if (_parent) {

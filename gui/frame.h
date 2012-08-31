@@ -9,6 +9,8 @@ class Frame: public IControl {
 			redim(x, y, w, h);
 		}
 
+                const char* controlClassName() { return "Frame"; }
+
 		int getXMin() { return _thickness; }
 		int getYMin() { return _thickness; }
 		int getXMax() { return _w-_thickness; }

@@ -251,7 +251,7 @@ int main(int argc, char* argv[]) {
 
         } // End memory allocation testing block
 
-	std::cout << "Undeleted control number: " << IControl::ctlCounter << std::endl;
+        IControl::dumpRegisteredControls();
 
 	return 0;
 }

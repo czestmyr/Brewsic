@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include <list>
+#include <map>
 #include "draw/SDL_draw.h"
 #include "common/pointers.h"
 
@@ -10,13 +11,31 @@
 #define safe_new(obj) (new obj)->dropAndSafePtr()
 
 class IControl {
-	public:
-		static long ctlCounter;
-		static void incCounter() { ctlCounter++; }
-		static void decCounter() { ctlCounter--; }
+                // Debugging (gui control counting) features:
+        public:
+                static void dumpRegisteredControls();
 
+        protected:
+                static std::map<long, IControl*> registeredControls;
+		static long ctlCounter;
+
+		static void registerControl(IControl* ctl) {
+                  ctl->controlId = ctlCounter; ctlCounter++;
+                  registeredControls.insert(std::make_pair(ctl->controlId, ctl));
+                }
+		static void unregisterControl(IControl* ctl) {
+                  registeredControls.erase(ctl->controlId);
+                }
+
+                virtual const char* controlClassName() { return "Unnamed control class"; }
+
+                long controlId;
+
+                // End debugging features
+
+	public:
 		IControl(SafePtr<IControl> parent);
-		virtual ~IControl() { decCounter(); }
+		virtual ~IControl() { unregisterControl(this); }
 
 		SafePtr<IControl> safePtr() { return SafePtr<IControl>(_this_ref_ptr); }
 

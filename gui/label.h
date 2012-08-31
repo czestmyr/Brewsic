@@ -14,6 +14,8 @@ class Label: public IControl, IObserver {
 		Label(SafePtr<IControl> parent, int x, int y, const char* text);
 		~Label();
 
+                const char* controlClassName() { return "Label"; }
+
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);
 
 		void signal();

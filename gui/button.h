@@ -14,6 +14,8 @@ class Button: public IControl {
 		Button(SafePtr<IControl> parent, int x, int y, const char* text = "A button", Signal sig = Signal());
 		~Button();
 
+                const char* controlClassName() { return "Button"; }
+
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);
 		bool leftPress(int x, int y);
 		bool leftRelease(int x, int y);

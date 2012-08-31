@@ -13,6 +13,8 @@ class Background: public IControl {
 			_rect.h = _h;
 		}
 
+                const char* controlClassName() { return "Background"; }
+
 		int getXMin() { return 10; }
 		int getYMin() { return 10; }
 		int getXMax() { return _w-10; }

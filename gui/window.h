@@ -14,6 +14,9 @@ class Window: public IControl {
 	public:
 		Window(SafePtr<IControl>, int x, int y, int w, int h, const char* title = "Unnamed window");
 		~Window() {};
+
+                const char* controlClassName() { return "Window"; }
+
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);
 
 		bool leftPress(int x, int y);

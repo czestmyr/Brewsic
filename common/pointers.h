@@ -49,6 +49,8 @@ class RefPtr {
 		const T& get() const { return *_ptr; }
 		T& get() { return *_ptr; }
 
+                unsigned int getCount() const { return _refcount; }
+
 	private:
 		unsigned int _refcount;
 		T* _ptr;
