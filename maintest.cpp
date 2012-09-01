@@ -66,12 +66,13 @@ int MainTest::init() {
 }
 
 void MainTest::deinit() {
+  SDL_CloseAudio();
+
   // Clear pointers to all main classes
   _synth_factory.clear();
   _mixer.clear();
   _gui_mgr.clear();
 
-  SDL_CloseAudio();
   free(_obtained_audio_format);
   SDL_Quit();
 }
@@ -89,6 +90,9 @@ void MainTest::mainLoop() {
   _do_quit = false;
   while (!_do_quit) {
     SDL_Delay(50);
+
+    // Locking the audio while processing events and drawing
+    SDL_LockAudio();
 
     while (SDL_PollEvent(&e)) {
       switch (e.type) {
@@ -134,12 +138,16 @@ void MainTest::mainLoop() {
     _gui_mgr->cleanup();
     _gui_mgr->draw(_screen);
 
+    // Unlocking audio mutex
+    SDL_UnlockAudio();
+
     SDL_Flip(_screen);
   }
 }
 
 void MainTest::audioCallback(void *userdata, Uint8 *stream, int len) {
-  if (_instance)
+  if (_instance) {
     _instance->_mixer->mixInto((Sint16*)stream);
+  }
 }
 
