@@ -10,6 +10,8 @@ class Wheel: public IControl, IObserver {
 		Wheel(SafePtr<IControl> parent, int x, int y, int w, int h, float min, float max, Property<float>* prop = NULL);
 		~Wheel();
 
+                const char* controlClassName() { return "Wheel"; }
+
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);
 
 		bool leftPress(int x, int y);

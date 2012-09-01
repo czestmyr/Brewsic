@@ -3,6 +3,10 @@
 
 #include <SDL.h>
 #include "common/signals.h"
+#include "common/pointers.h"
+#include "mixer/mainmixer.h"
+#include "gui/guimgr.h"
+#include "synths/synthfactory.h"
 
 #define _FREQ 22050
 #define _SAMPLES 64
@@ -39,9 +43,9 @@ class MainTest {
 
     bool _do_quit;
 
-    MainMixer* _mixer;
-    GuiMgr* _gui_mgr;
-    SynthFactory* _synth_factory;
+    SafePtr<MainMixer> _mixer;
+    SafePtr<GuiMgr> _gui_mgr;
+    SafePtr<SynthFactory> _synth_factory;
 
     SDL_AudioSpec* _obtained_audio_format;
     SDL_Surface* _screen;

@@ -10,6 +10,8 @@ class Checkbox: public IControl, IObserver {
 		Checkbox(SafePtr<IControl> parent, int x, int y, int w, int h, Property<bool>* prop = NULL);
 		~Checkbox();
 
+                const char* controlClassName() { return "Checkbox"; }
+
 		void draw(SDL_Surface* surf, int x, int y);
 		bool leftPress(int x, int y);
 		bool leftRelease(int x, int y);

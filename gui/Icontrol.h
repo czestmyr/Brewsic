@@ -22,6 +22,12 @@ class IControl {
 		static void registerControl(IControl* ctl) {
                   ctl->controlId = ctlCounter; ctlCounter++;
                   registeredControls.insert(std::make_pair(ctl->controlId, ctl));
+
+                  //Debug hook:
+                  if (ctl->controlId == 77) {
+                    // DO something useless
+                    int q = 5;
+                  }
                 }
 		static void unregisterControl(IControl* ctl) {
                   registeredControls.erase(ctl->controlId);

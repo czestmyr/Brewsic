@@ -9,6 +9,7 @@
 class SynthFactory {
 	public:
 		SynthFactory(int bufsize): _bufsize(bufsize) {}
+                ~SynthFactory();
 
 		int getClassNumber();
 		std::string getClassName(int index);

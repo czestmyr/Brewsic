@@ -14,6 +14,9 @@
 
 #include <queue>
 
+//XXX: TEST
+#include <iostream>
+
 #define POLYPHONY 4
 
 enum {
@@ -27,6 +30,7 @@ class TripleOscillator: public ISynth{
 	public:
 		TripleOscillator(int bufsize);
 		~TripleOscillator() {
+                        std::cout << "Deleting triosc" << std::endl;
 			for (int i = 0; i < POLYPHONY; ++i) {
 				for (int j = 0; j < 3; ++j) {
 					delete _generators[i][j];

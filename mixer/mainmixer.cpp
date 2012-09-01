@@ -4,9 +4,11 @@
 #include "mixer/filterqueue.h"
 #include "mixer/synthqueue.h"
 #include "synths/Isynth.h"
+#include "synths/synthfactory.h"
 #include "gui/mixer/mixer.h"
 
-MainMixer::MainMixer(int bufsize, int channels): _main_mixer(bufsize), _guiSignal(this), _master_volume(1.0) {
+MainMixer::MainMixer(int bufsize, int channels, SafePtr<SynthFactory> factory):
+  _main_mixer(bufsize), _guiSignal(this), _master_volume(1.0), _factory(factory) {
 	_channels = channels;
 	_bufsize = bufsize;
 
@@ -23,6 +25,7 @@ MainMixer::MainMixer(int bufsize, int channels): _main_mixer(bufsize), _guiSigna
                 char buffer[16];
                 sprintf(buffer, "Synth Queue %i", i+1);
 		_synths[i] = new SynthQueue(buffer);
+                _synths[i]->setSynthFactory(_factory);
 	}
 }
 
@@ -40,6 +43,7 @@ MainMixer::~MainMixer() {
 
         _gui_parent.clear();
         _gui.clear();
+        _factory.clear();
 }
 
 void MainMixer::mixInto(Sint16* buffer) {

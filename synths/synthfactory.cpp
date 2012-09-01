@@ -1,11 +1,24 @@
 #include "synths/synthfactory.h"
 #include "synths/triosc.h"
 
-int getClassNumber() {
+// XXX: TEST
+#include <iostream>
+
+SynthFactory::~SynthFactory() {
+        std::vector<SafePtr<ISynth> >::iterator it = _synths.begin();
+        std::cout << "Destroying synth factory" << std::endl;
+        int i = 0;
+        while (it != _synths.end()) {
+                std::cout << "Synth " << i << " reffed " << (*it).getCount() << " times" << std::endl;
+                ++it; ++i;
+        }
+}
+
+int SynthFactory::getClassNumber() {
 	return 1;
 }
 
-std::string getClassName(int index) {
+std::string SynthFactory::getClassName(int index) {
 	switch (index) {
 		case 1: return "TripleOscillator";
 	}

@@ -10,6 +10,8 @@ class PictureSelector: public IControl {
 		PictureSelector(SafePtr<IControl> parent, int x, int y, int w, int h, Property<int>* prop);
 		~PictureSelector();
 
+                const char* controlClassName() { return "Pselect"; }
+
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);
 
 		bool leftPress(int x, int y);

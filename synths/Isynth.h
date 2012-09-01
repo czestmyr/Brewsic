@@ -7,6 +7,7 @@
 class ISynth {
 	public:
 		ISynth(): _createGui(this) {}
+                virtual ~ISynth() {}
 
 		virtual void startNote(int noteId, float frequency) = 0;
 		virtual void stopNote(int noteId) = 0;

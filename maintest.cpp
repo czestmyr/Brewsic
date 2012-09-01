@@ -1,10 +1,7 @@
 #include "maintest.h"
-#include "mixer/mainmixer.h"
-#include "gui/guimgr.h"
 #include "gui/background.h"
 #include "gui/button.h"
 #include "gui/style.h"
-#include "synths/synthfactory.h"
 
 #include <iostream>
 
@@ -54,9 +51,9 @@ int MainTest::init() {
   _gui_mgr->adoptControl(gui_bg);
 
   // Main classes creation
-  _mixer = new MainMixer(_SAMPLES, _CHANNELS);
-  _mixer->setGuiParent(gui_bg);
   _synth_factory = new SynthFactory(_SAMPLES);
+  _mixer = new MainMixer(_SAMPLES, _CHANNELS, _synth_factory);
+  _mixer->setGuiParent(gui_bg);
 
   // Some gui tests:
 
@@ -69,9 +66,10 @@ int MainTest::init() {
 }
 
 void MainTest::deinit() {
-  delete _synth_factory;
-  delete _mixer;
-  delete _gui_mgr;
+  // Clear pointers to all main classes
+  _synth_factory.clear();
+  _mixer.clear();
+  _gui_mgr.clear();
 
   SDL_CloseAudio();
   free(_obtained_audio_format);

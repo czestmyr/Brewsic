@@ -8,6 +8,8 @@ class Keyboard: public IControl {
 	public:
 		Keyboard(SafePtr<IControl> parent, int x, int y, int h);
 
+                const char* controlClassName() { return "Keyboard"; }
+
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);
 
 		bool leftPress(int x, int y);

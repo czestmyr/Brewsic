@@ -9,10 +9,11 @@
 
 class FilterQueue;
 class SynthQueue;
+class SynthFactory;
 
 class MainMixer {
 	public:
-		MainMixer(int bufsize, int channels);
+		MainMixer(int bufsize, int channels, SafePtr<SynthFactory> factory);
 		~MainMixer();
 
 		void mixInto(Sint16* buffer);
@@ -26,6 +27,7 @@ class MainMixer {
 
 		void setGuiParent(SafePtr<IControl> guiParent);
                 void unsetGuiParent();
+
 		SIGNAL_DESTINATION(_guiSignal, MainMixer, guiSignal);
 		void guiSignal();
 	private:
@@ -36,6 +38,7 @@ class MainMixer {
 		int _bufsize;
 
 		Mixer _main_mixer;
+                SafePtr<SynthFactory> _factory;
 
 		Mixer** _mixers;
 		FilterQueue** _filters;

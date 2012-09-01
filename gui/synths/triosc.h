@@ -11,6 +11,7 @@ class TripleOscillatorGui: public Window {
 	public:
 		TripleOscillatorGui(SafePtr<IControl> parent, TripleOscillator* osc);
 
+                const char* controlClassName() { return "Triosc GUI"; }
 	private:
 		TripleOscillator* _osc;
 };

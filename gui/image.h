@@ -9,6 +9,8 @@ class Image: public IControl {
 		Image(SafePtr<IControl> parent, int x, int y, int w, int h, const char* filename);
 		~Image();
 
+                const char* controlClassName() { return "Image"; }
+
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);
 	private:
 		SDL_Surface* _img;

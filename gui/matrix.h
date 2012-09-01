@@ -7,6 +7,8 @@ class Matrix: public IControl {
 	public:
 		Matrix(SafePtr<IControl> parent, int x, int y, int w, int h);
 
+                const char* controlClassName() { return "Matrix"; }
+
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);
 
 		void setShift(int shift) { _shift = shift; }
