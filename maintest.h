@@ -7,6 +7,7 @@
 #include "mixer/mainmixer.h"
 #include "gui/guimgr.h"
 #include "synths/synthfactory.h"
+#include "song/patternmanager.h"
 
 #define _FREQ 22050
 #define _SAMPLES 64
@@ -18,6 +19,7 @@
 class MainMixer;
 class GuiMgr;
 class SynthFactory;
+class PatternManager;
 
 /// Main test class that contains all the initialization and deinitialization stuff.
 /// It is here so that main.cpp does not contain any unnecesarry stuff and also
@@ -46,6 +48,7 @@ class MainTest {
     SafePtr<MainMixer> _mixer;
     SafePtr<GuiMgr> _gui_mgr;
     SafePtr<SynthFactory> _synth_factory;
+    SafePtr<PatternManager> _pattern_manager;
 
     SDL_AudioSpec* _obtained_audio_format;
     SDL_Surface* _screen;

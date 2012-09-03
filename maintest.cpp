@@ -54,13 +54,17 @@ int MainTest::init() {
   _synth_factory = new SynthFactory(_SAMPLES);
   _mixer = new MainMixer(_SAMPLES, _CHANNELS, _synth_factory);
   _mixer->setGuiParent(gui_bg);
+  _pattern_manager = new PatternManager();
+  _pattern_manager->setGuiParent(gui_bg);
 
   // Some gui tests:
 
   // Quit button
   safe_new(Button(gui_bg, WIDTH, 5, "Quit Brewsic", _quit.getSignal()));
   // Mixer button
-  safe_new(Button(gui_bg, 600, 530, "Mixer Gui", _mixer->_guiSignal.getSignal()));
+  safe_new(Button(gui_bg, 600, 530, "Mixer", _mixer->getGuiSignal()));
+  // Pattern manager
+  safe_new(Button(gui_bg, 600, 500, "Patterns", _pattern_manager->getGuiSignal()));
 
   return 0;
 }
@@ -69,6 +73,7 @@ void MainTest::deinit() {
   SDL_CloseAudio();
 
   // Clear pointers to all main classes
+  _pattern_manager.clear();
   _synth_factory.clear();
   _mixer.clear();
   _gui_mgr.clear();

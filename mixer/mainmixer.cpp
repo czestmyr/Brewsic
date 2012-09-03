@@ -8,7 +8,7 @@
 #include "gui/mixer/mixer.h"
 
 MainMixer::MainMixer(int bufsize, int channels, SafePtr<SynthFactory> factory):
-  _main_mixer(bufsize), _guiSignal(this), _master_volume(1.0), _factory(factory) {
+  _main_mixer(bufsize), _master_volume(1.0), _factory(factory) {
 	_channels = channels;
 	_bufsize = bufsize;
 

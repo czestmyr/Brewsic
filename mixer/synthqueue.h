@@ -6,6 +6,7 @@
 #include "synths/Isynth.h"
 #include "synths/synthfactory.h"
 #include "gui/Icontrol.h"
+#include "gui/Iwithgui.h"
 #include "common/pointers.h"
 #include "common/Iobserver.h"
 #include "common/property.h"
@@ -16,7 +17,7 @@
 
 class SynthQueue: public IWithGui {
 	public:
-		SynthQueue(const std::string& name): _name(name), _guiSignal(this), _newSynthSignal(this) {}
+		SynthQueue(const std::string& name): _name(name), _newSynthSignal(this) {}
                 ~SynthQueue() {
                   std::cout << "Synth queue " << _name << " destruction:" << std::endl;
                   for (int i = 0; i < _synths.size(); ++i) {
