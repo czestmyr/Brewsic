@@ -5,13 +5,14 @@
 #include "common/signals.h"
 #include "common/pointers.h"
 #include "gui/Icontrol.h"
+#include "gui/Iwithgui.h"
 #include "filters/volume.h"
 
 class FilterQueue;
 class SynthQueue;
 class SynthFactory;
 
-class MainMixer {
+class MainMixer: public IWithGui {
 	public:
 		MainMixer(int bufsize, int channels, SafePtr<SynthFactory> factory);
 		~MainMixer();
@@ -27,13 +28,8 @@ class MainMixer {
 
 		void setGuiParent(SafePtr<IControl> guiParent);
                 void unsetGuiParent();
-
-		SIGNAL_DESTINATION(_guiSignal, MainMixer, guiSignal);
 		void guiSignal();
 	private:
-		SafePtr<IControl> _gui_parent;
-		SafePtr<IControl> _gui;
-
 		int _channels;
 		int _bufsize;
 

@@ -14,6 +14,7 @@ void SynthQueue::dropSynth(SafePtr<ISynth> synth) {
   }
 }
 
+// TODO: Might create a special class for this?
 void SynthQueue::guiSignal() {
   if (_gui)
     _gui->deleteMe();

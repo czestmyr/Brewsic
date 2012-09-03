@@ -1,6 +1,8 @@
 #ifndef _SIGNALS_H_
 #define _SIGNALS_H_
 
+#include <cstddef>
+
 class Signal {
 	public:
 		Signal(): _p(NULL), _o(NULL) {};
