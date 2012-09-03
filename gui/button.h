@@ -19,6 +19,8 @@ class Button: public IControl {
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);
 		bool leftPress(int x, int y);
 		bool leftRelease(int x, int y);
+
+                bool getPressed() { return _pressed; }
 	protected:
 		Signal _sig;
 		bool _pressed;

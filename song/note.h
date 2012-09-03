@@ -6,7 +6,6 @@ class Note {
     Note(float begin, float end, float frequency):
       _begin(begin), _end(end), _frequency(frequency) {}
 
-  private:
     float _begin;
     float _end;
     float _frequency;

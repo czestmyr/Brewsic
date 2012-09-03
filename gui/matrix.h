@@ -3,6 +3,8 @@
 
 #include "Icontrol.h"
 
+class Pattern;
+
 class Matrix: public IControl {
 	public:
 		Matrix(SafePtr<IControl> parent, int x, int y, int w, int h);
@@ -13,10 +15,17 @@ class Matrix: public IControl {
 
 		void setShift(int shift) { _shift = shift; }
 		int getShift() { return _shift; }
+
+                void setPattern(Pattern* pattern) { _pattern = pattern; }
 	private:
+                Pattern* _pattern;
+
 		int _shift;
 		int _x_shift;
 		int _zoom;
+
+                int timeToXPos(float time);
+                int freqToYPos(float freq);
 };
 
 #endif

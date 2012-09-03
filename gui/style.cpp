@@ -12,13 +12,13 @@ Style::Style() {
 	_fgcolor.g = 64;
 	_fgcolor.b = 92;
 
-/*	_shade.r = 0;
+	_shade.r = 0;
 	_shade.g = 5;
-	_shade.b = 10;*/
+	_shade.b = 10;
 
-	_shade.r = 255;
+/*	_shade.r = 255;
 	_shade.g = 255;
-	_shade.b = 255;
+	_shade.b = 255;*/
 
 	_medium.r = 128;
 	_medium.g = 128;

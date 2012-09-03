@@ -2,6 +2,7 @@
 #define _PATTERN_H_
 
 #include <map>
+#include <set>
 #include <vector>
 #include <string>
 #include "song/note.h"
@@ -13,7 +14,11 @@ typedef std::vector<SafePtr<Note> > NoteRecord;
 
 class Pattern: public IWithGui {
   public:
-    Pattern(const std::string& name): _name(name) {}
+    Pattern(const std::string& name): _name(name) {
+      //TEST:
+      newNote(0.0, 2000.0, 100);
+      newNote(1000.0, 3000.0, 200);
+    }
     ~Pattern();
 
     // Begin and end times of a note are in milliseconds in the pattern.
@@ -28,8 +33,11 @@ class Pattern: public IWithGui {
 
     const std::string& getName() const { return _name; }
 
+    friend class Matrix;
+
   private:
     std::map<float, NoteRecord*> _data;
+    std::set<SafePtr<Note> > _notes;
 
     std::string _name;
 };

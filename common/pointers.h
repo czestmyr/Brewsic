@@ -97,8 +97,11 @@ class SafePtr {
 
 		T& operator*() { return _ptr->get(); }
 		T* operator->() { return &_ptr->get(); }
-		operator bool() { return &_ptr->get(); }
-		bool operator==(const SafePtr<T>& other) { return _ptr == other._ptr; }
+		const T& operator*() const { return _ptr->get(); }
+		const T* operator->() const { return &_ptr->get(); }
+		operator bool() const { return &_ptr->get(); }
+		bool operator==(const SafePtr<T>& other) const { return _ptr == other._ptr; }
+                bool operator<(const SafePtr<T>& other) const { return _ptr < other._ptr; }
 
                 unsigned int getCount() { if (_ptr) return _ptr->getCount(); return 0; }
 

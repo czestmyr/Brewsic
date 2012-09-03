@@ -1,5 +1,9 @@
 #include "song/pattern.h"
 #include "gui/window.h"
+#include "gui/matrix.h"
+#include "gui/keyboard.h"
+#include "gui/frame.h"
+#include "gui/slider.h"
 
 /*typedef std::vector<SafePtr<Note> > NoteRecord;
 
@@ -36,6 +40,7 @@ void Pattern::newNote(float begin, float end, float frequency) {
   }
 
   SafePtr<Note> note = new Note(begin, end, frequency);
+  _notes.insert(note);
 
   // Add the note into all the records between begin and end times
   while (it_begin != it_end) {
@@ -58,6 +63,26 @@ void Pattern::guiSignal() {
   if (_gui)
     _gui->deleteMe();
 
-  _gui = safe_new(Window(_gui_parent, 0, 0, 200, 100, _name.c_str()));
+  _gui = safe_new(Window(_gui_parent, 0, 0, 400, 400, _name.c_str()));
+
+  SafePtr<IControl> frame1 = safe_new(Frame(_gui, 0, 0, 0, 0, 0));
+  frame1->setPreferedSize(0, 20, 1);
+  SafePtr<IControl> frame2 = safe_new(Frame(_gui, 0, 0, 0, 0, 0));
+  frame2->setPreferedSize(0, 0, 1);
+
+  safe_new(Keyboard(frame2, 0, 0, 360))->setPreferedSize(80, 0, 1);
+  safe_new(Matrix(frame2, 0, 0, 0, 0)).cast<Matrix>()->setPattern(this);
+
+  SafePtr<IControl> frame3 = safe_new(Frame(frame2, 0, 0, 0, 0, 0));
+  frame3->setPreferedSize(20, 0, 1);
+
+  safe_new(Button(frame3, 0, 0, "^"))->setPreferedSize(0, 20, 1);
+  safe_new(Slider(frame3, 0, 0, 0, 0, 100))->setPreferedSize(0, 0, 1);
+  safe_new(Button(frame3, 0, 0, "v"))->setPreferedSize(0, 20, 1);
+
+  frame1->packHorizontally(2);
+  frame2->packHorizontally(2);
+  frame3->packVertically(2);
+  _gui->packVertically(0);
 }
 

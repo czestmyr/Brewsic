@@ -25,6 +25,8 @@ class Window: public IControl {
 		bool keyPress(SDLKey sym);
 		bool keyRelease(SDLKey sym);
 
+		void redim(int x, int y, int w, int h);
+
 		int getYMin() { return _title_h + MARGIN; }
 		int getYMax() { return _h - _status_h - MARGIN; }
 		int getXMin() { return 1 + MARGIN; }
@@ -42,6 +44,7 @@ class Window: public IControl {
 		bool _dragging;
 
 		SafePtr<Button> _close_btn;
+                SafePtr<Button> _resize_btn;
 };
 
 #endif

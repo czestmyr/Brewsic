@@ -19,7 +19,10 @@ void PatternManager::createPattern() {
   ++_lastPatternNumber;
   stringstream patternName;
   patternName << "Pattern " << _lastPatternNumber;
-  _patterns.push_back(new Pattern(patternName.str()));
+
+  Pattern* newPattern = new Pattern(patternName.str());
+  newPattern->setGuiParent(_gui_parent);
+  _patterns.push_back(newPattern);
   guiSignal();
 }
 

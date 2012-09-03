@@ -1,6 +1,9 @@
 #include "matrix.h"
 #include "style.h"
-#include "math.h"
+#include <cmath>
+#include "song/pattern.h"
+
+#include <iostream>
 
 Matrix::Matrix(SafePtr<IControl> parent, int x, int y, int w, int h)
 : IControl(parent) {
@@ -17,6 +20,8 @@ void Matrix::draw(SDL_Surface* surf, int orig_x, int orig_y) {
 	Uint32 sh32 = SDL_MapRGB(surf->format, sh.r, sh.g, sh.b);
 	Uint32 med32 = SDL_MapRGB(surf->format, med.r, med.g, med.b);
 	Uint32 fg32 = SDL_MapRGB(surf->format, fg.r, fg.g, fg.b);
+
+	Uint32 note32 = SDL_MapRGB(surf->format, 192, 64, 32);
 
 	int yoff = orig_y + _y;
 	int xoff = orig_x + _x;
@@ -49,6 +54,30 @@ void Matrix::draw(SDL_Surface* surf, int orig_x, int orig_y) {
 		h = (h+1)%highlights;
 	}
 
-	Style::inst()->drawInset(surf, orig_x + _x, orig_y + _y, _w, _h, 2);
+        // Draw notes
+        std::set<SafePtr<Note> >::iterator it = _pattern->_notes.begin();
+        while (it != _pattern->_notes.end()) {
+          int x_begin = timeToXPos((*it)->_begin);
+          int x_end = timeToXPos((*it)->_end);
+          int y_begin = freqToYPos((*it)->_frequency);
+          std::cout << "Note coords: " << x_begin << "," << x_end << "," << y_begin << std::endl;
+	  Draw_FillRect(surf, x_begin + xoff, y_begin + yoff, x_end - x_begin, 10, note32);
+          ++it;
+        }
+
+//	Style::inst()->drawInset(surf, orig_x + _x, orig_y + _y, _w, _h, 2);
+}
+
+// TODO: use tempo information
+int Matrix::timeToXPos(float time) {
+  #define STEPS_PER_SECOND 1.0
+  float steps = time / 1000.0 * STEPS_PER_SECOND;
+  int step_width = 64/_zoom;
+  return (int)(steps * step_width);
+}
+
+int Matrix::freqToYPos(float freq) {
+  //TODO: SO far 1:1 correspondency (just a test)
+  return (int)freq;
 }
 

@@ -6,17 +6,20 @@
 
 Window::Window(SafePtr<IControl> parent, int x, int y, int w, int h, const char* title)
 : IControl(parent), _close(this) {
-	redim(x, y, w, h);
 	_status_h = 20;
 	_name = title;
 	_dragging = false;
 	_focusable = true;
+        _auto_packing = true;
 
 	_title_h = 0;
-	_close_btn = safe_new(Button(_this_ref_ptr, _w, 0, "X", _close.getSignal())).cast<Button>();
-	_close_btn->rawRedim(_w - 20, 0, 20, 20);
+	_close_btn = safe_new(Button(_this_ref_ptr, w, 0, "X", _close.getSignal())).cast<Button>();
 	_close_btn->setPackable(false);
+	_resize_btn = safe_new(Button(_this_ref_ptr, w, h - 20, "\\")).cast<Button>();
+	_resize_btn->setPackable(false);
 	_title_h = 20;
+
+	redim(x, y, w, h);
 
 	toFront();
 }
@@ -66,6 +69,10 @@ bool Window::mouseMove(int x, int y, int dx, int dy) {
 		redim(_x+dx, _y+dy, _w, _h);
 	}
 
+        if (_resize_btn->getPressed()) {
+                redim(_x, _y, _w+dx, _h+dy);
+        }
+
 	return true;
 }
 
@@ -77,5 +84,11 @@ bool Window::keyPress(SDLKey sym) {
 bool Window::keyRelease(SDLKey sym) {
 	_status = "Released a key...";
 	return true;
+}
+
+void Window::redim(int x, int y, int w, int h) {
+        IControl::redim(x,y,w,h);
+	_close_btn->rawRedim(_w - 20, 0, 20, 20);
+	_resize_btn->rawRedim(_w - 20, h - 20, 20, 20);
 }
 
