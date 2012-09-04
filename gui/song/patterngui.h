@@ -3,6 +3,8 @@
 
 #include "gui/window.h"
 #include "common/signals.h"
+#include "common/pointers.h"
+#include "gui/keyboard.h"
 
 class Pattern;
 
@@ -12,6 +14,7 @@ class PatternGui: public Window {
 
     const char* controlClassName() { return "Pattern GUI"; }
 
+    void setSynth(SafePtr<ISynth> synth);
   private:
     SIGNAL_DESTINATION(_lowerSynth, PatternGui, lowerSynth);
     SIGNAL_DESTINATION(_upperSynth, PatternGui, upperSynth);
@@ -19,6 +22,7 @@ class PatternGui: public Window {
     void upperSynth();
 
     Pattern* _pattern;
+    SafePtr<Keyboard> keyboard;
 };
 
 #endif

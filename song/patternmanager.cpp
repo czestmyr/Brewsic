@@ -22,6 +22,7 @@ void PatternManager::createPattern() {
 
   Pattern* newPattern = new Pattern(patternName.str());
   newPattern->setGuiParent(_gui_parent);
+  newPattern->setSynth(_synth_factory->getSynth(0));
   _patterns.push_back(newPattern);
   guiSignal();
 }

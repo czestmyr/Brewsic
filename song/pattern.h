@@ -9,6 +9,7 @@
 #include "common/pointers.h"
 #include "common/signals.h"
 #include "gui/Iwithgui.h"
+#include "synths/Isynth.h"
 
 typedef std::vector<SafePtr<Note> > NoteRecord;
 
@@ -28,6 +29,8 @@ class Pattern: public IWithGui {
     // Microtonality defines frequency tolerance: 1 means conventional tone (i.e. 1/12 of an octave), 2 is 1/2 of a conventional tone, etc...
     SafePtr<Note> getNote(float time, float frequency, int uTonality = 1);
     void deleteNote(SafePtr<Note> note);
+
+    void setSynth(SafePtr<ISynth> synth);
 
     void guiSignal();
 

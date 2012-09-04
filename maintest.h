@@ -10,7 +10,7 @@
 #include "song/patternmanager.h"
 
 #define _FREQ 22050
-#define _SAMPLES 64
+#define _SAMPLES 1024
 #define _CHANNELS 16
 
 #define WIDTH 800

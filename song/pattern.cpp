@@ -55,10 +55,19 @@ void Pattern::deleteNote(SafePtr<Note> note) {
 
 }
 
+void Pattern::setSynth(SafePtr<ISynth> synth) {
+  _synth = synth;
+
+  if (_gui) {
+    _gui.cast<PatternGui>()->setSynth(synth);
+  }
+}
+
 void Pattern::guiSignal() {
   if (_gui)
     _gui->deleteMe();
 
   _gui = safe_new(PatternGui(_gui_parent, this));
+  _gui.cast<PatternGui>()->setSynth(_synth);
 }
 

@@ -56,6 +56,7 @@ int MainTest::init() {
   _mixer->setGuiParent(gui_bg);
   _pattern_manager = new PatternManager();
   _pattern_manager->setGuiParent(gui_bg);
+  _pattern_manager->setSynthFactory(_synth_factory);
 
   // Some gui tests:
 

@@ -23,7 +23,8 @@ PatternGui::PatternGui(SafePtr<IControl> parent, Pattern* pattern):
 
   SafePtr<IControl> frame2 = safe_new(Frame(safePtr(), 0, 0, 0, 0, 0));
   frame2->setPreferedSize(0, 0, 1);
-  safe_new(Keyboard(frame2, 0, 0, 360))->setPreferedSize(80, 0, 1);
+  keyboard = safe_new(Keyboard(frame2, 0, 0, 360)).cast<Keyboard>();
+  keyboard->setPreferedSize(80, 0, 1);
   safe_new(Matrix(frame2, 0, 0, 0, 0)).cast<Matrix>()->setPattern(pattern);
   SafePtr<IControl> frame3 = safe_new(Frame(frame2, 0, 0, 0, 0, 0));
   frame3->setPreferedSize(20, 0, 1);
@@ -37,6 +38,10 @@ PatternGui::PatternGui(SafePtr<IControl> parent, Pattern* pattern):
     frame3->packVertically(2);
 
   packVertically(0);
+}
+
+void PatternGui::setSynth(SafePtr<ISynth> synth) {
+  keyboard->setSynth(synth);
 }
 
 void PatternGui::lowerSynth() {
