@@ -18,6 +18,7 @@ class SynthFactory {
                 void dropSynth(SafePtr<ISynth> synth);
 
 		int getSynthNumber() { return _synths.size(); }
+                int getSynthPosition(SafePtr<ISynth> synth);
 		SafePtr<ISynth> getSynth(int index) {
 			if (index >= 0 && index < _synths.size())
 				return _synths[index];

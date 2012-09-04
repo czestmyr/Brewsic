@@ -39,6 +39,8 @@ class Pattern: public IWithGui {
     std::map<float, NoteRecord*> _data;
     std::set<SafePtr<Note> > _notes;
 
+    SafePtr<ISynth> _synth;
+
     std::string _name;
 };
 

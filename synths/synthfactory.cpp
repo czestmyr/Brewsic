@@ -46,3 +46,16 @@ void SynthFactory::dropSynth(SafePtr<ISynth> synth) {
         }
 }
 
+int SynthFactory::getSynthPosition(SafePtr<ISynth> synth) {
+        std::vector<SafePtr<ISynth> >::iterator it = _synths.begin();
+        int pos = 0;
+        while (it != _synths.end()) {
+                if (*it == synth) {
+                          return pos;
+                }
+                ++it;
+                ++pos;
+        }
+        return 0;
+}
+
