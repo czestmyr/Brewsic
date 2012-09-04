@@ -60,7 +60,7 @@ void Matrix::draw(SDL_Surface* surf, int orig_x, int orig_y) {
           int x_begin = timeToXPos((*it)->_begin);
           int x_end = timeToXPos((*it)->_end);
           int y_begin = freqToYPos((*it)->_frequency);
-          std::cout << "Note coords: " << x_begin << "," << x_end << "," << y_begin << std::endl;
+          //std::cout << "Note coords: " << x_begin << "," << x_end << "," << y_begin << std::endl;
 	  Draw_FillRect(surf, x_begin + xoff, y_begin + yoff, x_end - x_begin, 10, note32);
           ++it;
         }
