@@ -12,7 +12,7 @@
 
 TripleOscillatorGui::TripleOscillatorGui(SafePtr<IControl> parent, TripleOscillator* osc):
 	_osc(osc),
-	Window(parent, 0, 0, 200, 220, "3xOsc") {
+	Window(parent, 0, 0, 200, 220, osc->getSynthName().c_str()) {
 
 	SafePtr<IControl> slider = safe_new(Slider(safePtr(), 0, 0, 0, -400, 600, &osc->_shift));
 	SafePtr<IControl> frame = safe_new(Frame(safePtr(), 0, 0, 0, 0, 0));

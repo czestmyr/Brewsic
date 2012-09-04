@@ -2,11 +2,15 @@
 #define _INTERFACE_SYNTH_H__
 
 #include "gui/Icontrol.h"
+#include "gui/Iwithgui.h"
 #include "common/signals.h"
+#include "common/property.h"
 
-class ISynth {
+#include <string>
+
+class ISynth: public IWithGui {
   public:
-    ISynth(): _createGui(this) {}
+    ISynth() {}
     virtual ~ISynth() {}
 
     virtual void startNote(int noteId, float frequency) = 0;
@@ -16,12 +20,13 @@ class ISynth {
     virtual float* getBuffer() = 0;
 
     virtual const char* getClassName() = 0;
+    const std::string& getSynthName() { return _synth_name; }
 
-    void setGuiParent(SafePtr<IControl> parent) { _gui_parent = parent; }
-    SIGNAL_DESTINATION(_createGui, ISynth, createGui);
-    virtual void createGui() = 0;
   protected:
-    SafePtr<IControl> _gui_parent;
+    void constructSynthName();
+
+    Property<std::string> _synth_name;
+    static int _lastSerialNumber;
 };
 
 #endif

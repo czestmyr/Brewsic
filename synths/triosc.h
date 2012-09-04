@@ -13,6 +13,7 @@
 #include "gui/synths/triosc.h"
 
 #include <queue>
+#include <string>
 
 //XXX: TEST
 #include <iostream>
@@ -52,7 +53,7 @@ class TripleOscillator: public ISynth{
 		float* getBuffer();
 
 		const char* getClassName() { return "TripleOscillator"; }
-		void createGui();
+		void guiSignal();
 
 		Property<float> _shift;
 		Property<float> _first;
@@ -82,8 +83,6 @@ class TripleOscillator: public ISynth{
 		std::queue<int> _channelQueue;
 
 		int _bufsize;
-
-		SafePtr<IControl> _gui;
 };
 
 #endif

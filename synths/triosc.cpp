@@ -33,6 +33,8 @@ TripleOscillator::TripleOscillator(int bufsize):
 	for (int i = 0; i < POLYPHONY; ++i) {
 		_channelQueue.push(i);
 	}
+
+        constructSynthName();
 }
 
 void TripleOscillator::setGenerator(int oscId, IGenerator* gen) {
@@ -94,7 +96,7 @@ float* TripleOscillator::getBuffer() {
 	return _mixer.getBuffer();
 }
 
-void TripleOscillator::createGui() {
+void TripleOscillator::guiSignal() {
 	if (_gui) _gui->deleteMe();
 
 	_gui = safe_new(TripleOscillatorGui(_gui_parent, this));

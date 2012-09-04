@@ -27,22 +27,18 @@ void SynthQueue::guiSignal() {
   safe_new(Frame(_gui, 0, 0, 0, 0))->setPreferedSize(0, 2, 1);
 
   for (int i = 0; i < _size; ++i) {
-    safe_new(Button(_gui, 0, 0, _synths[i]->getClassName(), _synths[i]->_createGui.getSignal()));
+    safe_new(Button(_gui, 0, 0, _synths[i]->getSynthName().c_str(), _synths[i]->getGuiSignal()));
   }
 
   _gui->packVertically(5);
 }
 
-#include <iostream>
-
 void SynthQueue::newSynth() {
   // TODO: Make the user choose the synth
   SafePtr<ISynth> synth = _factory->createNewSynth("TripleOscillator");
-  std::cout << "Synth is reffed " << synth.getCount() << " times" << std::endl;
   synth->setGuiParent(_gui_parent);
   _synths.push_back(synth);
 
-  std::cout << "Synth is reffed " << synth.getCount() << " times" << std::endl;
   // Recreate gui
   guiSignal();
 }
