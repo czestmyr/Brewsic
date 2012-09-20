@@ -30,7 +30,7 @@ void PictureSelector::draw(SDL_Surface* surf, int orig_x, int orig_y) {
 
 bool PictureSelector::leftPress(int x, int y) {
 	if (_pics.size() == 0) return false;
-	setProp(getProp() + 1 % _pics.size());
+	setProp((getProp() + 1) % _pics.size());
 }
 
 void PictureSelector::addPicture(const char* filename) {
