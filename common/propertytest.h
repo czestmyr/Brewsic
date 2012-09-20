@@ -3,6 +3,7 @@
 
 #include "property.h"
 #include "propertyobserver.h"
+#include "propertylinker.h"
 
 #include <iostream>
 
@@ -24,6 +25,7 @@ class PropertyTest {
 	public:
                 static void runTest() {
 		        Property<int>* _number;
+                        Property<int>* anotherNumber;
 		        NumberObserver _num_obs;
 
                         // The number observer now does not point to a property, but setting it is safe:
@@ -32,9 +34,16 @@ class PropertyTest {
                         _number = new Property<int>(0);
                         _num_obs = NumberObserver(_number);
                         _num_obs.setValue(42);
+                        // Test linked properties
+                        anotherNumber = new Property<int>(666);
+                        PropertyLinker<int> link;
+                        link.addProperty(anotherNumber);
+                        link.addProperty(_number); // This should change _number to 666
+                        *anotherNumber = 1234; // Another try
                         // Deleting the property now is also safe
                         delete _number;
                         _num_obs.setValue(13);
+                        delete anotherNumber;
                 }
 };
 

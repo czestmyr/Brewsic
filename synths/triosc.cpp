@@ -5,6 +5,7 @@
 
 #include "gui/Icontrol.h"
 #include "gui/synths/triosc.h"
+#include "common/propertylinker.h"
 
 using namespace std;
 
