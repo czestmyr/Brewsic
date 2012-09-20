@@ -1,34 +1,41 @@
 #ifndef _PROPERTY_TEST_H_
 #define _PROPERTY_TEST_H_
 
-#include "common/property.h"
-#include "common/Iobserver.h"
+#include "property.h"
+#include "propertyobserver.h"
 
 #include <iostream>
+
+// This files shows how properties and their observers can be used
 
 using namespace std;
 
 class PropertyTest {
 	public:
-		class NumberObserver: public IObserver {
+                // A class that observes an integer property and reacts to a change
+		class NumberObserver: public PropertyObserver<int> {
 			public:
-				NumberObserver(PropertyTest* parent): _parent(parent) {}
-				void signal() { _parent->numberChanged(); }
-			private:
-				PropertyTest* _parent;
+				NumberObserver(Property<int>* prop = NULL): PropertyObserver<int>(prop) {}
+				void propertyChanged() {
+			                cout << "The current value of number is " << getProp() << endl;
+                                }
+                                void setValue(int val) { setProp(val); }
 		};
 	public:
-		PropertyTest(): _num_obs(this), _number(0, &_num_obs) {}
+                static void runTest() {
+		        Property<int>* _number;
+		        NumberObserver _num_obs;
 
-		void setNumber(int number) { _number = number; }
-
-	private:
-		NumberObserver _num_obs;
-		Property<int> _number;
-
-		void numberChanged() {
-			cout << "The current value of number is " << _number << endl;
-		}
+                        // The number observer now does not point to a property, but setting it is safe:
+                        _num_obs.setValue(10);
+                        // We create the property and supply it to the number observer
+                        _number = new Property<int>(0);
+                        _num_obs = NumberObserver(_number);
+                        _num_obs.setValue(42);
+                        // Deleting the property now is also safe
+                        delete _number;
+                        _num_obs.setValue(13);
+                }
 };
 
 #endif

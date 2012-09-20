@@ -4,8 +4,8 @@
 #include <string>
 #include "Icontrol.h"
 #include "common/property.h"
-#include "common/Iobserver.h"
 #include "common/signals.h"
+#include "common/pointers.h"
 #include "gui/button.h"
 
 #define MARGIN 3
@@ -32,7 +32,7 @@ class Window: public IControl {
 		int getXMin() { return 1 + MARGIN; }
 		int getXMax() { return _w-1 - MARGIN; }
 
-		SIGNAL_DESTINATION(_close, Window, close);
+		ACTION(Window, close);
 		void close() { deleteMe(); }
 	protected:
 		std::string _name;

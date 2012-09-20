@@ -2,36 +2,64 @@
 #define _SIGNALS_H_
 
 #include <cstddef>
+#include <list>
 
-class Signal {
+// An abstraction of an object and it's method.
+// Using this abstraction, the method on an object can be called without
+// knowing anything about the object or the method.
+// The method cannot be called directly. Instead, a proxy method is used.
+// This proxy method can be created using the ACTION macro.
+class Action {
 	public:
-		Signal(): _p(NULL), _o(NULL) {};
-		Signal(void* object, void (*staticProxy)(void*)):
+		Action(): _p(NULL), _o(NULL) {};
+		Action(void* object, void (*staticProxy)(void*)):
 			_o(object), _p(staticProxy) {}
-		void operator() (){
-			if (_p && _o)
+                bool isValid() const {
+                        return (_p && _o);
+                }
+		void operator() () const{
+			if (isValid())
 				_p(_o);
 		}
+                bool operator==(const Action& other) {
+                        return _p == other._p && _o == other._o;
+                }
 	private:
 		void* _o;
 		void (*_p)(void*);
 };
 
-#define SIGNAL_DESTINATION(sigName, className, method) class sigName##SignalClass {\
-	public:\
-		static void staticProxyMethod (sigName##SignalClass* obj){\
-			obj->proxyMethod();\
+class Signal {
+  public:
+    void operator() () const {
+      std::list<Action>::const_iterator it = _actions.begin();
+      while (it != _actions.end()) {
+        (*it)();
+        ++it;
+      }
+    }
+
+    void addAction(Action action) { _actions.push_back(action); }
+    void removeAction(Action action) {
+      std::list<Action>::iterator it = _actions.begin();
+      while (it != _actions.end()) {
+        if (*it == action)
+          it = _actions.erase(it);
+        else
+          ++it;
+      }
+    }
+  private:
+    std::list<Action> _actions;
+};
+
+#define ACTION(className, method) \
+		static void method##StaticProxyMethod (void* obj){\
+                        ((className *) obj)->method();\
 		}\
-		sigName##SignalClass(className* parent): _p(parent) {};\
-		void proxyMethod() {\
-			_p->method();\
+		Action method##Action() {\
+			return Action(this, className::method##StaticProxyMethod);\
 		}\
-		Signal getSignal() {\
-			return Signal(this, (void(*)(void*))sigName##SignalClass::staticProxyMethod);\
-		}\
-	private:\
-		className* _p;\
-}; sigName##SignalClass sigName;
 
 #endif
 

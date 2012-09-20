@@ -4,11 +4,11 @@
 #include <SDL.h>
 #include <string>
 #include "Icontrol.h"
-#include "common/Iobserver.h"
+#include "common/propertyobserver.h"
 
 template <class T> class Property;
 
-class Label: public IControl, IObserver {
+class Label: public IControl, PropertyObserver<std::string> {
 	public:
 		Label(SafePtr<IControl> parent, int x, int y, Property<std::string>* prop = NULL);
 		Label(SafePtr<IControl> parent, int x, int y, const char* text);
@@ -18,10 +18,9 @@ class Label: public IControl, IObserver {
 
 		void draw(SDL_Surface* surf, int orig_x, int orig_y);
 
-		void signal();
-		void disconnect();
 	private:
-		Property<std::string>* _prop;
+		void propertyChanged();
+
 		SDL_Surface* _textSurf;
                 union {
 		  const char* _const_text;

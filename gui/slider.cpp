@@ -6,7 +6,7 @@
 #define SLIDER_WIDTH         20
 
 Slider::Slider(SafePtr<IControl> parent, int x, int y, int h, float min, float max, Property<float>* prop, int bh)
-: IControl(parent), _prop(prop), _slider_button_height(bh) {
+: IControl(parent), PropertyObserver<float>(prop), _slider_button_height(bh) {
 	if (h < _slider_button_height)
 		h = _slider_button_height;
 
@@ -18,31 +18,19 @@ Slider::Slider(SafePtr<IControl> parent, int x, int y, int h, float min, float m
 	_min = min;
 	_max = max;
 
-        if (_prop) {
-	  _prop->addObserver(this);
-        }
-
 	redim(x, y, SLIDER_WIDTH, h);
 	setPreferedSize(SLIDER_WIDTH, 0, 1);
 
 	_pressed = false;
 }
 
-Slider::~Slider() {
-	if (_prop) {
-		_prop->removeObserver(this);
-	}
-}
+Slider::~Slider() {}
 
 void Slider::redim(int x, int y, int w, int h) {
 	IControl::redim(x, y, w, h);
 	_inc = (_max - _min) / _h;
 
-	if (_prop) {
-		setValue(*_prop);
-	} else {
-		setValue(0.0);
-	}
+        setValueInternal(getProp(), true);
 }
 
 void Slider::draw(SDL_Surface* surf, int orig_x, int orig_y) {
@@ -101,15 +89,11 @@ void Slider::setValue(float val) {
 	setValueInternal(val);
 }
 
-void Slider::signal() {
+void Slider::propertyChanged() {
 	setValueInternal(*_prop, true);
 }
 
-void Slider::disconnect() {
-	_prop = NULL;
-}
-
-void Slider::setValueInternal(float val, bool bySignal) {
+void Slider::setValueInternal(float val, bool byAction) {
 	if (val < _min) val = _min;
 	if (val > _max) val = _max;
 	_value = val;
@@ -118,7 +102,7 @@ void Slider::setValueInternal(float val, bool bySignal) {
 	float t = (_max - _value) / (_max - _min);
 	_button_y = t * (_h - _slider_button_height);
 
-	if (!bySignal && _prop)
-		*_prop = _value;
+	if (!byAction && propValid())
+		setProp(_value);
 }
 

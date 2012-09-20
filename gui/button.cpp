@@ -3,8 +3,10 @@
 #include "fonts.h"
 #include "common/property.h"
 
-Button::Button(SafePtr<IControl> parent, int x, int y, const char* text, Signal sig)
-: IControl(parent), _text(text), _sig(sig) {
+Button::Button(SafePtr<IControl> parent, int x, int y, const char* text, Action action)
+: IControl(parent), _text(text) {
+        if (action.isValid())
+          _sig.addAction(action);
 	int w = Fonts::inst()->getTextWidth(text) + 8;
 	redim(x, y, w, 20);
 	_textSurf = NULL;
@@ -60,5 +62,13 @@ bool Button::leftRelease(int x, int y) {
 		_pressed = false;
 
 	return true;
+}
+
+void Button::addAction(Action action) {
+  _sig.addAction(action);
+}
+
+void Button::removeAction(Action action) {
+  _sig.removeAction(action);
 }
 

@@ -38,7 +38,7 @@ class MainTest {
     void mainLoop();
     static void audioCallback(void *userdata, Uint8 *stream, int len);
 
-    SIGNAL_DESTINATION(_quit, MainTest, quit);
+    ACTION(MainTest, quit);
     void quit() { _do_quit = true; }
   private:
     static MainTest* _instance;

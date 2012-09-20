@@ -1,0 +1,16 @@
+This file contains description of the various patterns that I used when
+programming the application. It serves as a guideline for me and for anyone
+who would want to contribute to the project.
+
+1) Signals
+
+Usage: Calling a method like a function (without knowledge about the object)
+Files: common/signals.h
+
+2) Properties
+
+Usage: Being able to react on changes to a variable
+Files: common/property.h common/propertyobserver.h
+
+Description:
+    

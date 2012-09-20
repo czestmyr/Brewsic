@@ -5,7 +5,7 @@
 #include <iostream>
 
 Window::Window(SafePtr<IControl> parent, int x, int y, int w, int h, const char* title)
-: IControl(parent), _close(this) {
+: IControl(parent) {
 	_status_h = 20;
 	_name = title;
 	_dragging = false;
@@ -13,7 +13,7 @@ Window::Window(SafePtr<IControl> parent, int x, int y, int w, int h, const char*
         _auto_packing = true;
 
 	_title_h = 0;
-	_close_btn = safe_new(Button(_this_ref_ptr, w, 0, "X", _close.getSignal())).cast<Button>();
+	_close_btn = safe_new(Button(_this_ref_ptr, w, 0, "X", closeAction())).cast<Button>();
 	_close_btn->setPackable(false);
 	_resize_btn = safe_new(Button(_this_ref_ptr, w, h - 20, "\\")).cast<Button>();
 	_resize_btn->setPackable(false);

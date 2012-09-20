@@ -4,7 +4,7 @@
 #include <cmath>
 
 Wheel::Wheel(SafePtr<IControl> parent, int x, int y, int w, int h, float min, float max, Property<float>* prop)
-: IControl(parent), _prop(prop) {
+: IControl(parent), PropertyObserver<float>(prop) {
 	redim(x, y, w, h);
 
 	if (min > max) {
@@ -16,21 +16,12 @@ Wheel::Wheel(SafePtr<IControl> parent, int x, int y, int w, int h, float min, fl
 	_max = max;
 	_inc = (_max - _min) / 200.0;
 
-	if (prop) {
-		_prop->addObserver(this);
-		setValue(*_prop);
-	} else {
-		setValue(0.0);
-	}
+	setValueInternal(getProp(), true);
 
 	_pressed = false;
 }
 
-Wheel::~Wheel() {
-	if (_prop) {
-		_prop->removeObserver(this);
-	}
-}
+Wheel::~Wheel() {}
 
 void Wheel::draw(SDL_Surface* surf, int orig_x, int orig_y) {
 	SDL_Color light = Style::inst()->getLightColor();
@@ -94,20 +85,16 @@ void Wheel::setValue(float val) {
 	setValueInternal(val);
 }
 
-void Wheel::signal() {
-	setValueInternal(*_prop, true);
+void Wheel::propertyChanged() {
+	setValueInternal(getProp(), true);
 }
 
-void Wheel::disconnect() {
-	_prop = NULL;
-}
-
-void Wheel::setValueInternal(float val, bool bySignal) {
+void Wheel::setValueInternal(float val, bool byAction) {
 	if (val < _min) val = _min;
 	if (val > _max) val = _max;
 	_value = val;
 
-	if (!bySignal && _prop)
-		*_prop = _value;
+	if (!bySignal && propValid())
+		setProp(_value);
 }
 

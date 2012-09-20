@@ -2,57 +2,50 @@
 #define _PROPERTY_H_
 
 #include <list>
-#include "Iobserver.h"
+#include "signals.h"
 
 template <class T>
 class Property {
 	public:
 		Property() {}
 		Property(const T& init): data(init) {}
-		Property(const T& init, IObserver* obs) {
+		Property(const T& init, Action onChange, Action onDelete = Action()) {
 			data = init;
-			addObserver(obs);
+			addActions(onChange, onDelete);
 		}
 
 		~Property() {
-			std::list<IObserver*>::iterator it = observers.begin();
-			while (it != observers.end()) {
-				(*it)->disconnect();
-				++it;
-			}
+                        _on_delete();
 		}
 
 		operator const T&() const { return data; }
 		const T* operator->() const { return &data; }
 		const T& operator=(const T& newVal) {
 			data = newVal;
-		
-			std::list<IObserver*>::iterator it = observers.begin();
-			while (it != observers.end()) {
-				(*it)->signal();
-				++it;
-			}
-		
+		        _on_change();
 			return data;
 		}
 
-		void addObserver(IObserver* observer) {
-			observers.push_back(observer);
+                void addActions(Action onChange, Action onDelete = Action()) {
+                        _on_change.addAction(onChange);
+                        if (onDelete.isValid())
+        			_on_delete.addAction(onDelete);
 		}
 
-		void removeObserver(IObserver* observer) {
-			std::list<IObserver*>::iterator it = observers.begin();
-			while (it != observers.end()) {
-				if (*it == observer)
-					it = observers.erase(it);
-				else
-					++it;
-			}
+		void removeActions(Action onChange, Action onDelete = Action()) {
+                        _on_change.removeAction(onChange);
+                        if (onDelete.isValid())
+                              _on_delete.removeAction(onDelete);
 		}
 	private:
 		T data;
 
-		std::list<IObserver*> observers;
+                Signal _on_change;
+                Signal _on_delete;
+
+                // Copying properties is forbidden due to unclear semantics in case of actions.
+                // If you want to copy a property, do it manually instead.
+                Property(const Property<T>& other) {}
 };
 
 #endif

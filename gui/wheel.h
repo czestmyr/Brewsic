@@ -2,10 +2,10 @@
 #define _WHEEL_H_
 
 #include "Icontrol.h"
-#include "common/Iobserver.h"
 #include "common/property.h"
+#include "common/propertyobserver.h"
 
-class Wheel: public IControl, IObserver {
+class Wheel: public IControl, PropertyObserver<float> {
 	public:
 		Wheel(SafePtr<IControl> parent, int x, int y, int w, int h, float min, float max, Property<float>* prop = NULL);
 		~Wheel();
@@ -21,15 +21,14 @@ class Wheel: public IControl, IObserver {
 		float getValue();
 		void setValue(float val);
 
-		void signal();
-		void disconnect();
 	private:
-		void setValueInternal(float val, bool bySignal = false);
+		void propertyChanged();
+
+		void setValueInternal(float val, bool byAction = false);
 
 		float _min;
 		float _max;
 		float _value;
-		Property<float>* _prop;
 		float _inc;
 
 		int _pressed_y;
