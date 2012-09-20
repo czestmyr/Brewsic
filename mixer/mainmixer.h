@@ -28,7 +28,7 @@ class MainMixer: public IWithGui {
 
 		void setGuiParent(SafePtr<IControl> guiParent);
                 void unsetGuiParent();
-		void guiSignal();
+		void showGui();
 	private:
 		int _channels;
 		int _bufsize;

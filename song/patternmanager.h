@@ -11,15 +11,14 @@ class Pattern;
 
 class PatternManager: public IWithGui {
   public:
-    PatternManager(): _createPattern(this), _lastPatternNumber(0) {};
+    PatternManager(): _lastPatternNumber(0) {};
     ~PatternManager();
 
     void setSynthFactory(SafePtr<SynthFactory> factory) { _synth_factory = factory; }
 
-    SIGNAL_DESTINATION(_createPattern, PatternManager, createPattern);
-
+    ACTION(PatternManager, createPattern);
     void createPattern();
-    void guiSignal();
+    void showGui();
 
   private:
     std::vector<Pattern*> _patterns;

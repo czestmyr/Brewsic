@@ -8,7 +8,6 @@
 #include "gui/Icontrol.h"
 #include "gui/Iwithgui.h"
 #include "common/pointers.h"
-#include "common/Iobserver.h"
 #include "common/property.h"
 #include "common/signals.h"
 
@@ -17,7 +16,7 @@
 
 class SynthQueue: public IWithGui {
 	public:
-		SynthQueue(const std::string& name): _name(name), _newSynthSignal(this) {}
+		SynthQueue(const std::string& name): _name(name) {}
                 ~SynthQueue() {
                   std::cout << "Synth queue " << _name << " destruction:" << std::endl;
                   for (int i = 0; i < _synths.size(); ++i) {
@@ -34,10 +33,9 @@ class SynthQueue: public IWithGui {
 
                 void setSynthFactory(SafePtr<SynthFactory> factory) { _factory = factory; }
 
-                SIGNAL_DESTINATION(_newSynthSignal, SynthQueue, newSynth);
-
-		void guiSignal();
+                ACTION(SynthQueue, newSynth);
                 void newSynth();
+		void showGui();
 	private:
 		std::string _name;
                 SafePtr<SynthFactory> _factory;

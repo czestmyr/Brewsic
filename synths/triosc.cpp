@@ -13,15 +13,11 @@ TripleOscillator::TripleOscillator(int bufsize):
 	_mixer(bufsize),
 	_adsr(),
 	_first(0.0),
-	_first_obs(this, PROP_FIRST),
 	_second(0.0),
-	_second_obs(this, PROP_SECOND),
 	_shift(0),
-	_shift_obs(this, PROP_SHIFT),
-	_first_gen(GEN_SINE),
-	_second_gen(GEN_SINE),
-	_third_gen(GEN_SINE),
-	_gen_obs(this, PROP_GEN) {
+	_first_gen(GEN_SINE, checkGeneratorsAction()),
+	_second_gen(GEN_SINE, checkGeneratorsAction()),
+	_third_gen(GEN_SINE, checkGeneratorsAction()) {
 	for (int i = 0; i < POLYPHONY; ++i) {
 		_adsr[i] = new Adsr(200, 100, 101, 20000);
 		_buffers[i] = new float[bufsize];
@@ -96,7 +92,7 @@ float* TripleOscillator::getBuffer() {
 	return _mixer.getBuffer();
 }
 
-void TripleOscillator::guiSignal() {
+void TripleOscillator::showGui() {
 	if (_gui) _gui->deleteMe();
 
 	_gui = safe_new(TripleOscillatorGui(_gui_parent, this));

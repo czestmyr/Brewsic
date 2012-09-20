@@ -9,14 +9,12 @@
 #include "gui/label.h"
 
 PatternGui::PatternGui(SafePtr<IControl> parent, Pattern* pattern):
-  _lowerSynth(this),
-  _upperSynth(this),
   Window(parent, 0, 0, 300, 400, pattern->getName().c_str()), _pattern(pattern){
   
   SafePtr<IControl> frame1 = safe_new(Frame(safePtr(), 0, 0, 0, 0, 0));
-  safe_new(Button(frame1, 0, 0, "<", _lowerSynth.getSignal()))->setPreferedSize(20, 0, 1);
+  safe_new(Button(frame1, 0, 0, "<", lowerSynthAction()))->setPreferedSize(20, 0, 1);
   safe_new(Label(frame1, 0, 0, "Synth"))->setPreferedSize(0, 0, 1);
-  safe_new(Button(frame1, 0, 0, ">", _upperSynth.getSignal()))->setPreferedSize(20, 0, 1);
+  safe_new(Button(frame1, 0, 0, ">", upperSynthAction()))->setPreferedSize(20, 0, 1);
   frame1->setPreferedSize(0, 20, 1);
 
   frame1->packHorizontally(2);

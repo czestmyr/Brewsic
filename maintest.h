@@ -29,7 +29,7 @@ class PatternManager;
 /// shows the way the program's classes might be organized.
 class MainTest {
   public:
-    MainTest(): _quit(this) {}
+    MainTest() {}
     ~MainTest() {}
 
     int init();

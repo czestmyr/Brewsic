@@ -16,8 +16,8 @@ class PatternGui: public Window {
 
     void setSynth(SafePtr<ISynth> synth);
   private:
-    SIGNAL_DESTINATION(_lowerSynth, PatternGui, lowerSynth);
-    SIGNAL_DESTINATION(_upperSynth, PatternGui, upperSynth);
+    ACTION(PatternGui, lowerSynth);
+    ACTION(PatternGui, upperSynth);
     void lowerSynth();
     void upperSynth();
 

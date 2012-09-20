@@ -32,7 +32,7 @@ class Pattern: public IWithGui {
 
     void setSynth(SafePtr<ISynth> synth);
 
-    void guiSignal();
+    void showGui();
 
     const std::string& getName() const { return _name; }
 

@@ -84,7 +84,7 @@ void MainMixer::unsetGuiParent() {
   }
 }
 
-void MainMixer::guiSignal() {
+void MainMixer::showGui() {
 	if (_gui) _gui->deleteMe();
 
 	_gui = safe_new(MixerGui(_gui_parent, this));

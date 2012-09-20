@@ -94,7 +94,7 @@ void Wheel::setValueInternal(float val, bool byAction) {
 	if (val > _max) val = _max;
 	_value = val;
 
-	if (!bySignal && propValid())
+	if (!byAction && propValid())
 		setProp(_value);
 }
 

@@ -2,17 +2,13 @@
 #include "style.h"
 
 Checkbox::Checkbox(SafePtr<IControl> parent, int x, int y, int w, int h, Property<bool>* prop)
-: IControl(parent), _prop(prop) {
+: IControl(parent), PropertyObserver<bool>(prop) {
 	redim(x, y, w, h);
 	_pressed = false;
-	setValueInternal(false);
+	setValueInternal(getProp(), true);
 }
 
-Checkbox::~Checkbox() {
-	if (_prop) {
-		_prop->removeObserver(this);
-	}
-}
+Checkbox::~Checkbox() {}
 
 void Checkbox::draw(SDL_Surface* surf, int orig_x, int orig_y) {
 	SDL_Color bg = Style::inst()->getBgColor();
@@ -49,21 +45,15 @@ bool Checkbox::leftRelease(int x, int y) {
 	return true;
 }
 
-void Checkbox::signal() {
-	if (_value != *_prop) {
-		_value = *_prop;
-	}
+void Checkbox::propertyChanged() {
+        setValueInternal(getProp(), true);
 }
 
-void Checkbox::disconnect() {
-	_prop = NULL;
-}
-
-void Checkbox::setValueInternal(bool value) {
+void Checkbox::setValueInternal(bool value, bool byAction) {
 	_value = value;
 
-	if (_prop) {
-		*_prop = _value;
+	if (!byAction && propValid()) {
+		setProp(_value);
 	}
 }
 

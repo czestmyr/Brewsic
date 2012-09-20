@@ -7,15 +7,13 @@
 
 class IWithGui {
   public:
-    IWithGui(): _guiSignal(this) {}
+    IWithGui() {}
 
     virtual void setGuiParent(SafePtr<IControl> par) { _gui_parent = par; }
     virtual void unsetGuiParent() { _gui_parent.clear(); }
-    Signal getGuiSignal() { return _guiSignal.getSignal(); }
 
-    SIGNAL_DESTINATION(_guiSignal, IWithGui, guiSignal);
-
-    virtual void guiSignal() = 0;
+    ACTION(IWithGui, showGui);
+    virtual void showGui() = 0;
 
   protected:
     SafePtr<IControl> _gui;

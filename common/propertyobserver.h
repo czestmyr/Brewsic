@@ -32,7 +32,7 @@ template <class T> class PropertyObserver {
   protected:
     ACTION(PropertyObserver<T>, propertyChanged);
     ACTION(PropertyObserver<T>, propertyDeletedMeta);
-    virtual void propertyChanged() = 0;
+    virtual void propertyChanged() {};
     virtual void propertyDeleted() {};
     void propertyDeletedMeta() {
       _prop = NULL;

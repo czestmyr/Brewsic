@@ -61,11 +61,11 @@ int MainTest::init() {
   // Some gui tests:
 
   // Quit button
-  safe_new(Button(gui_bg, WIDTH, 5, "Quit Brewsic", _quit.getSignal()));
+  safe_new(Button(gui_bg, WIDTH, 5, "Quit Brewsic", quitAction()));
   // Mixer button
-  safe_new(Button(gui_bg, 600, 530, "Mixer", _mixer->getGuiSignal()));
+  safe_new(Button(gui_bg, 600, 530, "Mixer", _mixer->showGuiAction()));
   // Pattern manager
-  safe_new(Button(gui_bg, 600, 500, "Patterns", _pattern_manager->getGuiSignal()));
+  safe_new(Button(gui_bg, 600, 500, "Patterns", _pattern_manager->showGuiAction()));
 
   return 0;
 }

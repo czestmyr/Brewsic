@@ -9,7 +9,6 @@
 #include "generators/sine.h"
 #include "filters/adsr.h"
 #include "common/property.h"
-#include "trioscobserver.h"
 #include "gui/synths/triosc.h"
 
 #include <queue>
@@ -20,14 +19,7 @@
 
 #define POLYPHONY 4
 
-enum {
-	PROP_FIRST,
-	PROP_SECOND,
-	PROP_SHIFT,
-	PROP_GEN
-};
-
-class TripleOscillator: public ISynth{
+class TripleOscillator: public ISynth {
 	public:
 		TripleOscillator(int bufsize);
 		~TripleOscillator() {
@@ -53,7 +45,7 @@ class TripleOscillator: public ISynth{
 		float* getBuffer();
 
 		const char* getClassName() { return "TripleOscillator"; }
-		void guiSignal();
+		void showGui();
 
 		Property<float> _shift;
 		Property<float> _first;
@@ -64,14 +56,10 @@ class TripleOscillator: public ISynth{
 		Property<int> _third_gen;
 
 	protected:
-		void checkGenerators();
+		ACTION(TripleOscillator, checkGenerators);
+                void checkGenerators();
 
-		friend class TriOscObserver;
 		friend class TripleOscillatorGui;
-		TriOscObserver _shift_obs;
-		TriOscObserver _first_obs;
-		TriOscObserver _second_obs;
-		TriOscObserver _gen_obs;
 
 		Mixer _mixer;
 

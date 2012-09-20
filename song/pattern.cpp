@@ -63,7 +63,7 @@ void Pattern::setSynth(SafePtr<ISynth> synth) {
   }
 }
 
-void Pattern::guiSignal() {
+void Pattern::showGui() {
   if (_gui)
     _gui->deleteMe();
 
