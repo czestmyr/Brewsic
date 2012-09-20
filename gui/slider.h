@@ -29,7 +29,6 @@ class Slider: public IControl, PropertyObserver<float> {
 		float _min;
 		float _max;
 		float _value;
-		Property<float>* _prop;
 		float _inc;
 
 		int _pressed_y;

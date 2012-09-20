@@ -90,7 +90,7 @@ void Slider::setValue(float val) {
 }
 
 void Slider::propertyChanged() {
-	setValueInternal(*_prop, true);
+	setValueInternal(getProp(), true);
 }
 
 void Slider::setValueInternal(float val, bool byAction) {
