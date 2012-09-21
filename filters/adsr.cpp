@@ -3,6 +3,7 @@
 
 #include "gui/wheel.h"
 #include "gui/frame.h"
+#include "gui/label.h"
 
 #define SPEED 0.0001
 
@@ -62,14 +63,29 @@ void Adsr::release() {
 }
 
 void Adsr::prepareGui() {
-	_gui = safe_new(Frame((IControl*)NULL, 0, 0, 0, 0, 0));
+	_gui = safe_new(Frame((IControl*)NULL, 0, 0, 0, 0, 1));
 
-	safe_new(Wheel(_gui, 0, 0, 0, 0, 10, 10000, &_attack));
-	safe_new(Wheel(_gui, 0, 0, 0, 0, 0, 10000, &_decay));
-	safe_new(Wheel(_gui, 0, 0, 0, 0, 0, 10000, &_sustain));
-	safe_new(Wheel(_gui, 0, 0, 0, 0, 0, 10000, &_release));
-
+        SafePtr<IControl> frame1 = safe_new(Frame(_gui, 0, 0, 0, 0, 0));
+        frame1->packHorizontally(2);
+        SafePtr<IControl> label1 = safe_new(Label(frame1, 0, 0, "A"));
+        label1->setPreferedSize(0, 0, 1);
+	safe_new(Wheel(frame1, 0, 0, 0, 0, 10, 10000, &_attack))->setPreferedSize(32, 32, 1);
+        SafePtr<IControl> frame2 = safe_new(Frame(_gui, 0, 0, 0, 0, 0));
+        frame2->packHorizontally(2);
+        SafePtr<IControl> label2 = safe_new(Label(frame2, 0, 0, "D"));
+        label2->setPreferedSize(0, 0, 1);
+	safe_new(Wheel(frame2, 0, 0, 0, 0, 0, 10000, &_decay))->setPreferedSize(32, 32, 1);
+        SafePtr<IControl> frame3 = safe_new(Frame(_gui, 0, 0, 0, 0, 0));
+        frame3->packHorizontally(2);
+        SafePtr<IControl> label3 = safe_new(Label(frame3, 0, 0, "S"));
+        label3->setPreferedSize(0, 0, 1);
+	safe_new(Wheel(frame3, 0, 0, 0, 0, 0, 10000, &_sustain))->setPreferedSize(32, 32, 1);
+        SafePtr<IControl> frame4 = safe_new(Frame(_gui, 0, 0, 0, 0, 0));
+        frame4->packHorizontally(2);
+        SafePtr<IControl> label4 = safe_new(Label(frame4, 0, 0, "R"));
+        label4->setPreferedSize(0, 0, 1);
+	safe_new(Wheel(frame4, 0, 0, 0, 0, 0, 10000, &_release))->setPreferedSize(32, 32, 1);
 	_gui->packHorizontally(5);
-        _gui->setPreferedSize(0, 25, 1);
+        _gui->setPreferedSize(0, 36, 1);
 }
 

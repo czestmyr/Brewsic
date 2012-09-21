@@ -12,15 +12,12 @@
 
 TripleOscillatorGui::TripleOscillatorGui(SafePtr<IControl> parent, TripleOscillator* osc):
 	_osc(osc),
-	Window(parent, 0, 0, 200, 220, osc->getSynthName().c_str()) {
+	Window(parent, 0, 0, 240, 260, osc->getSynthName().c_str()) {
 
 	SafePtr<IControl> slider = safe_new(Slider(safePtr(), 0, 0, 0, -400, 600, &osc->_shift));
 	SafePtr<IControl> frame = safe_new(Frame(safePtr(), 0, 0, 0, 0, 0));
 
         frame->adopt(osc->_adsr[0]->getGui());
-        frame->adopt(osc->_adsr[1]->getGui());
-        frame->adopt(osc->_adsr[2]->getGui());
-        frame->adopt(osc->_adsr[3]->getGui());
 
 	SafePtr<IControl> label1 = safe_new(Label(frame, 0, 0, "First oscillator"));
 
