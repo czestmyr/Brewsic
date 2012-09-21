@@ -58,10 +58,16 @@ void Matrix::draw(SDL_Surface* surf, int orig_x, int orig_y) {
         std::set<SafePtr<Note> >::iterator it = _pattern->_notes.begin();
         while (it != _pattern->_notes.end()) {
           int x_begin = timeToXPos((*it)->_begin);
+          x_begin = x_begin < 0 ? 0 : x_begin;
           int x_end = timeToXPos((*it)->_end);
+          x_end = x_end > _w ? _w : x_end;
           int y_begin = freqToYPos((*it)->_frequency);
-          //std::cout << "Note coords: " << x_begin << "," << x_end << "," << y_begin << std::endl;
-	  Draw_FillRect(surf, x_begin + xoff, y_begin + yoff, x_end - x_begin, 10, note32);
+          y_begin = y_begin < 0 ? 0 : y_begin;
+          int height = (y_begin + 10) > _h ? _h - y_begin : 10;
+          if (height > 0 && x_end > x_begin) {
+            //std::cout << "Note coords: " << x_begin << "," << x_end << "," << y_begin << std::endl;
+	    Draw_FillRect(surf, x_begin + xoff, y_begin + yoff, x_end - x_begin, height, note32);
+          }
           ++it;
         }
 
