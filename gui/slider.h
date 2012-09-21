@@ -22,14 +22,24 @@ class Slider: public IControl, PropertyObserver<float> {
 		float getValue();
 		void setValue(float val);
 
+                void setInverted(bool inverted = true);
+
+                ACTION(Slider, up);
+                ACTION(Slider, down);
+                void up();
+                void down();
+
 	private:
 		void propertyChanged();
+                void recalculateIncrement();
+                void recalculateButtonPosition();
 		void setValueInternal(float val, bool byAction = false);
 
 		float _min;
 		float _max;
 		float _value;
 		float _inc;
+                bool _inverted;
 
 		int _pressed_y;
 		float _pressed_value;

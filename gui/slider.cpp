@@ -6,7 +6,7 @@
 #define SLIDER_WIDTH         20
 
 Slider::Slider(SafePtr<IControl> parent, int x, int y, int h, float min, float max, Property<float>* prop, int bh)
-: IControl(parent), PropertyObserver<float>(prop), _slider_button_height(bh) {
+: IControl(parent), PropertyObserver<float>(prop), _slider_button_height(bh), _inverted(false) {
 	if (h < _slider_button_height)
 		h = _slider_button_height;
 
@@ -28,8 +28,8 @@ Slider::~Slider() {}
 
 void Slider::redim(int x, int y, int w, int h) {
 	IControl::redim(x, y, w, h);
-	_inc = (_max - _min) / _h;
 
+        recalculateIncrement();
         setValueInternal(getProp(), true);
 }
 
@@ -89,8 +89,37 @@ void Slider::setValue(float val) {
 	setValueInternal(val);
 }
 
+void Slider::setInverted(bool inverted) {
+        _inverted = inverted;
+        recalculateIncrement();
+        recalculateButtonPosition();
+}
+
+void Slider::up() {
+        setValueInternal(_value + _inc*10);
+}
+
+void Slider::down() {
+        setValueInternal(_value - _inc*10);
+}
+
 void Slider::propertyChanged() {
 	setValueInternal(getProp(), true);
+}
+
+void Slider::recalculateIncrement() {
+        _inc = (_max - _min) / _h;
+        if (_inverted)
+          _inc = -_inc;
+}
+
+void Slider::recalculateButtonPosition() {
+	float t = (_max - _value) / (_max - _min);
+        if (_inverted) {
+          _button_y = (1.0 - t) * (_h - _slider_button_height);
+        } else {
+	  _button_y = t * (_h - _slider_button_height);
+        }
 }
 
 void Slider::setValueInternal(float val, bool byAction) {
@@ -98,9 +127,7 @@ void Slider::setValueInternal(float val, bool byAction) {
 	if (val > _max) val = _max;
 	_value = val;
 
-	// Calculate the position of the slide button
-	float t = (_max - _value) / (_max - _min);
-	_button_y = t * (_h - _slider_button_height);
+        recalculateButtonPosition();
 
 	if (!byAction && propValid())
 		setProp(_value);
