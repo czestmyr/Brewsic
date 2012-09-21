@@ -9,6 +9,7 @@
 #include "generators/sine.h"
 #include "filters/adsr.h"
 #include "common/property.h"
+#include "common/propertylinker.h"
 #include "gui/synths/triosc.h"
 
 #include <queue>
@@ -64,6 +65,11 @@ class TripleOscillator: public ISynth {
 		Mixer _mixer;
 
 		Adsr* _adsr[POLYPHONY];
+                PropertyLinker<float> _a_linker;
+                PropertyLinker<float> _d_linker;
+                PropertyLinker<float> _s_linker;
+                PropertyLinker<float> _r_linker;
+
 		IGenerator* _generators[POLYPHONY][3];
 		float* _buffers[POLYPHONY];
 		int _notes[POLYPHONY];

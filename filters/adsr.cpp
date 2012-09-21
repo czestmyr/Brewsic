@@ -70,5 +70,6 @@ void Adsr::prepareGui() {
 	safe_new(Wheel(_gui, 0, 0, 0, 0, 0, 10000, &_release));
 
 	_gui->packHorizontally(5);
+        _gui->setPreferedSize(0, 25, 1);
 }
 

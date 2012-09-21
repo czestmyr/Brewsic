@@ -7,9 +7,9 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-  PropertyTest::runTest();
-  return 0;
-/*
+//  PropertyTest::runTest();
+//  return 0;
+
   MainTest test;
 
   int initResult = test.init();
@@ -19,6 +19,6 @@ int main(int argc, char* argv[]) {
 
   IControl::dumpRegisteredControls();
 
-  return 0;*/
+  return 0;
 }
 

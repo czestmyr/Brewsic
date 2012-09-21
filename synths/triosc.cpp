@@ -5,7 +5,6 @@
 
 #include "gui/Icontrol.h"
 #include "gui/synths/triosc.h"
-#include "common/propertylinker.h"
 
 using namespace std;
 
@@ -21,6 +20,10 @@ TripleOscillator::TripleOscillator(int bufsize):
 	_third_gen(GEN_SINE, checkGeneratorsAction()) {
 	for (int i = 0; i < POLYPHONY; ++i) {
 		_adsr[i] = new Adsr(200, 100, 101, 20000);
+                _a_linker.addProperty(&_adsr[i]->_attack);
+                _d_linker.addProperty(&_adsr[i]->_decay);
+                _s_linker.addProperty(&_adsr[i]->_sustain);
+                _r_linker.addProperty(&_adsr[i]->_release);
 		_buffers[i] = new float[bufsize];
 		for (int j = 0; j < 3; ++j) {
 			_generators[i][j] = GeneratorFactory::inst()->createGenerator(GEN_SINE, 440.0, 0);
