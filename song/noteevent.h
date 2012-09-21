@@ -6,7 +6,7 @@
 
 class NoteEvent {
   public:
-    NoteEvent(SafePtr<Note> note, bool begin): _note(note) {}
+    NoteEvent(SafePtr<Note> note, bool begin): _note(note), _begin(begin) {}
 
     SafePtr<Note> _note;
     bool _begin; 

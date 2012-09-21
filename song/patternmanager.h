@@ -6,6 +6,7 @@
 #include "common/signals.h"
 #include "common/pointers.h"
 #include "synths/synthfactory.h"
+#include "song/songcontrol.h"
 
 class Pattern;
 
@@ -15,6 +16,7 @@ class PatternManager: public IWithGui {
     ~PatternManager();
 
     void setSynthFactory(SafePtr<SynthFactory> factory) { _synth_factory = factory; }
+    void setSongControl(SafePtr<SongControl> sctl) { _song_control = sctl; }
 
     ACTION(PatternManager, createPattern);
     void createPattern();
@@ -23,6 +25,7 @@ class PatternManager: public IWithGui {
   private:
     std::vector<Pattern*> _patterns;
     SafePtr<SynthFactory> _synth_factory;
+    SafePtr<SongControl> _song_control;
 
     int _lastPatternNumber;
 };

@@ -20,7 +20,7 @@ void PatternManager::createPattern() {
   stringstream patternName;
   patternName << "Pattern " << _lastPatternNumber;
 
-  Pattern* newPattern = new Pattern(patternName.str());
+  Pattern* newPattern = new Pattern(patternName.str(), _song_control);
   newPattern->setGuiParent(_gui_parent);
   newPattern->setSynth(_synth_factory->getSynth(0));
   _patterns.push_back(newPattern);

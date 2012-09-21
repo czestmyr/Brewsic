@@ -52,15 +52,16 @@ void Pattern::newNote(float begin, float end, float frequency) {
     ++it_begin;
   }
 
-  // TODO: Update event queue?
+  // Add the note to the event queue
+  _q.addNote(note);
 }
 
 SafePtr<Note> Pattern::getNote(float time, float frequency, int uTonality) {
-
+  //TODO
 }
 
 void Pattern::deleteNote(SafePtr<Note> note) {
-
+  //TODO
 }
 
 void Pattern::setSynth(SafePtr<ISynth> synth) {
@@ -77,5 +78,12 @@ void Pattern::showGui() {
 
   _gui = safe_new(PatternGui(_gui_parent, this));
   _gui.cast<PatternGui>()->setSynth(_synth);
+}
+
+void Pattern::play() {
+  _song_control->stop();
+  _song_control->flushQueues();
+  _song_control->addQueue(&_q);
+  _song_control->play();
 }
 

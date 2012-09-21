@@ -73,12 +73,9 @@ void Matrix::draw(SDL_Surface* surf, int orig_x, int orig_y) {
         }
 }
 
-// TODO: use tempo information
 int Matrix::timeToXPos(float time) {
-  #define STEPS_PER_SECOND 1.0
-  float steps = time / 1000.0 * STEPS_PER_SECOND;
   int step_width = 64/_zoom;
-  return (int)(steps * step_width);
+  return (int)(time * step_width);
 }
 
 int Matrix::freqToYPos(float freq) {

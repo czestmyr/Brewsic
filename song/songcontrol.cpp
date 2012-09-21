@@ -4,22 +4,46 @@
 #include "gui/button.h"
 
 void SongControl::play() {
+  _time = 0.0;
   _playing = true;
+
+  // Restart all the contained event queues
+  std::list<EventQueue*>::iterator it = _eventQueues.begin();
+  while (it != _eventQueues.end()) {
+    (*it)->resetPlayback(0.0);
+    ++it;
+  }
 }
 
 void SongControl::stop() {
   _playing = false;
 
   // Stop all the contained event queues
-  std::list<EventQueue*>::iterator it = eventQueues.begin();
-  while (it != eventQueues.end()) {
+  std::list<EventQueue*>::iterator it = _eventQueues.begin();
+  while (it != _eventQueues.end()) {
     (*it)->stop();
     ++it;
   }
 }
 
+void SongControl::flushQueues() {
+  _eventQueues.clear();
+}
+
+void SongControl::addQueue(EventQueue* queue) {
+  _eventQueues.push_back(queue);
+}
+
 void SongControl::processEvents(float timeMs) {
   float time = timeMs * _bps / 1000.0;
+  _time += time;
+
+  // Stop all the contained event queues
+  std::list<EventQueue*>::iterator it = _eventQueues.begin();
+  while (it != _eventQueues.end()) {
+    (*it)->play(_time);
+    ++it;
+  }
 }
 
 void SongControl::increaseTempo() {

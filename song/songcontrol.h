@@ -17,6 +17,9 @@ class SongControl: public IWithGui {
     void play();
     void stop();
 
+    void flushQueues();
+    void addQueue(EventQueue* queue);
+
     bool isPlaying() { return _playing; }
     void processEvents(float timeMs);
 
@@ -30,12 +33,13 @@ class SongControl: public IWithGui {
   private:
     void recalculateBps();
 
+    float _time;
     bool _playing;
 
     int _bpm;
     float _bps; // Beats per second. Should be a bit better that BPM for calculations
 
-    std::list<EventQueue*> eventQueues;
+    std::list<EventQueue*> _eventQueues;
 };
 
 #endif

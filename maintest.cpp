@@ -56,10 +56,11 @@ int MainTest::init() {
   _synth_factory = new SynthFactory(_SAMPLES);
   _mixer = new MainMixer(_SAMPLES, _CHANNELS, _synth_factory);
   _mixer->setGuiParent(gui_bg);
+  _song_control = new SongControl();
   _pattern_manager = new PatternManager();
   _pattern_manager->setGuiParent(gui_bg);
   _pattern_manager->setSynthFactory(_synth_factory);
-  _song_control = new SongControl();
+  _pattern_manager->setSongControl(_song_control);
 
   // Some gui tests:
 
@@ -166,6 +167,12 @@ void MainTest::mainLoop() {
 }
 
 void MainTest::audioCallback(void *userdata, Uint8 *stream, int len) {
+  // Song controls
+  if (_instance->_song_control->isPlaying()) {
+    _instance->_song_control->processEvents(_SAMPLES*1000.0 / _FREQ);
+  }
+
+  // Audio processing
   if (_instance) {
     _instance->_mixer->mixInto((Sint16*)stream);
   }

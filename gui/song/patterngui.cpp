@@ -12,6 +12,8 @@ PatternGui::PatternGui(SafePtr<IControl> parent, Pattern* pattern):
   Window(parent, 0, 0, 300, 400, pattern->getName().c_str()), _pattern(pattern){
   
   SafePtr<IControl> frame1 = safe_new(Frame(safePtr(), 0, 0, 0, 0, 0));
+  safe_new(Button(frame1, 0, 0, "Play", pattern->playAction()))->setPreferedSize(80, 0, 1);
+  safe_new(Button(frame1, 0, 0, "Stop"))->setPreferedSize(80, 0, 1);
   safe_new(Button(frame1, 0, 0, "<", lowerSynthAction()))->setPreferedSize(20, 0, 1);
   safe_new(Label(frame1, 0, 0, "--- no synth ---"))->setPreferedSize(0, 0, 1);
   safe_new(Button(frame1, 0, 0, ">", upperSynthAction()))->setPreferedSize(20, 0, 1);
