@@ -16,6 +16,9 @@ class Matrix: public IControl {
 		void setShift(int shift) { _shift = shift; }
 		int getShift() { return _shift; }
 
+		bool leftPress(int x, int y);
+		bool rightPress(int x, int y);
+
                 void setPattern(Pattern* pattern) { _pattern = pattern; }
 	private:
                 Pattern* _pattern;
@@ -25,7 +28,10 @@ class Matrix: public IControl {
 		int _zoom;
 
                 int timeToXPos(float time);
+                float xPosToTime(int pos);
                 int freqToYPos(float freq);
+                float yPosToFreq(int pos);
+                float yPosToSnapFreq(int pos);
 };
 
 #endif

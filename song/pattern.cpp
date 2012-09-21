@@ -1,6 +1,7 @@
 #include "song/pattern.h"
 #include "gui/song/patterngui.h"
 #include <cmath>
+#include <iostream>
 
 /*typedef std::vector<SafePtr<Note> > NoteRecord;
 
@@ -28,6 +29,8 @@ void Pattern::newNote(float begin, float end, float frequency) {
   if ((int)(ceil(end)) > _length) {
     _length = (int)(ceil(end));
   }
+
+  //TODO: Copy older notes when splitting records
 
   // Find (or create) an interval starting at begin time
   map<float, NoteRecord*>::iterator it_begin = _data.lower_bound(begin);
@@ -57,11 +60,66 @@ void Pattern::newNote(float begin, float end, float frequency) {
 }
 
 SafePtr<Note> Pattern::getNote(float time, float frequency, int uTonality) {
-  //TODO
+  map<float, NoteRecord*>::iterator it = _data.upper_bound(time);
+  if (it == _data.end()) return (Note*)NULL;
+  it--;
+
+  float minFreq = pow(2, -1.0/(12*uTonality)) * frequency;
+  float maxFreq = pow(2,  1.0/(12*uTonality)) * frequency;
+
+  std::cout << "MinFreq: " << minFreq << ", maxFreq: " << maxFreq << std::endl;
+
+  NoteRecord& rec = *it->second;
+  std::cout << "Rec time: " << it->first << std::endl;
+
+  for (int i = 0; i < rec.size(); ++i) {
+    if (minFreq <= rec[i]->_frequency && maxFreq >= rec[i]->_frequency) {
+      return rec[i];
+    }
+  }
+
+  return (Note*)NULL;
 }
 
 void Pattern::deleteNote(SafePtr<Note> note) {
-  //TODO
+  // Find the interval starting at begin time
+  map<float, NoteRecord*>::iterator it_begin = _data.lower_bound(note->_begin);
+  if (it_begin == _data.end() || it_begin->first != note->_begin) {
+    std::cerr << "Something went wrong in note records..." << std::endl;
+  }
+
+  // Find the an interval starting at end time
+  map<float, NoteRecord*>::iterator it_end = _data.lower_bound(note->_end);
+  if (it_end == _data.end() || it_end->first != note->_end) {
+    std::cerr << "Something went wrong in note records..." << std::endl;
+  }
+
+  it_end++;
+  while (it_begin != it_end) {
+    // Delete the note from the record
+    NoteRecord& rec = *it_begin->second;
+    NoteRecord::iterator rit = rec.begin();
+    while (rit != rec.end()) {
+      if (*rit == note) {
+        rec.erase(rit);
+        break;
+      }
+      ++rit;
+    }
+
+    // If the note record is no longer needed, remove it
+    if (rec.size() == 0) {
+      _data.erase(it_begin);
+    }
+
+    ++it_begin;
+  }
+
+  // Erase the note from the note set
+  _notes.erase(note);
+
+  // Erase the note from the event queue
+  _q.removeNote(note);
 }
 
 void Pattern::setSynth(SafePtr<ISynth> synth) {

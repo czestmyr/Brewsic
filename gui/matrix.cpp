@@ -73,9 +73,33 @@ void Matrix::draw(SDL_Surface* surf, int orig_x, int orig_y) {
         }
 }
 
+bool Matrix::leftPress(int x, int y) {
+  SafePtr<Note> note = _pattern->getNote(xPosToTime(x - _x), yPosToFreq(y - _y));
+  if (!note) {
+    float time = xPosToTime(x - _x);
+    _pattern->newNote(floor(time), floor(time) + 0.25, yPosToSnapFreq(y - _y));
+  }
+}
+
+bool Matrix::rightPress(int x, int y) {
+  float time = xPosToTime(x - _x);
+  float freq = yPosToFreq(y - _y);
+  std::cout << "Right press, time: " << time << ", freq: " << freq << std::endl;
+  SafePtr<Note> note = _pattern->getNote(time, freq);
+  std::cout << note.get() << std::endl;
+  if (note) {
+    _pattern->deleteNote(note);
+  }
+}
+
 int Matrix::timeToXPos(float time) {
   int step_width = 64/_zoom;
   return (int)(time * step_width);
+}
+
+float Matrix::xPosToTime(int pos) {
+  int step_width = 64/_zoom;
+  return ((float)pos) / step_width;
 }
 
 int Matrix::freqToYPos(float freq) {
@@ -85,5 +109,16 @@ int Matrix::freqToYPos(float freq) {
   // y = tone * 16 = 1248 + 16*12/ln(2) * ln(f/440.0)
   int y = 913 + 276.997447851 * log(freq/440.0);
   return y - _shift;
+}
+
+float Matrix::yPosToFreq(int pos) {
+  // Inverse of the aforementioned function
+  return exp((pos + _shift - 913) / 276.997447851) * 440.0;
+}
+
+//TODO: snapping
+float Matrix::yPosToSnapFreq(int pos) {
+  // Inverse of the aforementioned function
+  return exp((floor((pos + _shift)/16.0)*16.0 - 913) / 276.997447851) * 440.0;
 }
 

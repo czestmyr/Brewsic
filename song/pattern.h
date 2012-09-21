@@ -21,10 +21,10 @@ class Pattern: public IWithGui {
       _last_note_id = 0;
 
       //TEST:
-      newNote(0.0, 2.0, 220);      //A3
-      newNote(2.0, 3.0, 440);   //A4
-      newNote(2.0, 3.0, 97.99); //G2
-      newNote(2.0, 3.0, 2093);  //C7
+      //newNote(0.0, 2.0, 220);      //A3
+      //newNote(2.0, 3.0, 440);   //A4
+      //newNote(2.0, 3.0, 97.99); //G2
+      //newNote(2.0, 3.0, 2093);  //C7
     }
     ~Pattern();
 
