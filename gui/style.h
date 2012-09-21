@@ -20,8 +20,13 @@ class Style {
 		SDL_Color getMediumColor() { return _medium; }
 		SDL_Color getLightColor() { return _light; }
 
+                void loadImages();
+                void unloadImages();
+
 		void drawInset(SDL_Surface* surf, int x, int y, int w, int h, int depth);
 		void drawOutset(SDL_Surface* surf, int x, int y, int w, int h, int depth);
+                /// Returns the diameter of the wheel used
+                int drawWheel(SDL_Surface* surf, int x, int y, int w, int h);
 	private:
 		static Style* _inst;
 
@@ -30,6 +35,10 @@ class Style {
 		SDL_Color _shade;
 		SDL_Color _medium;
 		SDL_Color _light;
+
+                #define WHEEL_SIZES 6
+                SDL_Surface* _wheel_images[WHEEL_SIZES];
+                static int _wheel_sizes[WHEEL_SIZES];
 };
 
 #endif

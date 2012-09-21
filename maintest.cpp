@@ -45,6 +45,8 @@ int MainTest::init() {
   // SDL surface creation
   _screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, 0);
 
+  Style::inst()->loadImages();
+
   // Gui creation
   _gui_mgr = new GuiMgr();
   SafePtr<IControl> gui_bg = safe_new(Background((IControl*)NULL, 4, 4, WIDTH-8, HEIGHT-8));
@@ -78,6 +80,8 @@ void MainTest::deinit() {
   _synth_factory.clear();
   _mixer.clear();
   _gui_mgr.clear();
+
+  Style::inst()->unloadImages();
 
   free(_obtained_audio_format);
   SDL_Quit();
