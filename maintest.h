@@ -8,6 +8,7 @@
 #include "gui/guimgr.h"
 #include "synths/synthfactory.h"
 #include "song/patternmanager.h"
+#include "song/songcontrol.h"
 
 #define _FREQ 22050
 #define _SAMPLES 1024
@@ -49,6 +50,7 @@ class MainTest {
     SafePtr<GuiMgr> _gui_mgr;
     SafePtr<SynthFactory> _synth_factory;
     SafePtr<PatternManager> _pattern_manager;
+    SafePtr<SongControl> _song_control;
 
     SDL_AudioSpec* _obtained_audio_format;
     SDL_Surface* _screen;

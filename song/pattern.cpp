@@ -1,5 +1,6 @@
 #include "song/pattern.h"
 #include "gui/song/patterngui.h"
+#include <cmath>
 
 /*typedef std::vector<SafePtr<Note> > NoteRecord;
 
@@ -23,6 +24,11 @@ Pattern::~Pattern() {
 }
 
 void Pattern::newNote(float begin, float end, float frequency) {
+  // Make the pattern longer if necessary
+  if ((int)(ceil(end)) > _length) {
+    _length = (int)(ceil(end));
+  }
+
   // Find (or create) an interval starting at begin time
   map<float, NoteRecord*>::iterator it_begin = _data.lower_bound(begin);
   if (it_begin == _data.end() || it_begin->first != begin) {
@@ -35,7 +41,9 @@ void Pattern::newNote(float begin, float end, float frequency) {
     it_end = _data.insert(make_pair(end, new NoteRecord())).first;
   }
 
-  SafePtr<Note> note = new Note(begin, end, frequency);
+  // Create the new note
+  _last_note_id++;
+  SafePtr<Note> note = new Note(_last_note_id, begin, end, frequency);
   _notes.insert(note);
 
   // Add the note into all the records between begin and end times

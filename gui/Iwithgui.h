@@ -15,6 +15,8 @@ class IWithGui {
     ACTION(IWithGui, showGui);
     virtual void showGui() = 0;
 
+    SafePtr<IControl> getGui() { return _gui; }
+
   protected:
     SafePtr<IControl> _gui;
     SafePtr<IControl> _gui_parent;

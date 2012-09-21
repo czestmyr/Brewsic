@@ -16,6 +16,8 @@ typedef std::vector<SafePtr<Note> > NoteRecord;
 class Pattern: public IWithGui {
   public:
     Pattern(const std::string& name): _name(name) {
+      _last_note_id = 0;
+
       //TEST:
       newNote(0.0, 2000.0, 220);      //A3
       newNote(1000.0, 3000.0, 440);   //A4
@@ -33,14 +35,21 @@ class Pattern: public IWithGui {
     void deleteNote(SafePtr<Note> note);
 
     void setSynth(SafePtr<ISynth> synth);
+    SafePtr<ISynth> getSynth() { return _synth; }
 
     void showGui();
 
     const std::string& getName() const { return _name; }
 
+    int getLength() { return _length; }
+
     friend class Matrix;
 
   private:
+    int _length; // Length of this pattern in beats
+
+    int _last_note_id;
+
     std::map<float, NoteRecord*> _data;
     std::set<SafePtr<Note> > _notes;
 

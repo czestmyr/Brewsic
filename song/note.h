@@ -3,11 +3,12 @@
 
 class Note {
   public:
-    Note(float begin, float end, float frequency):
-      _begin(begin), _end(end), _frequency(frequency) {}
+    Note(int id, float begin, float end, float frequency):
+      _id(id), _begin(begin), _end(end), _frequency(frequency) {}
 
-    float _begin;
-    float _end;
+    int _id;
+    float _begin; // Time is in beats
+    float _end;   // Time is in beats
     float _frequency;
 };
 

@@ -59,6 +59,7 @@ int MainTest::init() {
   _pattern_manager = new PatternManager();
   _pattern_manager->setGuiParent(gui_bg);
   _pattern_manager->setSynthFactory(_synth_factory);
+  _song_control = new SongControl();
 
   // Some gui tests:
 
@@ -68,6 +69,11 @@ int MainTest::init() {
   safe_new(Button(gui_bg, 600, 530, "Mixer", _mixer->showGuiAction()));
   // Pattern manager
   safe_new(Button(gui_bg, 600, 500, "Patterns", _pattern_manager->showGuiAction()));
+  // Song control
+  _song_control->setGuiParent(gui_bg);
+  _song_control->showGui();
+  SafePtr<SongControl> sctl = _song_control.cast<SongControl>();
+  sctl->getGui()->redim(40, HEIGHT-30, 200, 20);
 
   return 0;
 }
@@ -76,6 +82,7 @@ void MainTest::deinit() {
   SDL_CloseAudio();
 
   // Clear pointers to all main classes
+  _song_control.clear();
   _pattern_manager.clear();
   _synth_factory.clear();
   _mixer.clear();

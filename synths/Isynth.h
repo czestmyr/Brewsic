@@ -15,6 +15,7 @@ class ISynth: public IWithGui {
 
     virtual void startNote(int noteId, float frequency) = 0;
     virtual void stopNote(int noteId) = 0;
+    virtual void stopAllNotes() = 0;
 
     virtual void generateOutput() = 0;
     virtual float* getBuffer() = 0;

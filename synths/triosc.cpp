@@ -81,6 +81,14 @@ void TripleOscillator::stopNote(int noteId) {
 	}
 }
 
+void TripleOscillator::stopAllNotes() {
+	for (int i = 0; i < POLYPHONY; ++i) {
+	  _notes[i] = 0;
+	  _channelQueue.push(i);
+	  _adsr[i]->release();
+	}
+}
+
 void TripleOscillator::generateOutput() {
 	_mixer.clear();
 	for (int i = 0; i < POLYPHONY; ++i) {
