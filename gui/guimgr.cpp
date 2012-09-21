@@ -89,6 +89,15 @@ void GuiMgr::keyRelease(SDLKey sym) {
 	}
 }
 
+bool GuiMgr::needsRedraw() {
+	std::vector<SafePtr<IControl> >::iterator it = _controls.begin();
+	while (it != _controls.end()) {
+		if ((*it)->needsRedraw()) return true;
+		++it;
+	}
+        return false;
+}
+
 void GuiMgr::draw(SDL_Surface* surf) {
 	std::vector<SafePtr<IControl> >::iterator it = _controls.begin();
 	while (it != _controls.end()) {

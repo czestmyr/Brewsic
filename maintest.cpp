@@ -135,14 +135,17 @@ void MainTest::mainLoop() {
     dt = SDL_GetTicks() - time;
     time += dt;
 
-    // Screen background
-    SDL_Color shadecol = Style::inst()->getShadeColor();
-    Uint32 shade = SDL_MapRGB(_screen->format, shadecol.r, shadecol.g, shadecol.b);
-    SDL_FillRect(_screen, NULL, shade);
-
-    // Gui drawing
+    // Graphics
     _gui_mgr->cleanup();
-    _gui_mgr->draw(_screen);
+    if (_gui_mgr->needsRedraw()) {
+      // Screen background
+      SDL_Color shadecol = Style::inst()->getShadeColor();
+      Uint32 shade = SDL_MapRGB(_screen->format, shadecol.r, shadecol.g, shadecol.b);
+      SDL_FillRect(_screen, NULL, shade);
+
+      // Gui drawing
+      _gui_mgr->draw(_screen);
+    }
 
     // Unlocking audio mutex
     SDL_UnlockAudio();

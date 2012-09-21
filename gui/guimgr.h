@@ -17,6 +17,7 @@ class GuiMgr {
 		void keyPress(SDLKey sym);
 		void keyRelease(SDLKey sym);
 
+                bool needsRedraw();
 		void draw(SDL_Surface* surf);
 		void cleanup();
 

@@ -122,6 +122,8 @@ class IControl {
 				}
 			}
 		}
+
+                bool needsRedraw() { return _dirty; }
 	protected:
 		int _x;
 		int _y;
@@ -140,6 +142,10 @@ class IControl {
 		bool _focusable;
 
 		bool _delete_me;
+
+                /// Whether the control should be redrawn
+                bool _dirty;
+                void markDirty();
 
 		std::list< SafePtr<IControl> > _children;
 		std::list< SafePtr<IControl> >::iterator _it;

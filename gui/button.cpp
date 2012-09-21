@@ -50,6 +50,7 @@ void Button::draw(SDL_Surface* surf, int orig_x, int orig_y) {
 
 bool Button::leftPress(int x, int y) {
 	_pressed = true;
+        markDirty();
 
 	return true;
 }
@@ -57,9 +58,12 @@ bool Button::leftPress(int x, int y) {
 bool Button::leftRelease(int x, int y) {
 	if (inside(x,y) && _pressed) {
 		_pressed = false;
+                markDirty();
 		_sig();
-	} else 
+	} else if (_pressed) {
 		_pressed = false;
+                markDirty();
+        }
 
 	return true;
 }

@@ -27,7 +27,8 @@ long IControl::ctlCounter = 0;
 
 IControl::IControl(SafePtr<IControl> parent): _x(0), _y(0), _w(0), _h(0),
 	_delete_me(false), _margins(5), _pack_horizontally(false), _auto_packing(false),
-	_packable(true), _focusable(false), _prefered_h(0), _prefered_w(0), _pack_weight(1) {
+	_packable(true), _focusable(false), _prefered_h(0), _prefered_w(0), _pack_weight(1),
+        _dirty(true) {
 	_this_ref_ptr = new RefPtr<IControl>(this);
 	if (parent) {
           _parent = parent.get();
@@ -70,6 +71,9 @@ void IControl::recursiveDraw(SDL_Surface* surf, int orig_x, int orig_y) {
 		(*_rit)->recursiveDraw(surf, orig_x + _x, orig_y + _y);
 		++_rit;
 	}
+
+//        TODO: implement on-demand redraw
+//        _dirty = false;
 }
 
 SafePtr<IControl> IControl::recursiveLeftPress(int x, int y) {
@@ -367,5 +371,11 @@ void IControl::packVertically(int margins) {
 		}
 		++_it;
 	}
+}
+
+void IControl::markDirty() {
+        _dirty = true;
+        if (_parent)
+                _parent->_dirty = true;
 }
 
