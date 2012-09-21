@@ -17,8 +17,10 @@ class Pattern: public IWithGui {
   public:
     Pattern(const std::string& name): _name(name) {
       //TEST:
-      newNote(0.0, 2000.0, 100);
-      newNote(1000.0, 3000.0, 200);
+      newNote(0.0, 2000.0, 220);      //A3
+      newNote(1000.0, 3000.0, 440);   //A4
+      newNote(1000.0, 3000.0, 97.99); //G2
+      newNote(1000.0, 3000.0, 2093);  //C7
     }
     ~Pattern();
 

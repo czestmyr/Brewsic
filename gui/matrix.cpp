@@ -63,15 +63,14 @@ void Matrix::draw(SDL_Surface* surf, int orig_x, int orig_y) {
           x_end = x_end > _w ? _w : x_end;
           int y_begin = freqToYPos((*it)->_frequency);
           y_begin = y_begin < 0 ? 0 : y_begin;
-          int height = (y_begin + 10) > _h ? _h - y_begin : 10;
+          int height = (y_begin + TAB_HEIGHT) > _h ? _h - y_begin : TAB_HEIGHT;
           if (height > 0 && x_end > x_begin) {
             //std::cout << "Note coords: " << x_begin << "," << x_end << "," << y_begin << std::endl;
 	    Draw_FillRect(surf, x_begin + xoff, y_begin + yoff, x_end - x_begin, height, note32);
+            Style::inst()->drawInset(surf, x_begin + xoff, y_begin + yoff, x_end - x_begin, height, 2);
           }
           ++it;
         }
-
-//	Style::inst()->drawInset(surf, orig_x + _x, orig_y + _y, _w, _h, 2);
 }
 
 // TODO: use tempo information
@@ -83,7 +82,11 @@ int Matrix::timeToXPos(float time) {
 }
 
 int Matrix::freqToYPos(float freq) {
-  //TODO: SO far 1:1 correspondency (just a test)
-  return (int)freq;
+  // === A short explanation of the math here ===
+  // tone = 57 + 12 * ld(f/440.0)    -> This is MIDI-like definition, only mine starts at C0. 440.0 is frequency of A4
+  // One tone is 16 px, thus:
+  // y = tone * 16 = 1248 + 16*12/ln(2) * ln(f/440.0)
+  int y = 913 + 276.997447851 * log(freq/440.0);
+  return y - _shift;
 }
 
