@@ -18,8 +18,8 @@ Style::Style() {
 	_fgcolor.b = 92;
 
 	_shade.r = 0;
-	_shade.g = 5;
-	_shade.b = 10;
+	_shade.g = 15;
+	_shade.b = 30;
 
 /*	_shade.r = 255;
 	_shade.g = 255;
